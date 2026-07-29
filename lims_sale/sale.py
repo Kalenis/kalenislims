@@ -895,6 +895,7 @@ class SaleLine(metaclass=PoolMeta):
             analysis.extend(Analysis.get_included_analysis_method(
                 sale_line.analysis.id))
             included_analysis_id = [a[0] for a in analysis]
+            origin_is_additional = bool(sale_line.additional_origin)
 
             for a in analysis:
                 clause = [
@@ -911,7 +912,7 @@ class SaleLine(metaclass=PoolMeta):
                 if not typifications:
                     continue
                 typification = typifications[0]
-                key = sale_line.sale.id
+                key = (sale_line.sale.id, sale_line.id)
 
                 if typification.additional and typification.additional.product:
                     additional = typification.additional
@@ -930,6 +931,7 @@ class SaleLine(metaclass=PoolMeta):
                         'matrix': sale_line.matrix.id,
                         'method': None,
                         'additional_origin': sale_line.id,
+                        'origin_is_additional': origin_is_additional,
                         }
 
                 if typification.additionals:
@@ -963,16 +965,25 @@ class SaleLine(metaclass=PoolMeta):
                             'matrix': sale_line.matrix.id,
                             'method': method_id,
                             'additional_origin': sale_line.id,
+                            'origin_is_additional': origin_is_additional,
                             }
 
         if additional_services:
             sale_lines = []
-            for sale_id, analysis in additional_services.items():
+            for (sale_id, _origin_id), analysis in additional_services.items():
                 for analysis_id, service_data in analysis.items():
-                    if cls.search([
-                            ('sale', '=', sale_id),
-                            ('analysis', '=', analysis_id),
-                            ]):
+                    clause = [
+                        ('sale', '=', sale_id),
+                        ('analysis', '=', analysis_id),
+                        ('product_type', '=',
+                            service_data['product_type']),
+                        ('matrix', '=', service_data['matrix']),
+                        ]
+                    if not service_data['origin_is_additional']:
+                        clause.append(
+                            ('additional_origin', '=',
+                                service_data['additional_origin']))
+                    if cls.search(clause):
                         continue
                     sale_line = cls(
                         quantity=service_data['quantity'],
@@ -1006,13 +1017,13 @@ class SaleLine(metaclass=PoolMeta):
             cls.delete(additionals_to_delete)
 
     @classmethod
-    def copy(cls, lines, default=None):
+    def copy(cls, sale_lines, default=None):
         if default is None:
             default = {}
-        else:
-            default = default.copy()
-        default.setdefault('services', None)
-        default.setdefault('additional_origin', None)
+        sale_lines = [l for l in sale_lines if not l.additional_origin]
+        current_default = default.copy()
+        current_default['services'] = None
+        current_default['additional_origin'] = None
         if Transaction().context.get('return_sale', False):
             new_sale_lines = []
             for sale_line in sale_lines:
@@ -1023,12 +1034,12 @@ class SaleLine(metaclass=PoolMeta):
                         quantity = sale_line.quantity * -1
                 else:
                     quantity = sale_line.quantity
-                default['quantity'] = quantity
+                current_default['quantity'] = quantity
                 new_sale_line, = super().copy([sale_line],
-                    default=default)
+                    default=current_default)
                 new_sale_lines.append(new_sale_line)
             return new_sale_lines
-        return super(SaleLine, cls).copy(lines, default=default)
+        return super().copy(sale_lines, default=current_default)
 
     def get_services_returned(self, name):
         pool = Pool()
