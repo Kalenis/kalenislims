@@ -653,7 +653,8 @@ class SaleLine(metaclass=PoolMeta):
     def on_change_with_product_type_domain(self, name=None):
         return self.default_product_type_domain()
 
-    @fields.depends('product_type', 'matrix', 'matrix_domain')
+    @fields.depends('product_type', 'matrix', 'matrix_domain',
+        methods=['on_change_with_matrix_domain', 'on_change_matrix'])
     def on_change_product_type(self):
         matrix_domain = []
         matrix = None
@@ -663,6 +664,17 @@ class SaleLine(metaclass=PoolMeta):
                 matrix = matrix_domain[0]
         self.matrix_domain = matrix_domain
         self.matrix = matrix
+        self.on_change_matrix()
+
+    @fields.depends('product_type', 'matrix', 'analysis', 'method', 'product',
+        'analysis_domain', 'method_domain',
+        methods=['on_change_with_analysis_domain'])
+    def on_change_matrix(self):
+        self.analysis = None
+        self.method = None
+        self.product = None
+        self.analysis_domain = self.on_change_with_analysis_domain()
+        self.method_domain = []
 
     @fields.depends('product_type')
     def on_change_with_matrix_domain(self, name=None):
@@ -798,18 +810,33 @@ class SaleLine(metaclass=PoolMeta):
                 return False
         return True
 
-    @fields.depends('analysis', '_parent_analysis.product',
-        methods=['on_change_product'])
+    @fields.depends('analysis', 'product_type', 'matrix', 'method',
+        'method_domain', '_parent_analysis.product', '_parent_analysis.type',
+        methods=['on_change_product', 'on_change_with_method_domain'])
     def on_change_analysis(self):
         product = None
+        method = None
         if self.analysis and self.analysis.product:
             product = self.analysis.product
         self.product = product
         self.on_change_product()
 
+        method_domain = self.on_change_with_method_domain()
+        self.method_domain = method_domain
+        if method_domain:
+            if len(method_domain) == 1:
+                method = method_domain[0]
+            elif self.method and self.method.id in method_domain:
+                method = self.method
+        self.method = method
+
     @classmethod
     def validate(cls, sale_lines):
         super().validate(sale_lines)
+        pool = Pool()
+        Analysis = pool.get('lims.analysis')
+        Typification = pool.get('lims.typification')
+
         for sale_line in sale_lines:
             if (sale_line.analysis and sale_line.product and
                     sale_line.analysis.product != sale_line.product):
@@ -817,6 +844,38 @@ class SaleLine(metaclass=PoolMeta):
                     'lims_sale.msg_sale_line_analysis_product',
                     product=sale_line.product.rec_name,
                     analysis=sale_line.analysis.rec_name))
+
+            if getattr(sale_line, 'type', 'line') != 'line':
+                continue
+            if not (sale_line.product_type and sale_line.matrix
+                    and sale_line.analysis):
+                continue
+            if sale_line.analysis.behavior == 'additional':
+                continue
+
+            if not Analysis.is_typified(
+                    sale_line.analysis, sale_line.product_type,
+                    sale_line.matrix):
+                raise UserError(gettext('lims.msg_not_typified',
+                    analysis=sale_line.analysis.rec_name,
+                    product_type=sale_line.product_type.rec_name,
+                    matrix=sale_line.matrix.rec_name))
+
+            if (sale_line.method
+                    and sale_line.analysis.type == 'analysis'
+                    and not Typification.search_count([
+                        ('product_type', '=', sale_line.product_type.id),
+                        ('matrix', '=', sale_line.matrix.id),
+                        ('analysis', '=', sale_line.analysis.id),
+                        ('method', '=', sale_line.method.id),
+                        ('valid', '=', True),
+                        ])):
+                raise UserError(gettext(
+                    'lims_sale.msg_sale_line_not_typified_method',
+                    analysis=sale_line.analysis.rec_name,
+                    method=sale_line.method.rec_name,
+                    product_type=sale_line.product_type.rec_name,
+                    matrix=sale_line.matrix.rec_name))
 
     @classmethod
     def create(cls, vlist):

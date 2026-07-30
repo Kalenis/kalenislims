@@ -358,6 +358,10 @@ msgctxt "model:ir.message,text:msg_sale_line_analysis_product"
 msgid "Product \"%(product)s\" does not correspond to analysis \"%(analysis)s\"."
 msgstr "El producto \"%(product)s\" no corresponde al análisis \"%(analysis)s\"."
 
+msgctxt "model:ir.message,text:msg_sale_line_not_typified_method"
+msgid "The analysis \"%(analysis)s\" with method \"%(method)s\" is not typified for product type \"%(product_type)s\" and matrix \"%(matrix)s\"."
+msgstr "El análisis \"%(analysis)s\" con método \"%(method)s\" no está tipificado para tipo de producto \"%(product_type)s\" y matriz \"%(matrix)s\"."
+
 msgctxt "model:ir.message,text:msg_services_without_quotation"
 msgid "This entry exceeds the amount of quoted services."
 msgstr "Este ingreso excede la cantidad de servicios presupuestados."

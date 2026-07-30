@@ -16,5 +16,8 @@
         <record model="ir.message" id="msg_sale_line_analysis_product">
             <field name="text">Product "%(product)s" does not correspond to analysis "%(analysis)s".</field>
         </record>
+        <record model="ir.message" id="msg_sale_line_not_typified_method">
+            <field name="text">The analysis "%(analysis)s" with method "%(method)s" is not typified for product type "%(product_type)s" and matrix "%(matrix)s".</field>
+        </record>
     </data>
 </tryton>
