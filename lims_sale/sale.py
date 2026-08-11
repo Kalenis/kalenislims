@@ -86,6 +86,8 @@ class Sale(metaclass=PoolMeta):
             cls.state.selection.append(state)
         cls.shipping_date.states['readonly'] = Eval('state').in_(
             ['processing', 'expired', 'done', 'cancelled'])
+        cls.sale_date.states['required'] = ~Eval('state').in_(
+            ['draft', 'quotation', 'cancelled', 'expired'])
         cls.invoice_party.required = True
         cls.invoice_party.select = True
         cls.invoice_party.domain = ['OR',
@@ -485,14 +487,24 @@ class Sale(metaclass=PoolMeta):
         Cron - Update Expired Sales Status
         '''
         Date = Pool().get('ir.date')
+        cursor = Transaction().connection.cursor()
         expired_sales = cls.search([
             ('expiration_date', '<', Date.today()),
             ('state', 'in', ['quotation', 'processing', 'confirmed']),
             ])
         logger.info('Cron - Updating Expired Sales Status: %s found' %
             str(len(expired_sales)))
-        if expired_sales:
-            cls.write(expired_sales, {'state': 'expired'})
+        for expired_sale in expired_sales:
+            savepoint = 'expire_sale_%s' % expired_sale.id
+            cursor.execute('SAVEPOINT "%s"' % savepoint)
+            try:
+                logger.info('Sale id: %s', expired_sale.id)
+                cls.write([expired_sale], {'state': 'expired'})
+                cursor.execute('RELEASE SAVEPOINT "%s"' % savepoint)
+            except Exception:
+                cursor.execute('ROLLBACK TO SAVEPOINT "%s"' % savepoint)
+                logger.exception(
+                    'Cron - Failed to expire sale id %s', expired_sale.id)
 
 
 class Sale2(metaclass=PoolMeta):
