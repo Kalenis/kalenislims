@@ -301,6 +301,9 @@
         <record model="ir.message" id="msg_replace_number">
             <field name="text">Supplants the Results Report N° %(report)s</field>
         </record>
+        <record model="ir.message" id="msg_modification_certificate">
+            <field name="text">Modification to report N° %(report)s</field>
+        </record>
         <record model="ir.message" id="msg_detection_limit">
             <field name="text">(LoD = %(detection_limit)s %(initial_unit)s)</field>
         </record>
@@ -441,6 +444,15 @@
         </record>
         <record model="ir.message" id="msg_cancellation_reason_unique_id">
             <field name="text">Cancellation reason code must be unique</field>
+        </record>
+        <record model="ir.message" id="msg_results_report_reason_unique_id">
+            <field name="text">Results report reason code must be unique</field>
+        </record>
+        <record model="ir.message" id="msg_default_results_report_reason">
+            <field name="text">There is already a default reason for this type</field>
+        </record>
+        <record model="ir.message" id="msg_results_report_reason_type">
+            <field name="text">A results report reason must apply to review and/or annulment</field>
         </record>
         <record model="ir.message" id="msg_laboratory_code_unique_id">
             <field name="text">Laboratory code must be unique</field>

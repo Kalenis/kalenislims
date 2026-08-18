@@ -397,6 +397,74 @@
             <field name="perm_delete" eval="True"/>
         </record>
 
+        <record model="ir.model.field.access"
+            id="access_results_report_version_detail_annulment_reason_code">
+            <field name="field"
+                search="[('name', '=', 'annulment_reason_code'), ('model.model', '=', 'lims.results_report.version.detail')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.field.access"
+            id="access_results_report_version_detail_annulment_reason_code_group_lims_laboratory_reports_qa">
+            <field name="field"
+                search="[('name', '=', 'annulment_reason_code'), ('model.model', '=', 'lims.results_report.version.detail')]"/>
+            <field name="group" ref="group_lims_laboratory_reports_qa"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
+<!-- Results Report Reason -->
+
+        <record model="ir.ui.view" id="lims_results_report_reason_view_form">
+            <field name="model">lims.results_report.reason</field>
+            <field name="type">form</field>
+            <field name="name">results_report_reason_form</field>
+        </record>
+        <record model="ir.ui.view" id="lims_results_report_reason_view_list">
+            <field name="model">lims.results_report.reason</field>
+            <field name="type">tree</field>
+            <field name="name">results_report_reason_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_lims_results_report_reason_list">
+            <field name="name">Results Report Reasons</field>
+            <field name="res_model">lims.results_report.reason</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_results_report_reason_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="lims_results_report_reason_view_list"/>
+            <field name="act_window" ref="act_lims_results_report_reason_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_lims_results_report_reason_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="lims_results_report_reason_view_form"/>
+            <field name="act_window" ref="act_lims_results_report_reason_list"/>
+        </record>
+
+        <menuitem action="act_lims_results_report_reason_list"
+            id="lims_results_report_reason_menu"
+            parent="lims_config_report" sequence="10"/>
+
+        <record model="ir.model.access" id="access_results_report_reason">
+            <field name="model" search="[('model', '=', 'lims.results_report.reason')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+        <record model="ir.model.access" id="access_results_report_reason_group_conf_report_admin">
+            <field name="model" search="[('model', '=', 'lims.results_report.reason')]"/>
+            <field name="group" ref="group_lims_conf_report_admin"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
+        </record>
+
 <!-- Results Report Version Detail Signer -->
 
         <record model="ir.ui.view" id="lims_results_report_version_detail_signer_view_list">

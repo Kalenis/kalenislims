@@ -284,6 +284,8 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
         'Allow reprinting any version of Result Reports')
     results_report_review_reason_print = fields.Boolean(
         'Print review reason on Result Reports')
+    results_report_reasons_in_comments = fields.Boolean(
+        'Print review and annulment reasons in comments')
     results_decimal_comma = fields.Boolean(
         'Use a comma as the decimal separator in the results',
         help="By default, a period is used ")
@@ -368,6 +370,10 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
 
     @staticmethod
     def default_results_report_review_reason_print():
+        return False
+
+    @staticmethod
+    def default_results_report_reasons_in_comments():
         return False
 
     @staticmethod

@@ -1,7 +1,13 @@
 <?xml version="1.0"?>
 <form>
+    <label name="annulment_reason_code"/>
+    <field name="annulment_reason_code"/>
     <separator name="annulment_reason" colspan="4"/>
     <field name="annulment_reason" colspan="4"/>
     <label name="annulment_reason_print"/>
     <field name="annulment_reason_print"/>
+    <group id="invisible" colspan="4" col="1">
+        <field name="annulment_reasons_available" invisible="1"/>
+        <field name="reason_requires_comments" invisible="1"/>
+    </group>
 </form>

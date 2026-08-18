@@ -17199,3 +17199,104 @@ msgstr "Cancelar"
 msgctxt "wizard_button:lims.update_typification_calculated,start,update:"
 msgid "Update"
 msgstr "Actualizar"
+
+msgctxt "field:lims.configuration,results_report_reasons_in_comments:"
+msgid "Print review and annulment reasons in comments"
+msgstr "Imprimir motivos de revisión y anulación en observaciones"
+
+msgctxt "field:lims.results_report.reason,annulment:"
+msgid "Annulment"
+msgstr "Anulación"
+
+msgctxt "field:lims.results_report.reason,by_default:"
+msgid "By default"
+msgstr "Por defecto"
+
+msgctxt "field:lims.results_report.reason,code:"
+msgid "Code"
+msgstr "Código"
+
+msgctxt "field:lims.results_report.reason,description:"
+msgid "Description"
+msgstr "Descripción"
+
+msgctxt "field:lims.results_report.reason,require_comments:"
+msgid "Require comments"
+msgstr "Requiere comentarios"
+
+msgctxt "field:lims.results_report.reason,review:"
+msgid "Review"
+msgstr "Revisión"
+
+msgctxt "field:lims.results_report.version.detail,annulment_reason_code:"
+msgid "Coded annulment reason"
+msgstr "Motivo de anulación codificado"
+
+msgctxt "field:lims.results_report.version.detail,review_reason_code:"
+msgid "Coded review reason"
+msgstr "Motivo de revisión codificado"
+
+msgctxt "field:lims.notebook.generate_results_report.start,review_reason_code:"
+msgid "Coded review reason"
+msgstr "Motivo de revisión codificado"
+
+msgctxt "field:lims.notebook.generate_results_report.start,review_reasons_available:"
+msgid "Review reasons available"
+msgstr "Motivos de revisión disponibles"
+
+msgctxt "field:lims.notebook.generate_results_report.start,reason_requires_comments:"
+msgid "Reason requires comments"
+msgstr "El motivo requiere comentarios"
+
+msgctxt "field:lims.results_report.version.detail.new_version.start,review_reason_code:"
+msgid "Coded review reason"
+msgstr "Motivo de revisión codificado"
+
+msgctxt "field:lims.results_report.version.detail.new_version.start,review_reasons_available:"
+msgid "Review reasons available"
+msgstr "Motivos de revisión disponibles"
+
+msgctxt "field:lims.results_report.version.detail.new_version.start,reason_requires_comments:"
+msgid "Reason requires comments"
+msgstr "El motivo requiere comentarios"
+
+msgctxt "field:lims.results_report_annulation.start,annulment_reason_code:"
+msgid "Coded annulment reason"
+msgstr "Motivo de anulación codificado"
+
+msgctxt "field:lims.results_report_annulation.start,annulment_reasons_available:"
+msgid "Annulment reasons available"
+msgstr "Motivos de anulación disponibles"
+
+msgctxt "field:lims.results_report_annulation.start,reason_requires_comments:"
+msgid "Reason requires comments"
+msgstr "El motivo requiere comentarios"
+
+msgctxt "model:ir.action,name:act_lims_results_report_reason_list"
+msgid "Results Report Reasons"
+msgstr "Motivos de informe de resultados"
+
+msgctxt "model:ir.message,text:msg_modification_certificate"
+msgid "Modification to report N° %(report)s"
+msgstr "Modificación al informe de resultados N° %(report)s"
+
+msgctxt "model:ir.message,text:msg_results_report_reason_unique_id"
+msgid "Results report reason code must be unique"
+msgstr "El código del motivo de informe de resultados debe ser único"
+
+msgctxt "model:ir.message,text:msg_default_results_report_reason"
+msgid "There is already a default reason for this type"
+msgstr "Ya existe un motivo por defecto para este tipo"
+
+msgctxt "model:ir.message,text:msg_results_report_reason_type"
+msgid "A results report reason must apply to review and/or annulment"
+msgstr "Un motivo de informe de resultados debe aplicar a revisión y/o anulación"
+
+msgctxt "model:ir.ui.menu,name:lims_results_report_reason_menu"
+msgid "Results Report Reasons"
+msgstr "Motivos de informe de resultados"
+
+msgctxt "model:lims.results_report.reason,name:"
+msgid "Results Report Reason"
+msgstr "Motivo de informe de resultados"
+

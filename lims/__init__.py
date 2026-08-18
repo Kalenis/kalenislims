@@ -100,6 +100,7 @@ def register():
         notebook.NotebookLineProfessional,
         control_tendency.RangeType,
         results_report.ResultsReportVersion,
+        results_report.ResultsReportReason,
         results_report.ResultsReportVersionDetail,
         results_report.ResultsReportCachedReport,
         results_report.ResultsReportComment,

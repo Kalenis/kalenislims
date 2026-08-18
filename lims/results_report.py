@@ -12,7 +12,7 @@ from trytond.model import (Workflow, ModelView, ModelSQL, Unique, fields,
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
     StateReport, Button
 from trytond.pool import Pool
-from trytond.pyson import PYSONEncoder, Eval, Bool, Not, Or
+from trytond.pyson import PYSONEncoder, Eval, Bool, Not, Or, And
 from trytond.transaction import Transaction
 from trytond.report import Report
 from trytond.rpc import RPC
@@ -705,6 +705,115 @@ class ResultsReportVersion(ModelSQL, ModelView):
     order_party = _order_report_field('party')
 
 
+class ResultsReportReason(ModelSQL, ModelView):
+    'Results Report Reason'
+    __name__ = 'lims.results_report.reason'
+    _rec_name = 'description'
+
+    code = fields.Char('Code', required=True)
+    description = fields.Char('Description', required=True, translate=True)
+    by_default = fields.Boolean('By default')
+    review = fields.Boolean('Review')
+    annulment = fields.Boolean('Annulment')
+    require_comments = fields.Boolean('Require comments')
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        t = cls.__table__()
+        cls._sql_constraints += [
+            ('code_uniq', Unique(t, t.code),
+                'lims.msg_results_report_reason_unique_id'),
+            ]
+
+    @staticmethod
+    def default_by_default():
+        return False
+
+    @staticmethod
+    def default_review():
+        return False
+
+    @staticmethod
+    def default_annulment():
+        return False
+
+    @staticmethod
+    def default_require_comments():
+        return False
+
+    def get_rec_name(self, name):
+        if self.code:
+            return self.code + ' - ' + self.description
+        return self.description
+
+    @classmethod
+    def search_rec_name(cls, name, clause):
+        field = None
+        for field in ('code', 'description'):
+            records = cls.search([(field,) + tuple(clause[1:])], limit=1)
+            if records:
+                break
+        if records:
+            return [(field,) + tuple(clause[1:])]
+        return [(cls._rec_name,) + tuple(clause[1:])]
+
+    @classmethod
+    def validate(cls, reasons):
+        super().validate(reasons)
+        for reason in reasons:
+            reason.check_type()
+            reason.check_default()
+
+    def check_type(self):
+        if not self.review and not self.annulment:
+            raise UserError(gettext(
+                'lims.msg_results_report_reason_type'))
+
+    def check_default(self):
+        if not self.by_default:
+            return
+        if self.review:
+            others = self.search([
+                ('by_default', '=', True),
+                ('review', '=', True),
+                ('id', '!=', self.id),
+                ])
+            if others:
+                raise UserError(gettext(
+                    'lims.msg_default_results_report_reason'))
+        if self.annulment:
+            others = self.search([
+                ('by_default', '=', True),
+                ('annulment', '=', True),
+                ('id', '!=', self.id),
+                ])
+            if others:
+                raise UserError(gettext(
+                    'lims.msg_default_results_report_reason'))
+
+    @classmethod
+    def get_wizard_defaults(cls, kind):
+        available_key = ('review_reasons_available' if kind == 'review'
+            else 'annulment_reasons_available')
+        code_key = ('review_reason_code' if kind == 'review'
+            else 'annulment_reason_code')
+        domain = [(kind, '=', True)]
+        available = bool(cls.search_count(domain))
+        res = {
+            available_key: available,
+            'reason_requires_comments': False,
+            }
+        if available:
+            defaults = cls.search(
+                domain + [('by_default', '=', True)], limit=1)
+            if defaults:
+                res[code_key] = defaults[0].id
+                res['reason_requires_comments'] = bool(
+                    defaults[0].require_comments)
+        return res
+
+
 class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
     'Results Report Version Detail'
     __name__ = 'lims.results_report.version.detail'
@@ -788,6 +897,12 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
     revision_date = fields.DateTime('Revision date', readonly=True)
     release_uid = fields.Many2One('res.user', 'Release user', readonly=True)
     release_date = fields.DateTime('Release date', readonly=True)
+    review_reason_code = fields.Many2One('lims.results_report.reason',
+        'Coded review reason', domain=[('review', '=', True)],
+        states={
+            'readonly': Or(Bool(Eval('valid')), Eval('state') != 'released'),
+            },
+        depends=['state', 'valid'])
     review_reason = fields.Text('Review reason', translate=True,
         states={
             'readonly': Or(Bool(Eval('valid')), Eval('state') != 'released'),
@@ -802,6 +917,9 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
     annulment_uid = fields.Many2One('res.user', 'Annulment user',
         readonly=True)
     annulment_date = fields.DateTime('Annulment date', readonly=True)
+    annulment_reason_code = fields.Many2One('lims.results_report.reason',
+        'Coded annulment reason', domain=[('annulment', '=', True)],
+        states={'readonly': Eval('state') != 'annulled'}, depends=_depends)
     annulment_reason = fields.Text('Annulment reason', translate=True,
         states={'readonly': Eval('state') != 'annulled'}, depends=_depends)
     annulment_reason_print = fields.Boolean('Print annulment reason',
@@ -1037,6 +1155,30 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
 
     def get_rec_name(self, name):
         return '%s-%s' % (self.report_version.number, self.number)
+
+    def get_display_number(self):
+        return self.rec_name
+
+    def get_previous_number(self):
+        if self.number == '1':
+            return ''
+        return '%s-%s' % (self.report_version.number, int(self.number) - 1)
+
+    def get_printable_review_reason(self):
+        parts = []
+        if self.review_reason_code:
+            parts.append(self.review_reason_code.description)
+        if self.review_reason:
+            parts.append(self.review_reason)
+        return '\n'.join(parts)
+
+    def get_printable_annulment_reason(self):
+        parts = []
+        if self.annulment_reason_code:
+            parts.append(self.annulment_reason_code.description)
+        if self.annulment_reason:
+            parts.append(self.annulment_reason)
+        return '\n'.join(parts)
 
     def get_report_section(self, name):
         if self.laboratory:
@@ -1358,17 +1500,20 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def update_review_reason(cls, detail, review_reason,
-            review_reason_print):
+            review_reason_print, review_reason_code=None):
         valid_detail = cls.search([
             ('report_version', '=', detail.report_version.id),
             ('valid', '=', True),
             ('type', '!=', 'preliminary'),
             ], limit=1)
         if valid_detail:
-            cls.write(valid_detail, {
+            values = {
                 'review_reason': review_reason,
                 'review_reason_print': review_reason_print,
-                })
+                }
+            if review_reason_code:
+                values['review_reason_code'] = review_reason_code.id
+            cls.write(valid_detail, values)
 
     @classmethod
     @ModelView.button
@@ -2638,19 +2783,34 @@ class GenerateReportStart(ModelView):
         states={'invisible': ~Eval('type').in_([
             'complementary', 'corrective'])},
         depends=['type'])
+    review_reason_code = fields.Many2One('lims.results_report.reason',
+        'Coded review reason', domain=[('review', '=', True)],
+        states={
+            'invisible': ~Eval('type').in_([
+                'complementary', 'corrective']),
+            'required': And(
+                Eval('type').in_(['complementary', 'corrective']),
+                Bool(Eval('review_reasons_available'))),
+            },
+        depends=['type', 'review_reasons_available'])
     review_reason = fields.Text('Review reason',
         states={
             'invisible': ~Eval('type').in_([
                 'complementary', 'corrective']),
-            'required': Eval('type').in_([
-                'complementary', 'corrective']),
+            'required': And(
+                Eval('type').in_(['complementary', 'corrective']),
+                Or(~Bool(Eval('review_reason_code')),
+                    Bool(Eval('reason_requires_comments')))),
             },
-        depends=['type'])
+        depends=['type', 'review_reason_code',
+            'reason_requires_comments'])
     review_reason_print = fields.Boolean(
         'Print review reason in next version',
         states={'invisible': ~Eval('type').in_([
             'complementary', 'corrective'])},
         depends=['type'])
+    review_reasons_available = fields.Boolean('Review reasons available')
+    reason_requires_comments = fields.Boolean('Reason requires comments')
     reports_created = fields.One2Many('lims.results_report.version.detail',
         None, 'Reports created')
     group_samples = fields.Boolean('Group samples in the same report')
@@ -2676,6 +2836,12 @@ class GenerateReportStart(ModelView):
         if self.corrective:
             return 'corrective'
         return 'complementary'
+
+    @fields.depends('review_reason_code')
+    def on_change_with_reason_requires_comments(self, name=None):
+        if self.review_reason_code:
+            return bool(self.review_reason_code.require_comments)
+        return False
 
     def _get_report_state(self):
         pool = Pool()
@@ -2732,6 +2898,8 @@ class GenerateReport(Wizard):
             'append_samples': True,
             'review_reason_print': config_.results_report_review_reason_print,
             }
+        Reason = pool.get('lims.results_report.reason')
+        res.update(Reason.get_wizard_defaults('review'))
 
         party_key = None
         entry = None
@@ -2904,7 +3072,8 @@ class GenerateReport(Wizard):
                     ResultsDetail.update_from_valid_version([detail])
                     ResultsDetail.update_review_reason(detail,
                         self.start.review_reason,
-                        self.start.review_reason_print)
+                        self.start.review_reason_print,
+                        self.start.review_reason_code)
                     reports_details = [detail.id]
                 else:
                     draft_detail = draft_detail[0]
@@ -3107,7 +3276,8 @@ class GenerateReport(Wizard):
             ResultsDetail.update_from_valid_version([detail])
             ResultsDetail.update_review_reason(detail,
                 self.start.review_reason,
-                self.start.review_reason_print)
+                self.start.review_reason_print,
+                self.start.review_reason_code)
             reports_details = [detail.id]
             return reports_details
 
@@ -3477,14 +3647,31 @@ class ResultsReportAnnulationStart(ModelView):
     'Report Annulation'
     __name__ = 'lims.results_report_annulation.start'
 
-    annulment_reason = fields.Text('Annulment reason', required=True,
-        translate=True)
+    annulment_reason_code = fields.Many2One('lims.results_report.reason',
+        'Coded annulment reason', domain=[('annulment', '=', True)],
+        states={'required': Bool(Eval('annulment_reasons_available'))},
+        depends=['annulment_reasons_available'])
+    annulment_reason = fields.Text('Annulment reason', translate=True,
+        states={
+            'required': Or(~Bool(Eval('annulment_reason_code')),
+                Bool(Eval('reason_requires_comments'))),
+            },
+        depends=['annulment_reason_code', 'reason_requires_comments'])
     annulment_reason_print = fields.Boolean(
         'Print annulment reason in next version')
+    annulment_reasons_available = fields.Boolean(
+        'Annulment reasons available')
+    reason_requires_comments = fields.Boolean('Reason requires comments')
 
     @staticmethod
     def default_annulment_reason_print():
         return True
+
+    @fields.depends('annulment_reason_code')
+    def on_change_with_reason_requires_comments(self, name=None):
+        if self.annulment_reason_code:
+            return bool(self.annulment_reason_code.require_comments)
+        return False
 
 
 class ResultsReportAnnulation(Wizard):
@@ -3498,6 +3685,14 @@ class ResultsReportAnnulation(Wizard):
             ])
     annul = StateTransition()
 
+    def default_start(self, fields):
+        Reason = Pool().get('lims.results_report.reason')
+        res = {
+            'annulment_reason_print': True,
+            }
+        res.update(Reason.get_wizard_defaults('annulment'))
+        return res
+
     def transition_annul(self):
         pool = Pool()
         ResultsDetail = pool.get('lims.results_report.version.detail')
@@ -3508,14 +3703,18 @@ class ResultsReportAnnulation(Wizard):
             ])
         if details:
             ResultsDetail.unlink_notebook_lines(details)
-            ResultsDetail.write(details, {
+            values = {
                 'state': 'annulled',
                 'valid': False,
                 'annulment_uid': int(Transaction().user),
                 'annulment_date': datetime.now(),
                 'annulment_reason': self.start.annulment_reason,
                 'annulment_reason_print': self.start.annulment_reason_print,
-                })
+                }
+            if self.start.annulment_reason_code:
+                values['annulment_reason_code'] = (
+                    self.start.annulment_reason_code.id)
+            ResultsDetail.write(details, values)
             cached_reports = CachedReport.search([
                 ('version_detail', 'in', [d.id for d in details]),
                 ])
@@ -3538,10 +3737,20 @@ class NewResultsReportVersionStart(ModelView):
         states={'invisible': ~Eval('type').in_([
             'complementary', 'corrective'])},
         depends=['type'])
-    review_reason = fields.Text('Review reason', required=True,
-        translate=True)
+    review_reason_code = fields.Many2One('lims.results_report.reason',
+        'Coded review reason', domain=[('review', '=', True)],
+        states={'required': Bool(Eval('review_reasons_available'))},
+        depends=['review_reasons_available'])
+    review_reason = fields.Text('Review reason', translate=True,
+        states={
+            'required': Or(~Bool(Eval('review_reason_code')),
+                Bool(Eval('reason_requires_comments'))),
+            },
+        depends=['review_reason_code', 'reason_requires_comments'])
     review_reason_print = fields.Boolean(
         'Print review reason in next version')
+    review_reasons_available = fields.Boolean('Review reasons available')
+    reason_requires_comments = fields.Boolean('Reason requires comments')
     reports_created = fields.Many2Many('lims.results_report.version.detail',
         None, None, 'Reports created')
 
@@ -3556,6 +3765,12 @@ class NewResultsReportVersionStart(ModelView):
         if self.corrective:
             return 'corrective'
         return 'complementary'
+
+    @fields.depends('review_reason_code')
+    def on_change_with_reason_requires_comments(self, name=None):
+        if self.review_reason_code:
+            return bool(self.review_reason_code.require_comments)
+        return False
 
 
 class NewResultsReportVersion(Wizard):
@@ -3597,6 +3812,8 @@ class NewResultsReportVersion(Wizard):
             'corrective': False,
             'review_reason_print': config_.results_report_review_reason_print,
             }
+        Reason = pool.get('lims.results_report.reason')
+        res.update(Reason.get_wizard_defaults('review'))
         valid_details = ResultsDetail.search([
             ('id', 'in', Transaction().context['active_ids']),
             ('state', '=', 'released'),
@@ -3628,10 +3845,13 @@ class NewResultsReportVersion(Wizard):
             ResultsDetail.update_from_valid_version([new_version])
             reports_created.append(new_version.id)
 
-        ResultsDetail.write(valid_details, {
+        values = {
             'review_reason': self.start.review_reason,
             'review_reason_print': self.start.review_reason_print,
-            })
+            }
+        if self.start.review_reason_code:
+            values['review_reason_code'] = self.start.review_reason_code.id
+        ResultsDetail.write(valid_details, values)
         self.start.reports_created = reports_created
         return 'open_'
 
@@ -3837,10 +4057,11 @@ class ResultReport(Report):
         report_context['replace_number'] = ''
         if report.number != '1':
             with Transaction().set_context(language=lang_code):
-                prev_number = "%s-%s" % (report.report_version.number,
-                    int(report.number) - 1)
-                report_context['replace_number'] = (
-                    gettext('lims.msg_replace_number', report=prev_number))
+                prev_number = report.get_previous_number()
+                if prev_number:
+                    report_context['replace_number'] = (
+                        gettext('lims.msg_replace_number',
+                            report=prev_number))
         report_context['print_date'] = get_print_date().date()
         report_context['convert_timezone_datetime'] = \
             company.convert_timezone_datetime
@@ -4378,21 +4599,65 @@ class ResultReport(Report):
 
         report_context['annulment_reason'] = ''
         report_context['review_reason'] = ''
+        prev_report = None
         if report.number != '1':
             with Transaction().set_context(language=lang_code):
                 prev_report = ResultsDetail.search([
                     ('report_version', '=', report.report_version.id),
                     ('number', '=', str(int(report.number) - 1)),
-                    ])
+                    ], limit=1)
                 if prev_report:
-                    if prev_report[0].annulment_reason_print:
+                    prev = prev_report[0]
+                    if prev.annulment_reason_print:
                         report_context['annulment_reason'] = (
-                            prev_report[0].annulment_reason)
-                    if prev_report[0].review_reason_print:
+                            prev.get_printable_annulment_reason())
+                    if prev.review_reason_print:
                         report_context['review_reason'] = (
-                            prev_report[0].review_reason)
+                            prev.get_printable_review_reason())
+
+                    Configuration = pool.get('lims.configuration')
+                    config_ = Configuration(1)
+                    if config_.results_report_reasons_in_comments:
+                        extra = []
+                        review_text = prev.get_printable_review_reason()
+                        if (prev.review_reason_print and review_text
+                                and prev.type != 'preliminary'):
+                            extra.append(gettext(
+                                'lims.msg_modification_certificate',
+                                report=report.get_previous_number()))
+                            extra.append(review_text)
+                        annul_text = prev.get_printable_annulment_reason()
+                        if prev.annulment_reason_print and annul_text:
+                            extra.append(annul_text)
+                        if extra:
+                            html = (
+                                getattr(report, 'template_type', None)
+                                == 'base')
+                            prefix = cls._format_comments_prefix(extra, html)
+                            comments = report_context['comments']
+                            if comments:
+                                if html:
+                                    report_context['comments'] = (
+                                        prefix + comments)
+                                else:
+                                    report_context['comments'] = (
+                                        prefix + '\n' + comments)
+                            else:
+                                report_context['comments'] = prefix
 
         return report_context
+
+    @classmethod
+    def _format_comments_prefix(cls, lines, html):
+        lines = [l for l in lines if l]
+        if not lines:
+            return ''
+        if html:
+            parts = []
+            for line in lines:
+                parts.append('<p>%s</p>' % line.replace('\n', '<br/>'))
+            return ''.join(parts)
+        return '\n'.join(lines)
 
     @classmethod
     def get_accreditation(cls, product_type, matrix, analysis, method,

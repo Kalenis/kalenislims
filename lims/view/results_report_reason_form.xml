@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<form>
+    <label name="code"/>
+    <field name="code"/>
+    <label name="description"/>
+    <field name="description"/>
+    <label name="review"/>
+    <field name="review"/>
+    <label name="annulment"/>
+    <field name="annulment"/>
+    <label name="by_default"/>
+    <field name="by_default"/>
+    <label name="require_comments"/>
+    <field name="require_comments"/>
+</form>

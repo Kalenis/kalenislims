@@ -4,11 +4,15 @@
     <field name="type"/>
     <label name="corrective"/>
     <field name="corrective" xexpand="0"/>
+    <label name="review_reason_code"/>
+    <field name="review_reason_code"/>
     <separator name="review_reason" colspan="4"/>
     <field name="review_reason" colspan="4"/>
     <label name="review_reason_print"/>
     <field name="review_reason_print"/>
     <group id="invisible" colspan="4" col="1">
         <field name="preliminary" invisible="1"/>
+        <field name="review_reasons_available" invisible="1"/>
+        <field name="reason_requires_comments" invisible="1"/>
     </group>
 </form>

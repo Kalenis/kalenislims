@@ -52,6 +52,8 @@
             <field name="waiting_reason" colspan="4"/>
         </page>
         <page id="annulation" string="Annulation">
+            <label name="annulment_reason_code"/>
+            <field name="annulment_reason_code"/>
             <separator name="annulment_reason" colspan="4"/>
             <field name="annulment_reason" colspan="4"/>
             <label name="annulment_date"/>
@@ -60,6 +62,8 @@
             <field name="annulment_reason_print"/>
         </page>
         <page id="review" string="Review">
+            <label name="review_reason_code"/>
+            <field name="review_reason_code"/>
             <separator name="review_reason" colspan="4"/>
             <field name="review_reason" colspan="4"/>
             <label name="review_reason_print"/>
