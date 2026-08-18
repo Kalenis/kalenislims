@@ -4599,7 +4599,10 @@ class ResultReport(Report):
 
         report_context['annulment_reason'] = ''
         report_context['review_reason'] = ''
-        prev_report = None
+        report_context['comments_prefix'] = ''
+        html = getattr(report, 'template_type', None) == 'base'
+        stored_comments = report.comments or ''
+        prefix = ''
         if report.number != '1':
             with Transaction().set_context(language=lang_code):
                 prev_report = ResultsDetail.search([
@@ -4630,10 +4633,8 @@ class ResultReport(Report):
                         if prev.annulment_reason_print and annul_text:
                             extra.append(annul_text)
                         if extra:
-                            html = (
-                                getattr(report, 'template_type', None)
-                                == 'base')
                             prefix = cls._format_comments_prefix(extra, html)
+                            report_context['comments_prefix'] = prefix
                             comments = report_context['comments']
                             if comments:
                                 if html:
@@ -4644,6 +4645,13 @@ class ResultReport(Report):
                                         prefix + '\n' + comments)
                             else:
                                 report_context['comments'] = prefix
+
+        if prefix and stored_comments:
+            report_context['observations'] = (
+                prefix + stored_comments if html
+                else prefix + '\n' + stored_comments)
+        else:
+            report_context['observations'] = prefix or stored_comments
 
         return report_context
 
