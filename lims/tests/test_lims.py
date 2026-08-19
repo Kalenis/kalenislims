@@ -113,6 +113,25 @@ class LimsTestCase(ModuleTestCase):
         result = dec.get_target_date(date(2026, 12, 28), 5)
         self.assertEqual(result, date(2027, 1, 5))
 
+    @with_transaction()
+    def test_report_kind_complete_and_incomplete(self):
+        "Report type follows notebook completeness, not a batch flag"
+        GenerateReport = Pool().get('lims.notebook.generate_results_report')
+
+        class Notebook(object):
+            def __init__(self, state):
+                self.state = state
+
+        self.assertEqual(
+            GenerateReport._report_kind(Notebook('complete')),
+            ('final', 'complete'))
+        self.assertEqual(
+            GenerateReport._report_kind(Notebook('in_progress')),
+            ('preliminary', 'in_progress'))
+        self.assertEqual(
+            GenerateReport._report_kind(Notebook(None)),
+            ('preliminary', 'in_progress'))
+
 
 def suite():
     suite = trytond.tests.test_tryton.suite()

@@ -568,6 +568,12 @@
         <record model="ir.message" id="msg_invalid_report_state">
             <field name="text">The target Results Report does not have a valid state</field>
         </record>
+        <record model="ir.message" id="msg_mixed_sample_states">
+            <field name="text">Cannot mix complete and in-progress samples in the same target report</field>
+        </record>
+        <record model="ir.message" id="msg_draft_different_type">
+            <field name="text">The target Results Report already has a draft of a different type. Complete or delete that draft first.</field>
+        </record>
         <record model="ir.message" id="msg_service_default_laboratory">
             <field name="text">You cannot copy service "%(analysis)s" because the assigned laboratory (%(laboratory)s) is not the default one.</field>
         </record>

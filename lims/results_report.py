@@ -2875,6 +2875,33 @@ class GenerateReport(Wizard):
     generate = StateTransition()
     open_ = StateAction('lims.act_lims_results_report_version_detail')
 
+    @staticmethod
+    def _report_kind(notebook):
+        if notebook.state != 'complete':
+            return 'preliminary', 'in_progress'
+        return 'final', 'complete'
+
+    def _find_draft_detail(self, ResultsDetail, version_id, report_type):
+        draft_detail = ResultsDetail.search([
+            ('report_version', '=', version_id),
+            ('state', '=', 'draft'),
+            ('type', '=', report_type),
+            ], limit=1)
+        if draft_detail:
+            return draft_detail[0]
+        if ResultsDetail.search_count([
+                ('report_version', '=', version_id),
+                ('state', '=', 'draft'),
+                ]) > 0:
+            raise UserError(gettext('lims.msg_draft_different_type'))
+        if ResultsDetail.search_count([
+                ('report_version', '=', version_id),
+                ('state', 'not in', ['released', 'annulled']),
+                ]) > 0:
+            raise UserError(gettext(
+                'lims.msg_invalid_report_state'))
+        return None
+
     def default_start(self, fields):
         pool = Pool()
         Configuration = pool.get('lims.configuration')
@@ -2907,6 +2934,8 @@ class GenerateReport(Wizard):
         cie_fraction_type = None
         current_reports = []
         default_report_only_current = True
+        has_complete = False
+        has_incomplete = False
 
         for notebook in Notebook.browse(Transaction().context['active_ids']):
             res['notebooks'].append(notebook.id)
@@ -2948,8 +2977,14 @@ class GenerateReport(Wizard):
                         res['report_readonly'] = True
 
             if notebook.state != 'complete':
-                res['preliminary'] = True
-                res['type'] = 'preliminary'
+                has_incomplete = True
+            else:
+                has_complete = True
+
+        if has_incomplete and not has_complete:
+            res['preliminary'] = True
+            res['type'] = 'preliminary'
+        mixed = has_complete and has_incomplete
 
         if not res['report_readonly']:
             if current_reports:
@@ -2965,7 +3000,7 @@ class GenerateReport(Wizard):
             if reports:
                 res['report_domain'] = [r.id for r in reports]
 
-        if res['report_domain'] and entry != -1:
+        if res['report_domain'] and entry != -1 and not mixed:
             if current_reports:
                 clause = [
                     ('report_version.results_report.id', 'in',
@@ -3012,6 +3047,9 @@ class GenerateReport(Wizard):
         corrected = self.start.corrective
 
         if self.start.report:  # Result report selected
+            kinds = {self._report_kind(n)[0] for n in self.start.notebooks}
+            if len(kinds) > 1:
+                raise UserError(gettext('lims.msg_mixed_sample_states'))
             samples = []
             extra_signers = set()
             certifications = set()
@@ -3055,18 +3093,9 @@ class GenerateReport(Wizard):
                 reports_details = [d.id for d in version.details]
             else:
                 actual_version = actual_version[0]
-                draft_detail = ResultsDetail.search([
-                    ('report_version', '=', actual_version.id),
-                    ('state', '=', 'draft'),
-                    ], limit=1)
+                draft_detail = self._find_draft_detail(
+                    ResultsDetail, actual_version.id, details['type'])
                 if not draft_detail:
-                    if ResultsDetail.search_count([
-                            ('report_version', '=', actual_version.id),
-                            ('state', 'not in', ['released', 'annulled']),
-                            ]) > 0:
-                        raise UserError(gettext(
-                            'lims.msg_invalid_report_state'))
-
                     details['report_version'] = actual_version.id
                     detail, = ResultsDetail.create([details])
                     ResultsDetail.update_from_valid_version([detail])
@@ -3076,7 +3105,6 @@ class GenerateReport(Wizard):
                         self.start.review_reason_code)
                     reports_details = [detail.id]
                 else:
-                    draft_detail = draft_detail[0]
                     for sample in samples:
                         existing_sample = ResultsSample.search([
                             ('version_detail', '=', draft_detail.id),
@@ -3102,7 +3130,8 @@ class GenerateReport(Wizard):
 
             parties = {}
             for notebook in self.start.notebooks:
-                key = self._get_report_grouper(notebook)
+                kind, line_state = self._report_kind(notebook)
+                key = (self._get_report_grouper(notebook), kind)
                 if key not in parties:
                     parties[key] = {
                         'party': notebook.party.id,
@@ -3112,10 +3141,11 @@ class GenerateReport(Wizard):
                             notebook.fraction.cie_fraction_type),
                         'report_language': (
                             notebook.fraction.entry.report_language.id),
+                        'kind': kind,
                         'lines': [],
                         }
                 lines = notebook._get_lines_for_reporting(laboratory_id,
-                    state)
+                    line_state)
                 parties[key]['lines'].extend(lines)
 
             reports_details = []
@@ -3158,7 +3188,7 @@ class GenerateReport(Wizard):
                         'professional': signer_id,
                         } for signer_id in extra_signers]
                     details = {
-                        'type': self.start.type,
+                        'type': party['kind'],
                         'signatories': [('create',
                             signatories + extra_signatories)],
                         'certifications': [('add', list(certifications))],
@@ -3259,18 +3289,9 @@ class GenerateReport(Wizard):
             return reports_details
 
         actual_version = actual_version[0]
-        draft_detail = ResultsDetail.search([
-            ('report_version', '=', actual_version.id),
-            ('state', '=', 'draft'),
-            ], limit=1)
+        draft_detail = self._find_draft_detail(
+            ResultsDetail, actual_version.id, details['type'])
         if not draft_detail:
-            if ResultsDetail.search_count([
-                    ('report_version', '=', actual_version.id),
-                    ('state', 'not in', ['released', 'annulled']),
-                    ]) > 0:
-                raise UserError(gettext(
-                    'lims.msg_invalid_report_state'))
-
             details['report_version'] = actual_version.id
             detail, = ResultsDetail.create([details])
             ResultsDetail.update_from_valid_version([detail])
@@ -3281,7 +3302,6 @@ class GenerateReport(Wizard):
             reports_details = [detail.id]
             return reports_details
 
-        draft_detail = draft_detail[0]
         for sample in samples:
             existing_sample = ResultsSample.search([
                 ('version_detail', '=', draft_detail.id),
