@@ -120,6 +120,20 @@
           <field name="action" ref="wiz_invoice_line_create_invoice"/>
       </record>
 
+<!-- Wizard Release Invoice Lines -->
+
+      <record model="ir.action.wizard" id="act_release_invoice_lines">
+          <field name="name">Release Invoice Lines</field>
+          <field name="wiz_name">account.invoice.release_lines</field>
+          <field name="model">account.invoice.line</field>
+      </record>
+
+      <record model="ir.action.keyword" id="act_release_invoice_lines_keyword">
+          <field name="keyword">form_action</field>
+          <field name="model">account.invoice.line,-1</field>
+          <field name="action" ref="act_release_invoice_lines"/>
+      </record>
+
 <!-- Cron Send Of Invoice -->
 
         <record model="ir.cron" id="cron_account_invoice_send_invoice">

@@ -412,6 +412,88 @@ class InvoiceLine(metaclass=PoolMeta):
         return parties
 
 
+class CreditInvoice(metaclass=PoolMeta):
+    """
+    Extend `account.invoice.credit` wizard to keep LIMS invoice lines
+    available for re-invoicing after generating a Credit Note with
+    "with_refund" (con reembolso / set off).
+
+    The core Tryton credit note flow cancels the original invoice, but
+    leaves its `account.invoice.line` records linked to that invoice.
+    Our re-invoicing flow expects `account.invoice.line.invoice IS NULL`.
+    """
+
+    __name__ = 'account.invoice.credit'
+
+    def do_credit(self, action):
+        pool = Pool()
+        Invoice = pool.get('account.invoice')
+        InvoiceLine = pool.get('account.invoice.line')
+
+        # the core wizard determine invoice cancel
+        # and credit creation. We keep that behavior via `super()`.
+        refund = getattr(self.start, 'with_refund', False)
+        invoices = Invoice.browse(Transaction().context['active_ids'])
+
+        SaleLine = None
+        try:
+            SaleLine = pool.get('sale.line')
+        except Exception:
+            # sale is optional in some installations; if it's missing we just
+            # won't skip sale-origin lines.
+            SaleLine = None
+
+        if refund:
+            # Remove irrelevant reconciliations/payments before super().do_credit
+            for invoice in invoices:
+                to_remove = []
+                lines_to_pay = getattr(invoice, 'lines_to_pay', []) or []
+                reconciliations = [l.reconciliation for l in lines_to_pay]
+                for payment_line in getattr(invoice, 'payment_lines', []) or []:
+                    if (not payment_line.reconciliation or
+                            payment_line.reconciliation not in reconciliations):
+                        to_remove.append(payment_line.id)
+                if to_remove:
+                    Invoice.write([invoice], {
+                        'payment_lines': [('remove', to_remove)],
+                        })
+
+        action, data = super().do_credit(action)
+
+        if refund:
+            # Duplicate non-sale lines into standalone invoice lines
+            # (invoice=None), so the LIMS flow can pick them up again for
+            # new invoicing.
+            old_lines_to_unlink = []
+            for invoice in invoices:
+                if invoice.type == 'out':
+                    for line in invoice.lines:
+                        if line.type != 'line':
+                            continue
+                        if SaleLine and isinstance(line.origin, SaleLine):
+                            continue
+                        InvoiceLine.copy([line], default={
+                            'invoice': None,
+                            'invoice_type': invoice.type,
+                            'party': invoice.party,
+                            'origin': (str(line.origin) if line.origin
+                                else None),
+                            })
+
+                # For LIMS service-origin lines, also clear `origin` on the
+                # original line record to avoid reusing/copying wrong targets.
+                for line in invoice.lines:
+                    if line.origin and line.origin.__name__ == 'lims.service':
+                        old_line = InvoiceLine(line.id)
+                        old_line.origin = None
+                        old_lines_to_unlink.append(old_line)
+
+            if old_lines_to_unlink:
+                InvoiceLine.save(old_lines_to_unlink)
+
+        return action, data
+
+
 class PopulateInvoiceContactsStart(ModelView):
     'Populate Invoice Contacts Start'
     __name__ = 'account.invoice.populate_invoice_contacts.start'
@@ -634,6 +716,31 @@ class CreateInvoice(Wizard):
             invoice.update_taxes()
             res.append(invoice.id)
         return res
+
+    def end(self):
+        return 'reload'
+
+
+class ReleaseInvoiceLines(Wizard):
+    'Release Invoice Lines'
+    __name__ = 'account.invoice.release_lines'
+
+    start_state = 'release'
+    release = StateTransition()
+
+    def transition_release(self):
+        pool = Pool()
+        InvoiceLine = pool.get('account.invoice.line')
+
+        to_release = []
+        for line in self.records:
+            # Only detach lines from invoices still in draft.
+            if line.invoice and line.invoice_state == 'draft':
+                to_release.append(line)
+        if to_release:
+            InvoiceLine.write(to_release, {'invoice': None})
+
+        return 'end'
 
     def end(self):
         return 'reload'

@@ -49,6 +49,8 @@ def register():
         invoice.SendOfInvoice,
         invoice.ForceReadyToInvoice,
         invoice.CreateInvoice,
+        invoice.CreditInvoice,
+        invoice.ReleaseInvoiceLines,
         module='lims_account_invoice', type_='wizard')
     Pool.register(
         lims.EntriesReadyForInvoicingSpreadsheet,
