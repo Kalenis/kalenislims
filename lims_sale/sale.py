@@ -870,6 +870,48 @@ class SaleLine(metaclass=PoolMeta):
         return sale_lines
 
     @classmethod
+    def _get_typified_additional_ids(cls, sale_line):
+        pool = Pool()
+        Typification = pool.get('lims.typification')
+        Analysis = pool.get('lims.analysis')
+
+        if (not sale_line.product_type or not sale_line.matrix or
+                not sale_line.analysis):
+            return set()
+
+        analysis = [(sale_line.analysis.id,
+            sale_line.method and sale_line.method.id or None)]
+        analysis.extend(Analysis.get_included_analysis_method(
+            sale_line.analysis.id))
+        included_analysis_id = [a[0] for a in analysis]
+
+        additional_ids = set()
+        for a in analysis:
+            clause = [
+                ('product_type', '=', sale_line.product_type.id),
+                ('matrix', '=', sale_line.matrix.id),
+                ('analysis', '=', a[0]),
+                ('valid', '=', True),
+                ]
+            if a[1]:
+                clause.append(('method', '=', a[1]))
+            else:
+                clause.append(('by_default', '=', True))
+            typifications = Typification.search(clause)
+            if not typifications:
+                continue
+            typification = typifications[0]
+            if (typification.additional and typification.additional.product and
+                    typification.additional.id not in included_analysis_id):
+                additional_ids.add(typification.additional.id)
+            if typification.additionals:
+                for additional in typification.additionals:
+                    if (additional.product and
+                            additional.id not in included_analysis_id):
+                        additional_ids.add(additional.id)
+        return additional_ids
+
+    @classmethod
     def create_additional_services(cls, sale_lines):
         cursor = Transaction().connection.cursor()
         pool = Pool()
@@ -887,7 +929,6 @@ class SaleLine(metaclass=PoolMeta):
             analysis.extend(Analysis.get_included_analysis_method(
                 sale_line.analysis.id))
             included_analysis_id = [a[0] for a in analysis]
-            origin_is_additional = bool(sale_line.additional_origin)
 
             for a in analysis:
                 clause = [
@@ -904,7 +945,8 @@ class SaleLine(metaclass=PoolMeta):
                 if not typifications:
                     continue
                 typification = typifications[0]
-                key = (sale_line.sale.id, sale_line.id)
+                key = (sale_line.sale.id, sale_line.product_type.id,
+                    sale_line.matrix.id)
 
                 if typification.additional and typification.additional.product:
                     additional = typification.additional
@@ -923,7 +965,6 @@ class SaleLine(metaclass=PoolMeta):
                         'matrix': sale_line.matrix.id,
                         'method': None,
                         'additional_origin': sale_line.id,
-                        'origin_is_additional': origin_is_additional,
                         }
 
                 if typification.additionals:
@@ -957,25 +998,19 @@ class SaleLine(metaclass=PoolMeta):
                             'matrix': sale_line.matrix.id,
                             'method': method_id,
                             'additional_origin': sale_line.id,
-                            'origin_is_additional': origin_is_additional,
                             }
 
         if additional_services:
             sale_lines = []
-            for (sale_id, _origin_id), analysis in additional_services.items():
+            for (sale_id, _pt, _mx), analysis in additional_services.items():
                 for analysis_id, service_data in analysis.items():
-                    clause = [
-                        ('sale', '=', sale_id),
-                        ('analysis', '=', analysis_id),
-                        ('product_type', '=',
-                            service_data['product_type']),
-                        ('matrix', '=', service_data['matrix']),
-                        ]
-                    if not service_data['origin_is_additional']:
-                        clause.append(
-                            ('additional_origin', '=',
-                                service_data['additional_origin']))
-                    if cls.search(clause):
+                    if cls.search([
+                            ('sale', '=', sale_id),
+                            ('analysis', '=', analysis_id),
+                            ('product_type', '=',
+                                service_data['product_type']),
+                            ('matrix', '=', service_data['matrix']),
+                            ]):
                         continue
                     sale_line = cls(
                         quantity=service_data['quantity'],
@@ -999,12 +1034,42 @@ class SaleLine(metaclass=PoolMeta):
 
     @classmethod
     def delete_additional_services(cls, sale_lines):
-        lines_to_delete = [l.id for l in sale_lines]
+        lines_to_delete = {l.id for l in sale_lines}
         additionals = cls.search([
-            ('additional_origin', 'in', lines_to_delete),
+            ('additional_origin', 'in', list(lines_to_delete)),
             ])
-        additionals_to_delete = [l for l in additionals
-            if l.id not in lines_to_delete]
+        additionals_to_delete = []
+        additionals_to_write = []
+        for additional in additionals:
+            if additional.id in lines_to_delete:
+                continue
+            remaining_primary = cls.search([
+                ('sale', '=', additional.sale.id),
+                ('additional_origin', '=', None),
+                ('id', 'not in', list(lines_to_delete)),
+                ])
+            still_needed = False
+            new_origin = None
+            for line in remaining_primary:
+                if (line.product_type != additional.product_type or
+                        line.matrix != additional.matrix):
+                    continue
+                if additional.analysis.id in cls._get_typified_additional_ids(
+                        line):
+                    still_needed = True
+                    if new_origin is None:
+                        new_origin = line.id
+            if still_needed:
+                if (additional.additional_origin.id in lines_to_delete and
+                        new_origin):
+                    additionals_to_write.append((additional, new_origin))
+            else:
+                additionals_to_delete.append(additional)
+        if additionals_to_write:
+            for additional, new_origin in additionals_to_write:
+                cls.write([additional], {
+                    'additional_origin': new_origin,
+                    })
         if additionals_to_delete:
             cls.delete(additionals_to_delete)
 
