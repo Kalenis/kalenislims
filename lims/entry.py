@@ -588,7 +588,7 @@ class Entry(Workflow, ModelSQL, ModelView):
         ForwardAcknowledgmentOfReceipt = pool.get(
             'lims.entry.acknowledgment.forward', type='wizard')
 
-        deadline = datetime.now() - relativedelta(days=7)
+        deadline = datetime.now() - relativedelta(days=21)
         entries = Entry.search([
             ('result_cron', '!=', 'sent'),
             ('no_acknowledgment_of_receipt', '=', False),
