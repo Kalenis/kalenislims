@@ -218,7 +218,7 @@ class ControlTendency(ModelSQL, ModelView):
     mean = fields.Float('Mean', required=True, states=_states,
         digits=(16, Eval('digits', 2)))
     deviation = fields.Float('Standard Deviation', required=True,
-        digits=(16, Eval('digits', 2)))
+        digits=(16, 4))
     one_sd = fields.Function(fields.Float('1 SD', digits=(16,
         Eval('digits', 2))), 'get_one_sd')
     two_sd = fields.Function(fields.Float('2 SD', digits=(16,
@@ -898,7 +898,7 @@ class MeansDeviationsCalc(Wizard):
                     total += (detail.result - mean) ** 2
                 # Se toma correcion poblacional Bessel n-1
                 if count > 1:
-                    deviation = round(sqrt(total / (count - 1)), 2)
+                    deviation = round(sqrt(total / (count - 1)), 4)
                 else:
                     deviation = 0.00
                 line.mean = mean
@@ -1036,7 +1036,7 @@ class MeansDeviationsCalc(Wizard):
                     total += (detail.result - mean) ** 2
                 # Se toma correcion poblacional Bessel n-1
                 if count > 1:
-                    deviation = round(sqrt(total / (count - 1)), 2)
+                    deviation = round(sqrt(total / (count - 1)), 4)
                 else:
                     deviation = 0.00
                 line.mean = mean
