@@ -20,6 +20,7 @@ from trytond.tools import cursor_dict, grouped_slice
 from trytond.pyson import PYSONEncoder, Eval
 from trytond.rpc import RPC
 from trytond.exceptions import UserError
+from trytond.i18n import gettext
 from trytond.cache import LRUDictTransaction
 from trytond.model.model import record as model_record
 from trytond.model.modelstorage import cache_size as model_cache_size, AccessError
@@ -706,7 +707,45 @@ class Data(ModelSQL, ModelView):
         return fetchall
 
     @classmethod
+    def _check_editable_compilations(cls, records=None, compilation_ids=None):
+        """Reject changes when compilation/sheet is already confirmed or annulled."""
+        if Transaction().context.get('lims_interface_force_write'):
+            return
+        pool = Pool()
+        Compilation = pool.get('lims.interface.compilation')
+
+        if compilation_ids is None:
+            compilation_ids = set()
+            if records:
+                compilation_ids = {
+                    r.compilation.id for r in records if r.compilation}
+        else:
+            compilation_ids = {c for c in compilation_ids if c}
+        if not compilation_ids:
+            return
+        for compilation in Compilation.browse(list(compilation_ids)):
+            sheet = getattr(compilation, 'analysis_sheet', None)
+            record = sheet or compilation
+            state = record.state
+            if state in ('done', 'annulled'):
+                selections = dict(
+                    record.__class__.fields_get(['state'])['state']['selection'])
+                raise UserError(gettext(
+                    'lims_interface.msg_data_readonly_compilation',
+                    compilation=compilation.rec_name,
+                    state=selections.get(state, state),
+                    ))
+
+    @classmethod
     def create(cls, vlist):
+        compilation_ids = set()
+        context_compilation = Transaction().context.get(
+            'lims_interface_compilation')
+        for values in vlist:
+            compilation_ids.add(
+                values.get('compilation') or context_compilation)
+        cls._check_editable_compilations(compilation_ids=compilation_ids)
+
         sql_table = cls.get_sql_table()
         cursor = Transaction().connection.cursor()
 
@@ -734,6 +773,7 @@ class Data(ModelSQL, ModelView):
         all_records = []
         actions = iter(args)
         for records, vals in zip(actions, actions):
+            cls._check_editable_compilations(records)
             all_records += records
             fields = []
             values = []
@@ -787,6 +827,8 @@ class Data(ModelSQL, ModelView):
 
         if not records:
             records = cls.search([])
+        else:
+            cls._check_editable_compilations(records)
         for record in records:
             vals = {}
             fields = []
