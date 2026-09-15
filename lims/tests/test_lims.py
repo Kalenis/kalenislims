@@ -132,6 +132,55 @@ class LimsTestCase(ModuleTestCase):
             GenerateReport._report_kind(Notebook(None)),
             ('preliminary', 'in_progress'))
 
+    @with_transaction()
+    def test_results_estimated_date_skips_weekends(self):
+        "Estimated results date counts workdays, not calendar days"
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+
+        sequences = self._create_sequences()
+        self._create_workyear(
+            'Test 2099-06', date(2099, 6, 1), date(2099, 6, 30), sequences)
+
+        # Wed 10/06 + 5 workdays -> Wed 17/06 (skips Sat 13 and Sun 14),
+        # not Mon 15/06 as plain calendar days would give
+        result = NotebookLine._get_results_estimated_date(date(2099, 6, 10), 5)
+        self.assertEqual(result, date(2099, 6, 17))
+
+    @with_transaction()
+    def test_results_estimated_date_skips_holidays(self):
+        "Estimated results date skips holidays of the work year"
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+        Holiday = pool.get('lims.lab.workyear.holiday')
+
+        sequences = self._create_sequences()
+        workyear = self._create_workyear(
+            'Test 2099-06b', date(2099, 6, 1), date(2099, 6, 30), sequences)
+        Holiday.create([{
+            'workyear': workyear.id,
+            'name': 'June 15',
+            'date': date(2099, 6, 15),
+            }])
+
+        # Same case as above, but 15/06 is now a holiday -> one day later
+        result = NotebookLine._get_results_estimated_date(date(2099, 6, 10), 5)
+        self.assertEqual(result, date(2099, 6, 18))
+
+    @with_transaction()
+    def test_results_estimated_date_without_workyear(self):
+        "Without a work year for the date, calendar days are used"
+        pool = Pool()
+        NotebookLine = pool.get('lims.notebook.line')
+
+        sequences = self._create_sequences()
+        self._create_workyear(
+            'Test 2099-06c', date(2099, 6, 1), date(2099, 6, 30), sequences)
+
+        # 10/01/2099 is not covered by any work year: no error, calendar days
+        result = NotebookLine._get_results_estimated_date(date(2099, 1, 10), 5)
+        self.assertEqual(result, date(2099, 1, 15))
+
 
 def suite():
     suite = trytond.tests.test_tryton.suite()

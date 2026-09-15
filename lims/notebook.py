@@ -1730,9 +1730,13 @@ class NotebookLine(ModelSQL, ModelView):
 
     @staticmethod
     def _get_results_estimated_date(confirmation_date, estimated_waiting):
-        date = (confirmation_date +
-            relativedelta(days=estimated_waiting))
-        return date
+        LabWorkYear = Pool().get('lims.lab.workyear')
+        workyear_id = LabWorkYear.find(confirmation_date, exception=False)
+        if not workyear_id:
+            # No work year covers the date: fall back to calendar days
+            return confirmation_date + relativedelta(days=estimated_waiting)
+        workyear = LabWorkYear(workyear_id)
+        return workyear.get_target_date(confirmation_date, estimated_waiting)
 
     @fields.depends('analysis', '_parent_analysis.methods')
     def on_change_with_method_domain(self, name=None):
