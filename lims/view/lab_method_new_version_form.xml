@@ -27,4 +27,5 @@
     <field name="report_legend" colspan="3"/>
     <label name="results_estimated_waiting"/>
     <field name="results_estimated_waiting"/>
+    <field name="translations" colspan="4"/>
 </form>

@@ -202,6 +202,14 @@
             <field name="name">lab_method_version_list</field>
         </record>
 
+<!-- Method Translation -->
+
+        <record model="ir.ui.view" id="lims_lab_method_translation_view_list">
+            <field name="model">lims.lab.method.translation</field>
+            <field name="type">tree</field>
+            <field name="name">lab_method_translation_list</field>
+        </record>
+
 <!-- Wizard New Method Version -->
 
         <record model="ir.ui.view" id="method_new_version_start_form">
