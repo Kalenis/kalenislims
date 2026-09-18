@@ -1423,6 +1423,43 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
                         Data.delete(orphans)
 
     @classmethod
+    def get_lines_in_other_sheets(cls, sheet, notebook_lines):
+        'Notebook lines already loaded in another sheet of the same template'
+        pool = Pool()
+        Data = pool.get('lims.interface.data')
+
+        if not notebook_lines:
+            return set()
+
+        other_sheets = cls.search([
+            ('id', '!=', sheet.id),
+            ('template', '=', sheet.template.id),
+            ('state', '!=', 'annulled'),
+            ])
+        if not other_sheets:
+            return set()
+
+        compilations = {}
+        for other_sheet in other_sheets:
+            table_id = other_sheet.compilation.table.id
+            compilations.setdefault(table_id, []).append(
+                other_sheet.compilation.id)
+
+        nl_ids = [nl.id for nl in notebook_lines]
+        res = set()
+        for table_id, compilation_ids in compilations.items():
+            with Transaction().set_context(lims_interface_table=table_id):
+                lines = Data.search([
+                    ('compilation', 'in', compilation_ids),
+                    ('notebook_line', 'in', nl_ids),
+                    ])
+                for line in lines:
+                    if line.annulled or not line.notebook_line:
+                        continue
+                    res.add(line.notebook_line.id)
+        return res
+
+    @classmethod
     def sync_fraction_after_service_change(cls, fraction):
         pool = Pool()
         NotebookLine = pool.get('lims.notebook.line')
@@ -1430,7 +1467,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
 
         sheets = cls.search([
             ('state', 'in', ['draft', 'active', 'validated']),
-            ('samples', 'ilike', '%%%s%%' % sample.number),
+            ('related_samples', '=', sample.id),
             ])
         if not sheets:
             return
@@ -1445,9 +1482,16 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
         nls_with_template = [nl for nl in notebook_lines
             if nl.get_analysis_sheet_template()]
 
-        for sheet in sheets:
+        # the most recent sheet of each template takes the pending lines,
+        # the older ones must not receive them again
+        for sheet in sorted(sheets, key=lambda s: s.id, reverse=True):
             nls_for_sheet = [nl for nl in nls_with_template
                 if nl.get_analysis_sheet_template() == sheet.template.id]
+            if nls_for_sheet:
+                in_other_sheets = cls.get_lines_in_other_sheets(
+                    sheet, nls_for_sheet)
+                nls_for_sheet = [nl for nl in nls_for_sheet
+                    if nl.id not in in_other_sheets]
             if nls_for_sheet:
                 sheet.create_lines(nls_for_sheet, update_samples_list=False)
             sheet._update_samples_list()
