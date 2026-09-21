@@ -562,6 +562,8 @@ class Service(ModelSQL, ModelView):
         EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
         Sample = pool.get('lims.sample')
 
+        cls.check_fraction_not_confirmed(vlist)
+
         workyear_id = LabWorkYear.find()
         workyear = LabWorkYear(workyear_id)
         sequence = workyear.get_sequence('service')
@@ -665,6 +667,40 @@ class Service(ModelSQL, ModelView):
                 to_update = Sample.browse(list(set(s.sample.id
                     for s in services)))
                 Sample.__queue__.update_samples_state(to_update)
+
+    @classmethod
+    def check_fraction_not_confirmed(cls, vlist):
+        '''
+        Services can not be added to an already confirmed fraction outside
+        the wizards that set the context 'manage_service': only those set the
+        confirmation date and create the notebook lines. Created anywhere
+        else, the service ends up with no confirmation date and invisible in
+        the laboratory notebook.
+
+        The form already hides the services list once the fraction is
+        confirmed, but it does so from the value of 'confirmed' that the
+        client loaded. A form opened before a background confirmation still
+        offers the list as editable, and that is how services reach this
+        method on a confirmed fraction.
+        '''
+        Fraction = Pool().get('lims.fraction')
+
+        if Transaction().context.get('manage_service', False):
+            return
+        if Transaction().context.get('copying', False):
+            return
+
+        fraction_ids = set(v['fraction'] for v in vlist if v.get('fraction'))
+        if not fraction_ids:
+            return
+        with Transaction().set_context(_check_access=False):
+            confirmed = Fraction.search([
+                ('id', 'in', list(fraction_ids)),
+                ('confirmed', '=', True),
+                ], limit=1)
+        if confirmed:
+            raise UserError(gettext('lims.msg_service_fraction_confirmed',
+                fraction=confirmed[0].rec_name))
 
     @classmethod
     def _get_update_details(cls):

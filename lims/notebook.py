@@ -5685,7 +5685,10 @@ class NotebookAddInternalRelations(Wizard):
             'device': device_id,
             'divide': divide,
             }]
-        new_service, = Service.create(service_create)
+        # the fraction is already confirmed here: 'manage_service' is what
+        # makes create() process the additional services it may generate
+        with Transaction().set_context(manage_service=True):
+            new_service, = Service.create(service_create)
         Service.set_confirmation_date([new_service])
         analysis_detail = list(new_service.analysis_detail)
         if report_grouper != 0:
