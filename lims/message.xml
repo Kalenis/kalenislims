@@ -394,6 +394,9 @@
         <record model="ir.message" id="msg_delete_sample">
             <field name="text">You can not delete sample "%(sample)s" because its entry is not in draft state</field>
         </record>
+        <record model="ir.message" id="msg_service_fraction_confirmed">
+            <field name="text">You can not add services to fraction "%(fraction)s" because it is already confirmed. Use the "Manage services" wizard instead.</field>
+        </record>
         <record model="ir.message" id="msg_counter_sample_date">
             <field name="text">Reverse counter sample storage to enter the service </field>
         </record>
