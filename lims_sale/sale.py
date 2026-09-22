@@ -864,7 +864,38 @@ class SaleLine(metaclass=PoolMeta):
     def create(cls, vlist):
         sale_lines = super().create(vlist)
         cls.create_additional_services(sale_lines)
+        cls.delete_redundant_additional_services(sale_lines)
         return sale_lines
+
+    @classmethod
+    def _get_covered_analysis_ids(cls, sale_id, product_type_id, matrix_id):
+        '''
+        Analysis already covered by the sale for this product type and
+        matrix: the analysis of every line that is not an additional one,
+        plus everything those lines include, recursively.
+
+        Sets and groups are what makes this necessary. Their line stores the
+        set, not its contents, so looking only at 'analysis' does not see the
+        analysis inside it. Entries do not have this problem because there
+        the check is made against lims.entry.detail.analysis, where sets and
+        groups are already expanded into individual analysis.
+        '''
+        Analysis = Pool().get('lims.analysis')
+
+        lines = cls.search([
+            ('sale', '=', sale_id),
+            ('product_type', '=', product_type_id),
+            ('matrix', '=', matrix_id),
+            ('additional_origin', '=', None),
+            ])
+        covered = set()
+        for line in lines:
+            if not line.analysis:
+                continue
+            covered.add(line.analysis.id)
+            covered.update(a[0] for a in
+                Analysis.get_included_analysis_method(line.analysis.id))
+        return covered
 
     @classmethod
     def _get_typified_additional_ids(cls, sale_line):
@@ -999,8 +1030,14 @@ class SaleLine(metaclass=PoolMeta):
 
         if additional_services:
             sale_lines = []
-            for (sale_id, _pt, _mx), analysis in additional_services.items():
+            for (sale_id, pt_id, mx_id), analysis in (
+                    additional_services.items()):
+                covered_ids = cls._get_covered_analysis_ids(
+                    sale_id, pt_id, mx_id)
                 for analysis_id, service_data in analysis.items():
+                    # already in the sale inside a set or a group
+                    if analysis_id in covered_ids:
+                        continue
                     if cls.search([
                             ('sale', '=', sale_id),
                             ('analysis', '=', analysis_id),
@@ -1023,6 +1060,38 @@ class SaleLine(metaclass=PoolMeta):
                     sale_line.on_change_product()
                     sale_lines.append(sale_line)
             cls.save(sale_lines)
+
+    @classmethod
+    def delete_redundant_additional_services(cls, sale_lines):
+        '''
+        The reverse case of _get_covered_analysis_ids: a set or a group added
+        after the additional lines makes them redundant, because the sale now
+        charges the same analysis twice for the same product type and matrix.
+        '''
+        Analysis = Pool().get('lims.analysis')
+
+        new_ids = {l.id for l in sale_lines}
+        to_delete = set()
+        for sale_line in sale_lines:
+            if sale_line.additional_origin:
+                continue
+            if (not sale_line.analysis or not sale_line.product_type or
+                    not sale_line.matrix):
+                continue
+            included_ids = [a[0] for a in
+                Analysis.get_included_analysis_method(sale_line.analysis.id)]
+            if not included_ids:
+                continue
+            redundant = cls.search([
+                ('sale', '=', sale_line.sale.id),
+                ('product_type', '=', sale_line.product_type.id),
+                ('matrix', '=', sale_line.matrix.id),
+                ('additional_origin', '!=', None),
+                ('analysis', 'in', included_ids),
+                ])
+            to_delete.update(l.id for l in redundant if l.id not in new_ids)
+        if to_delete:
+            cls.delete(cls.browse(list(to_delete)))
 
     @classmethod
     def delete(cls, sale_lines):
