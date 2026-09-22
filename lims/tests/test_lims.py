@@ -181,6 +181,23 @@ class LimsTestCase(ModuleTestCase):
         result = NotebookLine._get_results_estimated_date(date(2099, 1, 10), 5)
         self.assertEqual(result, date(2099, 1, 15))
 
+    @with_transaction()
+    def test_labels_list_skips_blank_lines(self):
+        "Blank lines in the labels box do not create extra samples"
+        pool = Pool()
+        for name in ('lims.sample.duplicate', 'lims.entry.duplicate_sample',
+                'lims.create_sample'):
+            get_labels = pool.get(name, type='wizard')._get_labels_list
+            # a trailing newline used to add one sample with an empty label
+            self.assertEqual(get_labels(None, 'A\n'), ['A'])
+            self.assertEqual(get_labels(None, 'A\nB\n'), ['A', 'B'])
+            self.assertEqual(get_labels(None, 'A\r\nB\r\n'), ['A', 'B'])
+            self.assertEqual(get_labels(None, 'A\n\nB'), ['A', 'B'])
+            # nothing usable means one copy without label, as before
+            self.assertEqual(get_labels(None, '  \n '), [None])
+            self.assertEqual(get_labels(None, ''), [None])
+            self.assertEqual(get_labels(None, None), [None])
+
 
 def suite():
     suite = trytond.tests.test_tryton.suite()

@@ -4428,7 +4428,9 @@ class DuplicateSample(Wizard):
     def _get_labels_list(self, labels=None):
         if not labels:
             return [None]
-        return labels.split('\n')
+        # Blank lines in the labels box must not create extra samples
+        labels_list = [x.strip() for x in labels.splitlines() if x.strip()]
+        return labels_list or [None]
 
     def end(self):
         return 'reload'
@@ -4483,7 +4485,9 @@ class DuplicateSampleFromEntry(Wizard):
     def _get_labels_list(self, labels=None):
         if not labels:
             return [None]
-        return labels.split('\n')
+        # Blank lines in the labels box must not create extra samples
+        labels_list = [x.strip() for x in labels.splitlines() if x.strip()]
+        return labels_list or [None]
 
 
 class ResampleStart(ModelView):
@@ -7818,7 +7822,9 @@ class CreateSample(Wizard):
     def _get_labels_list(self, labels=None):
         if not labels:
             return [None]
-        return labels.split('\n')
+        # Blank lines in the labels box must not create extra samples
+        labels_list = [x.strip() for x in labels.splitlines() if x.strip()]
+        return labels_list or [None]
 
 
 class EditSampleStart(ModelView):
