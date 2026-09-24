@@ -1347,8 +1347,15 @@ class SaleLoadServices(Wizard):
                 continue
             if not service.analysis.product:
                 continue
-            if service.analysis.id not in sale_services:
-                sale_services[service.analysis.id] = {
+            method_id = service.method and service.method.id or None
+            if self.start.load_all:
+                key = (service.analysis.id,
+                    service.sample.product_type.id,
+                    service.sample.matrix.id, method_id)
+            else:
+                key = service.analysis.id
+            if key not in sale_services:
+                sale_services[key] = {
                     'quantity': 0,
                     'unit': service.analysis.product.default_uom.id,
                     'product': service.analysis.product.id,
@@ -1356,9 +1363,9 @@ class SaleLoadServices(Wizard):
                     'product_type': service.sample.product_type.id,
                     'matrix': service.sample.matrix.id,
                     'analysis': service.analysis.id,
-                    'method': service.method and service.method.id or None,
+                    'method': method_id,
                     }
-            sale_services[service.analysis.id]['quantity'] += 1
+            sale_services[key]['quantity'] += 1
 
         sale_lines = []
         for service in sale_services.values():
