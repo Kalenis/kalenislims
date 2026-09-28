@@ -2,4 +2,6 @@
 <form>
     <label name="responsible"/>
     <field name="responsible"/>
+    <label name="notice_days"/>
+    <field name="notice_days"/>
 </form>

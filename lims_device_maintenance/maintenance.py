@@ -214,6 +214,10 @@ class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
     responsible = fields.Many2One('res.user', 'Responsible User',
         states=_states, depends=_depends)
     notice_date = fields.Date('Notice Date', states=_states, depends=_depends)
+    notice_days = fields.Function(fields.Integer('Days to notify',
+        help='Leave empty to keep the current notice date.',
+        states=_states, depends=_depends),
+        'get_notice_days', setter='set_notice_days')
     state = fields.Selection([
         ('draft', 'Draft'),
         ('pending', 'Pending'),
@@ -309,6 +313,23 @@ class LabDeviceMaintenance(Workflow, ModelSQL, ModelView):
     def discard(cls, maintenances):
         pass
 
+    def get_notice_days(self, name):
+        if not self.date or not self.notice_date:
+            return None
+        return (self.date - self.notice_date).days
+
+    @classmethod
+    def set_notice_days(cls, maintenances, name, value):
+        to_write = []
+        for maintenance in maintenances:
+            notice_date = None
+            if value is not None:
+                notice_date = (maintenance.date +
+                    relativedelta.relativedelta(days=-value))
+            to_write.extend([[maintenance], {'notice_date': notice_date}])
+        if to_write:
+            cls.write(*to_write)
+
     @classmethod
     def send_notice(cls):
         pool = Pool()
@@ -381,7 +402,10 @@ class LabDeviceEditMaintenance(Wizard):
     confirm = StateTransition()
 
     def _fields_to_edit(self):
-        return ['responsible']
+        return ['responsible', 'notice_days']
+
+    def _fields_to_edit_if_set(self):
+        return ['notice_days']
 
     def default_start(self, fields):
         pool = Pool()
@@ -394,6 +418,8 @@ class LabDeviceEditMaintenance(Wizard):
         maintenance = Maintenance(active_ids[0])
 
         for field_name in self._fields_to_edit():
+            if field_name in self._fields_to_edit_if_set():
+                continue
             field_type = Maintenance._fields[field_name]._type
             if field_type == 'many2one':
                 field = getattr(maintenance, field_name, None)
@@ -416,10 +442,14 @@ class LabDeviceEditMaintenance(Wizard):
         if maintenances:
             values = {}
             for field_name in self._fields_to_edit():
-                values[field_name] = getattr(self.start, field_name)
+                value = getattr(self.start, field_name)
+                if (value is None and
+                        field_name in self._fields_to_edit_if_set()):
+                    continue
+                values[field_name] = value
             for maintenance in maintenances:
-                for field_name in self._fields_to_edit():
-                    setattr(maintenance, field_name, values[field_name])
+                for field_name, value in values.items():
+                    setattr(maintenance, field_name, value)
             Maintenance.save(maintenances)
         return 'end'
 

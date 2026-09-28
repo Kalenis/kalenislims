@@ -46,6 +46,10 @@ msgctxt "field:lims.lab.device.maintenance,notice_date:"
 msgid "Notice Date"
 msgstr "Fecha de aviso"
 
+msgctxt "field:lims.lab.device.maintenance,notice_days:"
+msgid "Days to notify"
+msgstr "Días para el aviso"
+
 msgctxt "field:lims.lab.device.maintenance,party:"
 msgid "Responsible Party"
 msgstr "Tercero Responsable"
@@ -158,6 +162,10 @@ msgstr "Fecha de inicio"
 msgctxt "field:lims.lab.device.maintenance.type,name:"
 msgid "Name"
 msgstr "Nombre"
+
+msgctxt "help:lims.lab.device.maintenance,notice_days:"
+msgid "Leave empty to keep the current notice date."
+msgstr "Dejar vacío para mantener la fecha de aviso actual."
 
 msgctxt "model:ir.action,name:act_device_maintenance_calendar_mine"
 msgid "My Device Maintenances"
