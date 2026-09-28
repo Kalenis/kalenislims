@@ -163,6 +163,27 @@ class InterfaceIntegrityTestCase(ModuleTestCase):
                 ])
             self.assertEqual(len(duplicates), 1)
 
+    def _sheets_for_sample(self, sample):
+        AnalysisSheet = Pool().get('lims.analysis_sheet')
+        return AnalysisSheet.search([
+            ('state', 'in', self._ACTIVE_SHEET_STATES),
+            ('related_samples', '=', sample.id),
+            ])
+
+    def _notebook_lines_by_sheet(self, sheets):
+        Data = Pool().get('lims.interface.data')
+        res = {}
+        for sheet in sheets:
+            with Transaction().set_context(
+                    lims_interface_table=sheet.compilation.table.id):
+                lines = Data.search([
+                    ('compilation', '=', sheet.compilation.id),
+                    ('notebook_line', '!=', None),
+                    ])
+                res[sheet.id] = set(l.notebook_line.id for l in lines
+                    if l.notebook_line and not l.annulled)
+        return res
+
     @with_transaction()
     def test_sync_after_service_change(self):
         pool = Pool()
@@ -173,11 +194,7 @@ class InterfaceIntegrityTestCase(ModuleTestCase):
         fractions = Fraction.search([], limit=50)
         target = None
         for fraction in fractions:
-            sheets = AnalysisSheet.search([
-                ('state', 'in', ['draft', 'active', 'validated']),
-                ('samples', 'ilike', '%%%s%%' % fraction.sample.number),
-                ])
-            if sheets:
+            if self._sheets_for_sample(fraction.sample):
                 target = fraction
                 break
         if not target:
@@ -185,11 +202,7 @@ class InterfaceIntegrityTestCase(ModuleTestCase):
 
         AnalysisSheet.sync_fraction_after_service_change(target)
 
-        sheets = AnalysisSheet.search([
-            ('state', 'in', ['draft', 'active', 'validated']),
-            ('samples', 'ilike', '%%%s%%' % target.sample.number),
-            ])
-        for sheet in sheets:
+        for sheet in self._sheets_for_sample(target.sample):
             with Transaction().set_context(
                     lims_interface_table=sheet.compilation.table.id):
                 lines = Data.search([
@@ -198,6 +211,47 @@ class InterfaceIntegrityTestCase(ModuleTestCase):
                     ])
                 orphans = [l for l in lines if not l.notebook_line]
                 self.assertEqual(orphans, [])
+
+    @with_transaction()
+    def test_sync_does_not_duplicate_lines_across_sheets(self):
+        pool = Pool()
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+        Fraction = pool.get('lims.fraction')
+
+        fractions = Fraction.search([], limit=50)
+        target = None
+        for fraction in fractions:
+            sheets = self._sheets_for_sample(fraction.sample)
+            templates = [s.template.id for s in sheets]
+            if len(templates) != len(set(templates)):
+                target = fraction
+                break
+        if not target:
+            self.skipTest('No sample with two open sheets of same template')
+
+        before = self._notebook_lines_by_sheet(
+            self._sheets_for_sample(target.sample))
+
+        AnalysisSheet.sync_fraction_after_service_change(target)
+
+        sheets = self._sheets_for_sample(target.sample)
+        after = self._notebook_lines_by_sheet(sheets)
+
+        # the sync must not add a notebook line to a sheet when another
+        # sheet of the same template already holds it
+        by_template = {}
+        for sheet in sheets:
+            by_template.setdefault(sheet.template.id, []).append(sheet)
+        for template_sheets in by_template.values():
+            if len(template_sheets) < 2:
+                continue
+            for sheet in template_sheets:
+                added = after[sheet.id] - before.get(sheet.id, set())
+                for other in template_sheets:
+                    if other.id == sheet.id:
+                        continue
+                    self.assertEqual(
+                        added & before.get(other.id, set()), set())
 
 
 def suite():
