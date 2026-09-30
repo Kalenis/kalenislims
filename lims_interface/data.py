@@ -405,6 +405,8 @@ class Data(ModelSQL, ModelView):
         GroupedData = pool.get('lims.interface.grouped_data')
         res = super().fields_get(fields_names)
         table = cls.get_table()
+        if not table:
+            return res
         interface = cls.get_interface()
 
         readonly_ids = []
@@ -975,7 +977,7 @@ class GroupedData(ModelView):
 
     notebook_line = fields.Many2One('lims.notebook.line', 'Notebook Line',
         readonly=True)
-    data = fields.Many2One('lims.inteface.data', 'Data',
+    data = fields.Many2One('lims.interface.data', 'Data',
         readonly=True)
     iteration = fields.Integer('Iteration', readonly=True)
 
@@ -1057,6 +1059,8 @@ class GroupedData(ModelView):
         res = super().fields_get(fields_names)
 
         table = cls.get_table()
+        if not table:
+            return res
         readonly = Transaction().context.get('lims_interface_readonly', False)
         encoder = PYSONEncoder()
 
