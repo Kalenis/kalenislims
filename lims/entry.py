@@ -2109,7 +2109,7 @@ class PrintAcknowledgmentOfReceipt(Wizard):
             data_id = data_ids.pop()
             with Transaction().set_context(_check_access=False):
                 entry = Entry(data_id)
-            if entry.state == 'ongoing':
+            if entry.state in ['ongoing', 'finished']:
                 printable = False
                 for sample in entry.samples:
                     if not sample.fractions:
