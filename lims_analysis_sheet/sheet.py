@@ -1,16 +1,20 @@
 # This file is part of lims_analysis_sheet module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+import re
 import formulas
 import schedula
 import functools
 from itertools import chain
-from io import StringIO
+from io import StringIO, BytesIO
 from decimal import Decimal
 from datetime import datetime, date
 from sql import Table, Column, Literal, Null
 from sql.aggregate import Count
 from sql.conditionals import Coalesce
+from openpyxl import Workbook
+from openpyxl.cell.cell import ILLEGAL_CHARACTERS_RE
+from openpyxl.styles import Font
 
 from trytond.model import Workflow, ModelView, ModelSQL, DeactivableMixin, \
     fields, Unique
@@ -19,6 +23,7 @@ from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
 from trytond.pool import Pool
 from trytond.pyson import PYSONEncoder, Eval, Bool, If
 from trytond.transaction import Transaction
+from trytond.tools import grouped_slice
 from trytond.report import Report
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
@@ -1783,6 +1788,290 @@ class ExportAnalysisSheetFile(Wizard):
 
     def export_excel(self, sheet):
         return
+
+
+class ExportAnalysisSheetDataStart(ModelView):
+    'Export Analysis Sheets Data'
+    __name__ = 'lims.analysis_sheet.export_data.start'
+
+    sheets = fields.Many2Many('lims.analysis_sheet', None, None, 'Sheets',
+        help='Leave empty to export the sheets that match the filters')
+    date_from = fields.Date('Date from',
+        states={
+            'required': ~Bool(Eval('sheets')),
+            'invisible': Bool(Eval('sheets')),
+            },
+        depends=['sheets'])
+    date_to = fields.Date('Date to',
+        states={
+            'required': ~Bool(Eval('sheets')),
+            'invisible': Bool(Eval('sheets')),
+            },
+        depends=['sheets'])
+    sheet_states = fields.MultiSelection('get_sheet_states', 'States',
+        states={'invisible': Bool(Eval('sheets'))},
+        depends=['sheets'])
+    laboratory = fields.Many2One('lims.laboratory', 'Laboratory',
+        states={'invisible': Bool(Eval('sheets'))},
+        depends=['sheets'])
+    templates = fields.Many2Many('lims.template.analysis_sheet', None, None,
+        'Templates', states={'invisible': Bool(Eval('sheets'))},
+        depends=['sheets'])
+
+    @classmethod
+    def get_sheet_states(cls):
+        AnalysisSheet = Pool().get('lims.analysis_sheet')
+        return AnalysisSheet.fields_get(['state'])['state']['selection']
+
+
+class ExportAnalysisSheetDataResult(ModelView):
+    'Export Analysis Sheets Data'
+    __name__ = 'lims.analysis_sheet.export_data.result'
+
+    file = fields.Binary('File', readonly=True, filename='file_name')
+    file_name = fields.Char('File Name', readonly=True)
+
+
+class ExportAnalysisSheetData(Wizard):
+    'Export Analysis Sheets Data'
+    __name__ = 'lims.analysis_sheet.export_data'
+
+    start = StateView('lims.analysis_sheet.export_data.start',
+        'lims_analysis_sheet.analysis_sheet_export_data_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Export', 'check', 'tryton-ok', default=True),
+            ])
+    check = StateTransition()
+    result = StateView('lims.analysis_sheet.export_data.result',
+        'lims_analysis_sheet.analysis_sheet_export_data_result_view_form', [
+            Button('Close', 'end', 'tryton-close'),
+            ])
+
+    def default_start(self, fields):
+        Date = Pool().get('ir.date')
+        context = Transaction().context
+        today = Date.today()
+        sheets = []
+        if context.get('active_model') == 'lims.analysis_sheet':
+            sheets = list(context.get('active_ids') or [])
+        return {
+            'sheets': sheets,
+            'date_from': today.replace(day=1),
+            'date_to': today,
+            'sheet_states': ['validated', 'done'],
+            'templates': [],
+            }
+
+    def transition_check(self):
+        if not self._get_sheets():
+            raise UserError(gettext(
+                'lims_analysis_sheet.msg_export_data_no_sheets'))
+        return 'result'
+
+    def default_result(self, fields):
+        cast = self.result.__class__.file.cast
+        if self.start.sheets:
+            file_name = 'analysis_sheets.xlsx'
+        else:
+            file_name = 'analysis_sheets_%s_%s.xlsx' % (
+                self.start.date_from.strftime('%Y%m%d'),
+                self.start.date_to.strftime('%Y%m%d'))
+        return {
+            'file': cast(self.get_file(self._get_sheets())),
+            'file_name': file_name,
+            }
+
+    def _get_sheets(self):
+        AnalysisSheet = Pool().get('lims.analysis_sheet')
+
+        if self.start.sheets:
+            sheets = list(self.start.sheets)
+        else:
+            domain = [
+                ('date2', '>=', self.start.date_from),
+                ('date2', '<=', self.start.date_to),
+                ]
+            if self.start.sheet_states:
+                domain.append(('state', 'in', self.start.sheet_states))
+            if self.start.laboratory:
+                domain.append(('laboratory', '=', self.start.laboratory.id))
+            if self.start.templates:
+                domain.append(('template', 'in',
+                    [t.id for t in self.start.templates]))
+            sheets = AnalysisSheet.search(domain)
+        sheets = [s for s in sheets if s.compilation and s.compilation.table]
+        return sorted(sheets, key=lambda s: (
+            s.compilation.date_time or datetime.min, s.number or ''))
+
+    def get_file(self, sheets):
+        pool = Pool()
+        AnalysisSheet = pool.get('lims.analysis_sheet')
+        NotebookLine = pool.get('lims.notebook.line')
+
+        sheet_fields = AnalysisSheet.fields_get(
+            ['number', 'date2', 'state', 'template'])
+        line_fields = NotebookLine.fields_get(['sample', 'fraction',
+            'product_type', 'matrix', 'analysis', 'method', 'annulled'])
+        header = [
+            sheet_fields['number']['string'],
+            sheet_fields['date2']['string'],
+            sheet_fields['state']['string'],
+            sheet_fields['template']['string'],
+            line_fields['sample']['string'],
+            line_fields['fraction']['string'],
+            line_fields['product_type']['string'],
+            line_fields['matrix']['string'],
+            line_fields['analysis']['string'],
+            line_fields['method']['string'],
+            line_fields['annulled']['string'],
+            ]
+        state_names = dict(sheet_fields['state']['selection'])
+        positions = {s.compilation.id: i for i, s in enumerate(sheets)}
+
+        groups = {}
+        table_columns = {}
+        for sheet in sheets:
+            table = sheet.compilation.table
+            if table.id not in table_columns:
+                table_columns[table.id] = [f for f in table.fields_
+                    if self._is_exportable(f)]
+            columns = table_columns[table.id]
+            interface = sheet.compilation.interface
+            key = (interface.id,
+                tuple((f.name, f.string, f.type) for f in columns))
+            group = groups.setdefault(key, {
+                'name': interface.rec_name,
+                'columns': columns,
+                'tables': {},
+                })
+            group['tables'].setdefault(table.id, []).append(sheet)
+
+        workbook = Workbook()
+        titles = set()
+        for index, group in enumerate(groups.values()):
+            title = self._get_worksheet_title(group['name'], titles)
+            if index == 0:
+                worksheet = workbook.active
+                worksheet.title = title
+            else:
+                worksheet = workbook.create_sheet(title)
+
+            columns = group['columns']
+            columns_names = {f.string for f in columns}
+            fixed = [i for i, name in enumerate(header)
+                if name not in columns_names]
+            worksheet.append([header[i] for i in fixed]
+                + [f.string for f in columns])
+            for cell in worksheet[1]:
+                cell.font = Font(bold=True)
+            worksheet.freeze_panes = 'A2'
+
+            for fixed_values, values in self._get_rows(group['tables'],
+                    columns, state_names, positions):
+                worksheet.append([self._clean_cell_value(v)
+                    for v in [fixed_values[i] for i in fixed] + values])
+            worksheet.auto_filter.ref = worksheet.dimensions
+
+        file_ = BytesIO()
+        workbook.save(file_)
+        return file_.getvalue()
+
+    def _get_rows(self, tables, columns, state_names, positions):
+        Data = Pool().get('lims.interface.data')
+        cursor = Transaction().connection.cursor()
+
+        sheets_info = {}
+        for sheets in tables.values():
+            for sheet in sheets:
+                sheets_info[sheet.compilation.id] = [
+                    sheet.number,
+                    sheet.date2,
+                    state_names.get(sheet.state, sheet.state),
+                    sheet.template.rec_name,
+                    ]
+
+        selections = {}
+        for field in columns:
+            if field.type == 'selection':
+                selections[field.name] = dict(tuple(v.split(':', 1))
+                    for v in (field.selection or '').splitlines() if v)
+
+        fields_names = ['compilation', 'notebook_line', 'annulled'] + [
+            f.name for f in columns]
+        rows = []
+        for table_id, sheets in tables.items():
+            with Transaction().set_context(lims_interface_table=table_id):
+                query = Data.search([
+                    ('compilation', 'in', [s.compilation.id for s in sheets]),
+                    ], query=True)
+                cursor.execute(*query)
+                ids = [r[0] for r in cursor.fetchall()]
+                for sub_ids in grouped_slice(ids):
+                    rows.extend(Data.read(list(sub_ids), fields_names))
+        rows.sort(key=lambda r: (positions[r['compilation']], r['id']))
+
+        lines_info = self._get_notebook_lines_info(
+            [r['notebook_line'] for r in rows if r['notebook_line']])
+        empty_line_info = [None] * 6
+
+        for row in rows:
+            yield (sheets_info[row['compilation']]
+                + lines_info.get(row['notebook_line'], empty_line_info)
+                + [bool(row['annulled'])],
+                [self._get_cell_value(f, row, selections) for f in columns])
+
+    def _get_notebook_lines_info(self, line_ids):
+        NotebookLine = Pool().get('lims.notebook.line')
+
+        res = {}
+        for sub_ids in grouped_slice(list(set(line_ids))):
+            for line in NotebookLine.browse(list(sub_ids)):
+                fraction = line.notebook.fraction
+                sample = fraction.sample
+                res[line.id] = [
+                    sample.number,
+                    fraction.number,
+                    sample.product_type.rec_name,
+                    sample.matrix.rec_name,
+                    line.analysis.rec_name,
+                    line.method.rec_name if line.method else None,
+                    ]
+        return res
+
+    @staticmethod
+    def _is_exportable(field):
+        return (not field.invisible and not field.group
+            and field.type not in ('binary', 'icon', 'image'))
+
+    @staticmethod
+    def _get_cell_value(field, row, selections):
+        value = row.get(field.name)
+        if value is None:
+            return None
+        if field.type == 'many2one':
+            related = row.get(field.name + '.')
+            return related.get('rec_name') if related else None
+        if field.type == 'selection':
+            return selections[field.name].get(value, value)
+        return value
+
+    @staticmethod
+    def _clean_cell_value(value):
+        if isinstance(value, str):
+            return ILLEGAL_CHARACTERS_RE.sub('', value)
+        return value
+
+    @staticmethod
+    def _get_worksheet_title(name, used):
+        name = re.sub(r'[\\/*?:\[\]]', ' ', name or '').strip()[:31]
+        name = name or 'Sheet'
+        title, count = name, 2
+        while title.lower() in used:
+            suffix = ' (%s)' % count
+            title = name[:31 - len(suffix)] + suffix
+            count += 1
+        used.add(title.lower())
+        return title
 
 
 class PrintAnalysisSheetReportAsk(ModelView):

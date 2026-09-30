@@ -23,6 +23,8 @@ def register():
         sheet.AnalysisSheetSample,
         sheet.PrintAnalysisSheetReportAsk,
         sheet.ExportAnalysisSheetFileStart,
+        sheet.ExportAnalysisSheetDataStart,
+        sheet.ExportAnalysisSheetDataResult,
         sheet.ImportAnalysisSheetFileStart,
         interface.Compilation,
         interface.Column,
@@ -60,6 +62,7 @@ def register():
     Pool.register(
         sheet.OpenAnalysisSheetData,
         sheet.ExportAnalysisSheetFile,
+        sheet.ExportAnalysisSheetData,
         sheet.PrintAnalysisSheetReport,
         sheet.ImportAnalysisSheetFile,
         sheet.OpenAnalysisSheetSample,

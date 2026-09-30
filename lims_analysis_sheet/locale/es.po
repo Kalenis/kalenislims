@@ -1503,3 +1503,74 @@ msgstr "Cancelar"
 msgctxt "wizard_button:lims.planification.search_analysis_sheet,start,search:"
 msgid "Search"
 msgstr "Buscar"
+
+msgctxt "field:lims.analysis_sheet.export_data.result,file:"
+msgid "File"
+msgstr "Archivo"
+
+msgctxt "field:lims.analysis_sheet.export_data.result,file_name:"
+msgid "File Name"
+msgstr "Nombre de archivo"
+
+msgctxt "field:lims.analysis_sheet.export_data.start,date_from:"
+msgid "Date from"
+msgstr "Fecha desde"
+
+msgctxt "field:lims.analysis_sheet.export_data.start,date_to:"
+msgid "Date to"
+msgstr "Fecha hasta"
+
+msgctxt "field:lims.analysis_sheet.export_data.start,laboratory:"
+msgid "Laboratory"
+msgstr "Laboratorio"
+
+msgctxt "field:lims.analysis_sheet.export_data.start,sheet_states:"
+msgid "States"
+msgstr "Estados"
+
+msgctxt "field:lims.analysis_sheet.export_data.start,sheets:"
+msgid "Sheets"
+msgstr "Hojas"
+
+msgctxt "field:lims.analysis_sheet.export_data.start,templates:"
+msgid "Templates"
+msgstr "Plantillas"
+
+msgctxt "help:lims.analysis_sheet.export_data.start,sheets:"
+msgid "Leave empty to export the sheets that match the filters"
+msgstr "Dejar vacío para exportar las hojas que cumplan con los filtros"
+
+msgctxt "model:ir.action,name:wiz_analysis_sheet_export_data"
+msgid "Export Analysis Sheets Data"
+msgstr "Exportar datos de hojas de análisis"
+
+msgctxt "model:ir.message,text:msg_export_data_no_sheets"
+msgid ""
+"There are no analysis sheets with data to export for the selected filters."
+msgstr ""
+"No hay hojas de análisis con datos para exportar con los filtros "
+"seleccionados."
+
+msgctxt "model:ir.ui.menu,name:menu_analysis_sheet_export_data"
+msgid "Export Analysis Sheets Data"
+msgstr "Exportar datos de hojas de análisis"
+
+msgctxt "model:lims.analysis_sheet.export_data.result,name:"
+msgid "Export Analysis Sheets Data"
+msgstr "Exportar datos de hojas de análisis"
+
+msgctxt "model:lims.analysis_sheet.export_data.start,name:"
+msgid "Export Analysis Sheets Data"
+msgstr "Exportar datos de hojas de análisis"
+
+msgctxt "wizard_button:lims.analysis_sheet.export_data,result,end:"
+msgid "Close"
+msgstr "Cerrar"
+
+msgctxt "wizard_button:lims.analysis_sheet.export_data,start,check:"
+msgid "Export"
+msgstr "Exportar"
+
+msgctxt "wizard_button:lims.analysis_sheet.export_data,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
