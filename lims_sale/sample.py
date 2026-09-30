@@ -11,6 +11,28 @@ from trytond.exceptions import UserError, UserWarning
 from trytond.i18n import gettext
 
 
+def get_quoted_analysis_methods(sale_lines):
+    '''
+    Return the quoted analyses and their methods, keyed by analysis id.
+    A sale line without analysis quotes every analysis of its product.
+    '''
+    Analysis = Pool().get('lims.analysis')
+
+    res = {}
+    products_methods = {}
+    for sl in sale_lines:
+        if sl.analysis:
+            res[sl.analysis.id] = sl.method
+        elif sl.product:
+            products_methods.setdefault(sl.product.id, sl.method)
+    if products_methods:
+        for a in Analysis.search([
+                ('product', 'in', list(products_methods.keys())),
+                ]):
+            res.setdefault(a.id, products_methods[a.product.id])
+    return res
+
+
 class CreateSampleStart(metaclass=PoolMeta):
     __name__ = 'lims.create_sample.start'
 
@@ -75,7 +97,6 @@ class CreateSampleStart(metaclass=PoolMeta):
     @fields.depends('party', 'product_type', 'matrix', 'sale_lines')
     def on_change_with_analysis_domain(self, name=None):
         pool = Pool()
-        Analysis = pool.get('lims.analysis')
         Entry = pool.get('lims.entry')
 
         entry_id = Transaction().context.get('active_id', None)
@@ -94,11 +115,8 @@ class CreateSampleStart(metaclass=PoolMeta):
             else:
                 return analysis_domain
 
-        quoted_products = [sl.product.id
-            for sl in self.sale_lines if sl.product]
-        quoted_analysis = Analysis.search([('product', 'in', quoted_products)])
-        quoted_analysis_ids = [a.id for a in quoted_analysis]
-        return [a for a in analysis_domain if a in quoted_analysis_ids]
+        quoted_analysis = get_quoted_analysis_methods(self.sale_lines)
+        return [a for a in analysis_domain if a in quoted_analysis]
 
     @fields.depends('sale_lines', 'product_type', 'matrix', 'services',
         methods=['on_change_with_analysis_domain'])
@@ -116,12 +134,10 @@ class CreateSampleStart(metaclass=PoolMeta):
         if not analysis_domain:
             return
 
-        quoted_products_methods = {}
-        for sl in self.sale_lines:
-            if sl.product:
-                quoted_products_methods[sl.product.id] = sl.method
+        quoted_analysis_methods = get_quoted_analysis_methods(
+            self.sale_lines)
         quoted_analysis = Analysis.search([
-            ('product', 'in', list(quoted_products_methods.keys()))])
+            ('id', 'in', list(quoted_analysis_methods.keys()))])
         quoted_analysis = [a for a in quoted_analysis
             if a.id in analysis_domain]
         if not quoted_analysis:
@@ -138,8 +154,8 @@ class CreateSampleStart(metaclass=PoolMeta):
                 s.priority = s.default_priority()
                 s.analysis = a
                 s.on_change_analysis()
-                if quoted_products_methods[a.product.id]:
-                    s.method = quoted_products_methods[a.product.id]
+                if quoted_analysis_methods[a.id]:
+                    s.method = quoted_analysis_methods[a.id]
                 s.laboratory_date = s.on_change_with_laboratory_date()
                 s.report_date = s.on_change_with_report_date()
 
@@ -363,7 +379,6 @@ class AddSampleServiceStart(metaclass=PoolMeta):
     @fields.depends('party', 'product_type', 'matrix', 'sale_lines')
     def on_change_with_analysis_domain(self, name=None):
         pool = Pool()
-        Analysis = pool.get('lims.analysis')
         Sample = pool.get('lims.sample')
 
         active_id = Transaction().context['active_ids'][0]
@@ -380,11 +395,8 @@ class AddSampleServiceStart(metaclass=PoolMeta):
         if not self.sale_lines:
             return analysis_domain
 
-        quoted_products = [sl.product.id
-            for sl in self.sale_lines if sl.product]
-        quoted_analysis = Analysis.search([('product', 'in', quoted_products)])
-        quoted_analysis_ids = [a.id for a in quoted_analysis]
-        return [a for a in analysis_domain if a in quoted_analysis_ids]
+        quoted_analysis = get_quoted_analysis_methods(self.sale_lines)
+        return [a for a in analysis_domain if a in quoted_analysis]
 
     @fields.depends('sale_lines', 'product_type', 'matrix', 'services',
         methods=['on_change_with_analysis_domain'])
@@ -402,12 +414,10 @@ class AddSampleServiceStart(metaclass=PoolMeta):
         if not analysis_domain:
             return
 
-        quoted_products_methods = {}
-        for sl in self.sale_lines:
-            if sl.product:
-                quoted_products_methods[sl.product.id] = sl.method
+        quoted_analysis_methods = get_quoted_analysis_methods(
+            self.sale_lines)
         quoted_analysis = Analysis.search([
-            ('product', 'in', list(quoted_products_methods.keys()))])
+            ('id', 'in', list(quoted_analysis_methods.keys()))])
         quoted_analysis = [a for a in quoted_analysis
             if a.id in analysis_domain]
         if not quoted_analysis:
@@ -424,8 +434,8 @@ class AddSampleServiceStart(metaclass=PoolMeta):
                 s.priority = s.default_priority()
                 s.analysis = a
                 s.on_change_analysis()
-                if quoted_products_methods[a.product.id]:
-                    s.method = quoted_products_methods[a.product.id]
+                if quoted_analysis_methods[a.id]:
+                    s.method = quoted_analysis_methods[a.id]
                 s.laboratory_date = s.on_change_with_laboratory_date()
                 s.report_date = s.on_change_with_report_date()
 
@@ -611,7 +621,6 @@ class AddFractionServiceStart(metaclass=PoolMeta):
     @fields.depends('party', 'product_type', 'matrix', 'sale_lines')
     def on_change_with_analysis_domain(self, name=None):
         pool = Pool()
-        Analysis = pool.get('lims.analysis')
         Fraction = pool.get('lims.fraction')
 
         active_id = Transaction().context['active_ids'][0]
@@ -628,11 +637,8 @@ class AddFractionServiceStart(metaclass=PoolMeta):
         if not self.sale_lines:
             return analysis_domain
 
-        quoted_products = [sl.product.id
-            for sl in self.sale_lines if sl.product]
-        quoted_analysis = Analysis.search([('product', 'in', quoted_products)])
-        quoted_analysis_ids = [a.id for a in quoted_analysis]
-        return [a for a in analysis_domain if a in quoted_analysis_ids]
+        quoted_analysis = get_quoted_analysis_methods(self.sale_lines)
+        return [a for a in analysis_domain if a in quoted_analysis]
 
     @fields.depends('sale_lines', 'product_type', 'matrix', 'services',
         methods=['on_change_with_analysis_domain'])
@@ -650,12 +656,10 @@ class AddFractionServiceStart(metaclass=PoolMeta):
         if not analysis_domain:
             return
 
-        quoted_products_methods = {}
-        for sl in self.sale_lines:
-            if sl.product:
-                quoted_products_methods[sl.product.id] = sl.method
+        quoted_analysis_methods = get_quoted_analysis_methods(
+            self.sale_lines)
         quoted_analysis = Analysis.search([
-            ('product', 'in', list(quoted_products_methods.keys()))])
+            ('id', 'in', list(quoted_analysis_methods.keys()))])
         quoted_analysis = [a for a in quoted_analysis
             if a.id in analysis_domain]
         if not quoted_analysis:
@@ -672,8 +676,8 @@ class AddFractionServiceStart(metaclass=PoolMeta):
                 s.priority = s.default_priority()
                 s.analysis = a
                 s.on_change_analysis()
-                if quoted_products_methods[a.product.id]:
-                    s.method = quoted_products_methods[a.product.id]
+                if quoted_analysis_methods[a.id]:
+                    s.method = quoted_analysis_methods[a.id]
                 s.laboratory_date = s.on_change_with_laboratory_date()
                 s.report_date = s.on_change_with_report_date()
 
