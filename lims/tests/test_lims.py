@@ -4,6 +4,7 @@
 import unittest
 import doctest
 from datetime import date
+from unittest.mock import patch
 
 import trytond.tests.test_tryton
 from trytond.pool import Pool
@@ -197,6 +198,32 @@ class LimsTestCase(ModuleTestCase):
             self.assertEqual(get_labels(None, '  \n '), [None])
             self.assertEqual(get_labels(None, ''), [None])
             self.assertEqual(get_labels(None, None), [None])
+
+    @with_transaction()
+    def test_generate_report_skips_inactive_transcription(self):
+        "Releasing does not fail when the transcription report is disabled"
+        pool = Pool()
+        ActionReport = pool.get('ir.action.report')
+        Detail = pool.get('lims.results_report.version.detail')
+        ResultReport = pool.get('lims.result_report', type='report')
+        Transcription = pool.get(
+            'lims.result_report.transcription', type='report')
+
+        action, = ActionReport.search([
+                ('report_name', '=', Transcription.__name__),
+                ])
+        detail = Detail()
+        with patch.object(ResultReport, 'execute') as report, \
+                patch.object(Transcription, 'execute') as transcription:
+            detail.generate_report()
+            self.assertEqual(report.call_count, 1)
+            self.assertEqual(transcription.call_count, 1)
+
+            action.active = False
+            action.save()
+            detail.generate_report()
+            self.assertEqual(report.call_count, 2)
+            self.assertEqual(transcription.call_count, 1)
 
 
 def suite():

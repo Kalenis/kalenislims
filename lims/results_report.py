@@ -1523,12 +1523,16 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
 
     def generate_report(self):
         pool = Pool()
+        ActionReport = pool.get('ir.action.report')
         ResultReport = pool.get('lims.result_report', type='report')
         ResultReportTranscription = pool.get(
             'lims.result_report.transcription', type='report')
 
         ResultReport.execute([self.id], {'save_cache': True})
-        ResultReportTranscription.execute([self.id], {'save_cache': True})
+        if ActionReport.search([
+                ('report_name', '=', ResultReportTranscription.__name__),
+                ], limit=1):
+            ResultReportTranscription.execute([self.id], {'save_cache': True})
 
     def generate_render(self):
         pool = Pool()
