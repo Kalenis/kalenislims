@@ -212,6 +212,10 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
         'Analysis Product Category', states={'required': True})
     entry_confirm_background = fields.Boolean(
         'Confirm Entries in Background')
+    entry_update_samples_dates = fields.Boolean(
+        'Update samples dates from entry',
+        help='When the date of an entry changes, samples that had the '
+        'previous date are moved to the new one, keeping their time')
     planification_sequence = fields.MultiValue(fields.Many2One(
         'ir.sequence', 'Planification Sequence', required=True,
         domain=[
@@ -304,6 +308,10 @@ class Configuration(ModelSingleton, ModelSQL, ModelView,
 
     @staticmethod
     def default_entry_confirm_background():
+        return False
+
+    @staticmethod
+    def default_entry_update_samples_dates():
         return False
 
     @staticmethod

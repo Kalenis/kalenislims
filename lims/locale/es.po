@@ -451,6 +451,18 @@ msgctxt "field:lims.configuration,entry_confirm_background:"
 msgid "Confirm Entries in Background"
 msgstr "Confirmar ingresos en segundo plano"
 
+msgctxt "field:lims.configuration,entry_update_samples_dates:"
+msgid "Update samples dates from entry"
+msgstr "Actualizar fechas de las muestras desde el ingreso"
+
+msgctxt "help:lims.configuration,entry_update_samples_dates:"
+msgid ""
+"When the date of an entry changes, samples that had the previous date are "
+"moved to the new one, keeping their time"
+msgstr ""
+"Al cambiar una fecha del ingreso, las muestras que tenían la fecha anterior "
+"pasan a la nueva, conservando su hora"
+
 msgctxt "field:lims.configuration,entry_default_contacts:"
 msgid "Default Contacts in Entries"
 msgstr "Contactos por defecto en Ingresos"

@@ -510,8 +510,18 @@ class Entry(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def write(cls, *args):
-        Sample = Pool().get('lims.sample')
+        pool = Pool()
+        Sample = pool.get('lims.sample')
+        Config = pool.get('lims.configuration')
+        update_samples_dates = Config(1).entry_update_samples_dates
+        actions = iter(args)
+        previous_dates = []
+        for entries, vals in zip(actions, actions):
+            if update_samples_dates and 'date' in vals:
+                previous_dates.extend((e, e.date) for e in entries)
         super().write(*args)
+        if previous_dates:
+            cls.update_samples_dates(previous_dates, 'date')
         actions = iter(args)
         for entries, vals in zip(actions, actions):
             if 'party' in vals:
@@ -525,6 +535,35 @@ class Entry(Workflow, ModelSQL, ModelView):
                     if e.multi_party]
                 cls.write(multi_party_entries,
                     {'party': vals.get('invoice_party')})
+
+    @classmethod
+    def update_samples_dates(cls, previous_values, field_name):
+        Sample = Pool().get('lims.sample')
+
+        to_write = []
+        for entry, previous_value in previous_values:
+            entry = cls(entry.id)
+            new_value = getattr(entry, field_name)
+            if not previous_value or not new_value:
+                continue
+            previous_date = cls._get_local_date(previous_value)
+            delta = cls._get_local_date(new_value) - previous_date
+            if not delta:
+                continue
+            for sample in entry.samples:
+                value = getattr(sample, field_name)
+                if value and cls._get_local_date(value) == previous_date:
+                    to_write.extend(([sample], {field_name: value + delta}))
+        if to_write:
+            Sample.write(*to_write)
+
+    @staticmethod
+    def _get_local_date(value):
+        Company = Pool().get('company.company')
+        company_id = Transaction().context.get('company')
+        if company_id:
+            value = Company(company_id).convert_timezone_datetime(value)
+        return value.date()
 
     @classmethod
     def copy(cls, entries, default=None):
