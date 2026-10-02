@@ -650,7 +650,7 @@ class Service(ModelSQL, ModelView):
                 cls.update_urgent_lines(services, vals.get('urgent'))
             update_samples_state = False
             for field in ('laboratory_date', 'report_date',
-                    'confirmation_date'):
+                    'confirmation_date', 'annulled'):
                 if field in vals:
                     update_samples_state = True
                     break
@@ -3925,7 +3925,9 @@ class Sample(ModelSQL, ModelView):
             res['confirmation_datetime'] = cursor.fetchone()[0] or None
 
         # Laboratory deadline
-        cursor.execute('SELECT MAX(s.laboratory_date) '
+        cursor.execute('SELECT COALESCE(MAX(CASE WHEN '
+                'NOT COALESCE(s.annulled, FALSE) THEN s.laboratory_date END), '
+                'MAX(s.laboratory_date)) '
             'FROM "' + Service._table + '" s '
                 'INNER JOIN "' + Fraction._table + '" f '
                 'ON f.id = s.fraction '
@@ -3934,7 +3936,9 @@ class Sample(ModelSQL, ModelView):
         res['laboratory_date'] = cursor.fetchone()[0] or None
 
         # Date agreed for result
-        cursor.execute('SELECT MAX(s.report_date) '
+        cursor.execute('SELECT COALESCE(MAX(CASE WHEN '
+                'NOT COALESCE(s.annulled, FALSE) THEN s.report_date END), '
+                'MAX(s.report_date)) '
             'FROM "' + Service._table + '" s '
                 'INNER JOIN "' + Fraction._table + '" f '
                 'ON f.id = s.fraction '
