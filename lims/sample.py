@@ -4099,7 +4099,7 @@ class Sample(ModelSQL, ModelView):
                 'AND nl.end_date IS NOT NULL',
             (self.id,))
         finished_without_report = cursor.fetchone()[0]
-        if finished_without_report == all_lines:
+        if finished_without_report == all_lines - annulled_lines:
             return 'without_report'
 
         if self.laboratory_acceptance_date:
