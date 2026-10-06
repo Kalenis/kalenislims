@@ -1693,11 +1693,18 @@ class Service(ModelSQL, ModelView):
     def get_manage_service_available(self, name=None):
         pool = Pool()
         NotebookLine = pool.get('lims.notebook.line')
+        PlanificationServiceDetail = pool.get(
+            'lims.planification.service_detail')
         planned_notebook_lines = NotebookLine.search([
             ('service', '=', self.id),
             ('planification', '!=', None),
             ])
         if planned_notebook_lines:
+            return False
+        planification_details = PlanificationServiceDetail.search([
+            ('notebook_line.service', '=', self.id),
+            ], limit=1)
+        if planification_details:
             return False
         return True
 
