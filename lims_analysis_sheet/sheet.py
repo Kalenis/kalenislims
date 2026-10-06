@@ -1909,7 +1909,8 @@ class ExportAnalysisSheetData(Wizard):
         NotebookLine = pool.get('lims.notebook.line')
 
         sheet_fields = AnalysisSheet.fields_get(
-            ['number', 'date2', 'state', 'template'])
+            ['number', 'date2', 'state', 'template', 'planning_date',
+                'activated_date', 'validated_date', 'confirmed_date'])
         line_fields = NotebookLine.fields_get(['sample', 'fraction',
             'product_type', 'matrix', 'analysis', 'method', 'annulled'])
         header = [
@@ -1917,6 +1918,10 @@ class ExportAnalysisSheetData(Wizard):
             sheet_fields['date2']['string'],
             sheet_fields['state']['string'],
             sheet_fields['template']['string'],
+            sheet_fields['planning_date']['string'],
+            sheet_fields['activated_date']['string'],
+            sheet_fields['validated_date']['string'],
+            sheet_fields['confirmed_date']['string'],
             line_fields['sample']['string'],
             line_fields['fraction']['string'],
             line_fields['product_type']['string'],
@@ -1983,11 +1988,19 @@ class ExportAnalysisSheetData(Wizard):
         sheets_info = {}
         for sheets in tables.values():
             for sheet in sheets:
+                planning_date = sheet.planning_date
+                if not planning_date and sheet.create_date:
+                    planning_date = self._get_local_datetime(
+                        sheet.create_date).date()
                 sheets_info[sheet.compilation.id] = [
                     sheet.number,
                     sheet.date2,
                     state_names.get(sheet.state, sheet.state),
                     sheet.template.rec_name,
+                    planning_date,
+                    self._get_local_datetime(sheet.activated_date),
+                    self._get_local_datetime(sheet.validated_date),
+                    self._get_local_datetime(sheet.confirmed_date),
                     ]
 
         selections = {}
@@ -2037,6 +2050,17 @@ class ExportAnalysisSheetData(Wizard):
                     line.method.rec_name if line.method else None,
                     ]
         return res
+
+    @staticmethod
+    def _get_local_datetime(value):
+        Company = Pool().get('company.company')
+        if not value:
+            return None
+        company_id = Transaction().context.get('company')
+        if company_id:
+            value = Company(company_id).convert_timezone_datetime(
+                value).replace(tzinfo=None)
+        return value.replace(microsecond=0)
 
     @staticmethod
     def _is_exportable(field):
