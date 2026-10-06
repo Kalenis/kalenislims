@@ -1979,7 +1979,7 @@ class TrendChart(ModelSQL, ModelView):
                     axis.legend(handles, labels, loc=loc[i], fontsize=14)
                     i += 1
 
-                ax.get_figure().savefig(output, bbox_inches='tight', dpi=300)
+                ax.get_figure().savefig(output, bbox_inches='tight', dpi=100)
                 plt.close('all')
                 image = output.getvalue()
                 output.close()
@@ -2019,7 +2019,7 @@ class TrendChart(ModelSQL, ModelView):
                         i += 1
 
                     ax.get_figure().savefig(output, bbox_inches='tight',
-                        dpi=300)
+                        dpi=100)
                     plt.close('all')
                     image = output.getvalue()
                     output.close()
