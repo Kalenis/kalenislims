@@ -715,7 +715,7 @@ class Service(ModelSQL, ModelView):
         to_update = Sample.browse(list(set(s.sample.id
             for s in services)))
         super().delete(services)
-        cls.delete_additional_services()
+        cls.delete_additional_services(fractions_ids)
         cls.set_shared_fraction(fractions_ids)
         Sample.__queue__.update_samples_state(to_update)
 
@@ -727,11 +727,15 @@ class Service(ModelSQL, ModelView):
                     'lims.msg_delete_service', service=service.rec_name))
 
     @classmethod
-    def delete_additional_services(cls):
-        additionals_to_delete = cls.search([
+    def delete_additional_services(cls, fractions_ids=None):
+        clause = [
             ('is_additional', '=', True),
             ('additional_origins', '=', None),
-            ])
+            ]
+        if fractions_ids:
+            clause.append(('fraction', 'in', fractions_ids))
+        additionals_to_delete = [s for s in cls.search(clause)
+            if s.manage_service_available]
         if additionals_to_delete:
             cls.delete(additionals_to_delete)
 
