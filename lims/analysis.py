@@ -2022,6 +2022,17 @@ class AnalysisIncluded(ModelSQL, ModelView):
         return included_analysis
 
     @classmethod
+    def write(cls, *args):
+        super().write(*args)
+        actions = iter(args)
+        to_update = []
+        for included_analysis, vals in zip(actions, actions):
+            if 'included_analysis' in vals or 'method' in vals:
+                to_update.extend(included_analysis)
+        if to_update:
+            cls.create_typification_calculated(to_update)
+
+    @classmethod
     def create_typification_calculated(cls, included_analysis):
         cursor = Transaction().connection.cursor()
         pool = Pool()

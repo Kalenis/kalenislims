@@ -239,6 +239,26 @@ class LimsTestCase(ModuleTestCase):
             self.assertEqual(report.call_count, 2)
             self.assertEqual(transcription.call_count, 1)
 
+    @with_transaction()
+    def test_included_analysis_write_updates_calculated_typifications(self):
+        "Changing an included analysis or its method recalculates typifications"
+        from trytond.model import ModelSQL
+        Included = Pool().get('lims.analysis.included')
+
+        first, second = Included(1), Included(2)
+        with patch.object(ModelSQL, 'write'), \
+                patch.object(Included,
+                    'create_typification_calculated') as update:
+            Included.write([first], {'method': 5}, [second], {'laboratory': 3})
+            update.assert_called_once_with([first])
+
+            update.reset_mock()
+            Included.write([first, second], {'laboratory': 3})
+            update.assert_not_called()
+
+            Included.write([first, second], {'included_analysis': 7})
+            update.assert_called_once_with([first, second])
+
 
 def suite():
     suite = trytond.tests.test_tryton.suite()
