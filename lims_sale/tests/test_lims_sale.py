@@ -60,6 +60,43 @@ class LimsTestCase(ModuleTestCase):
         # a line without analysis nor product quotes nothing
         self.assertEqual(get_quoted_analysis_methods([line()]), {})
 
+    @with_transaction()
+    def test_allowed_analysis(self):
+        "Services without quotation allow any analysis even with quotes"
+        from trytond.modules.lims_sale.sample import get_allowed_analysis
+        pool = Pool()
+        Uom = pool.get('product.uom')
+        Template = pool.get('product.template')
+        Product = pool.get('product.product')
+        Analysis = pool.get('lims.analysis')
+
+        unit, = Uom.search([('symbol', '=', 'u')])
+        template, = Template.create([{
+                    'name': 'Metals',
+                    'type': 'service',
+                    'default_uom': unit.id,
+                    }])
+        product, = Product.create([{'template': template.id}])
+        quoted, = Analysis.create([{
+                    'code': 'METALS',
+                    'description': 'METALS',
+                    'type': 'set',
+                    'behavior': 'normal',
+                    'product': product.id,
+                    }])
+        other = quoted.id + 1000
+        domain = [quoted.id, other]
+        quote = [SimpleNamespace(
+                analysis=quoted, product=product, method=None)]
+
+        # with quotes, only the quoted analyses unless it is allowed
+        self.assertEqual(get_allowed_analysis(domain, quote, False),
+            [quoted.id])
+        self.assertEqual(get_allowed_analysis(domain, quote, True), domain)
+        # without quotes, everything or nothing
+        self.assertEqual(get_allowed_analysis(domain, [], True), domain)
+        self.assertEqual(get_allowed_analysis(domain, [], False), [])
+
 
 def suite():
     suite = trytond.tests.test_tryton.suite()

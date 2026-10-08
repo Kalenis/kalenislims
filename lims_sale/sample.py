@@ -33,6 +33,21 @@ def get_quoted_analysis_methods(sale_lines):
     return res
 
 
+def get_allowed_analysis(analysis_domain, sale_lines,
+        allow_services_without_quotation):
+    '''
+    Return the analyses of the domain that can be added to a sample.
+    When services without quotation are allowed every analysis is offered,
+    even if quotes are selected; otherwise only the quoted ones.
+    '''
+    if allow_services_without_quotation:
+        return analysis_domain
+    if not sale_lines:
+        return []
+    quoted_analysis = get_quoted_analysis_methods(sale_lines)
+    return [a for a in analysis_domain if a in quoted_analysis]
+
+
 class CreateSampleStart(metaclass=PoolMeta):
     __name__ = 'lims.create_sample.start'
 
@@ -109,14 +124,8 @@ class CreateSampleStart(metaclass=PoolMeta):
         if not Transaction().context.get('_check_sale_line', True):
             return analysis_domain
 
-        if not self.sale_lines:
-            if not entry.allow_services_without_quotation:
-                return []
-            else:
-                return analysis_domain
-
-        quoted_analysis = get_quoted_analysis_methods(self.sale_lines)
-        return [a for a in analysis_domain if a in quoted_analysis]
+        return get_allowed_analysis(analysis_domain, self.sale_lines,
+            entry.allow_services_without_quotation)
 
     @fields.depends('sale_lines', 'product_type', 'matrix', 'services',
         methods=['on_change_with_analysis_domain'])
@@ -392,11 +401,8 @@ class AddSampleServiceStart(metaclass=PoolMeta):
 
         analysis_domain = sample.on_change_with_analysis_domain()
 
-        if not self.sale_lines:
-            return analysis_domain
-
-        quoted_analysis = get_quoted_analysis_methods(self.sale_lines)
-        return [a for a in analysis_domain if a in quoted_analysis]
+        return get_allowed_analysis(analysis_domain, self.sale_lines,
+            sample.entry.allow_services_without_quotation)
 
     @fields.depends('sale_lines', 'product_type', 'matrix', 'services',
         methods=['on_change_with_analysis_domain'])
@@ -634,11 +640,8 @@ class AddFractionServiceStart(metaclass=PoolMeta):
 
         analysis_domain = fraction.sample.on_change_with_analysis_domain()
 
-        if not self.sale_lines:
-            return analysis_domain
-
-        quoted_analysis = get_quoted_analysis_methods(self.sale_lines)
-        return [a for a in analysis_domain if a in quoted_analysis]
+        return get_allowed_analysis(analysis_domain, self.sale_lines,
+            fraction.entry.allow_services_without_quotation)
 
     @fields.depends('sale_lines', 'product_type', 'matrix', 'services',
         methods=['on_change_with_analysis_domain'])
