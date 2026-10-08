@@ -15,6 +15,15 @@ class Laboratory(metaclass=PoolMeta):
 
     planification_update_draft_sheet = fields.Boolean(
         'Update draft sheets when planning analyzes')
+    analysis_sheet_required = fields.Boolean(
+        'Requires Analysis Sheet Template',
+        help='Entries cannot be confirmed nor analyzes planned when they '
+        'have no analysis sheet template, unless the analysis is marked as '
+        'not using analysis sheets.')
+
+    @staticmethod
+    def default_analysis_sheet_required():
+        return False
 
     @staticmethod
     def default_planification_update_draft_sheet():

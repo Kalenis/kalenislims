@@ -7,5 +7,7 @@
     <xpath expr="/form/group[@id='checkboxes']" position="inside">
         <label name="planification_update_draft_sheet"/>
         <field name="planification_update_draft_sheet"/>
+        <label name="analysis_sheet_required"/>
+        <field name="analysis_sheet_required"/>
     </xpath>
 </data>

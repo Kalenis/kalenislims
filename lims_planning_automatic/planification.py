@@ -200,6 +200,7 @@ class Planification(metaclass=PoolMeta):
             } for nl_id in notebook_lines])
 
         if analysis_sheet_activated:
+            NotebookLine.check_analysis_sheet_templates(lines)
 
             company = Company(Transaction().context.get('company'))
             company_timezone = company.get_timezone()

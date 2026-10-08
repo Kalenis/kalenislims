@@ -37,133 +37,38 @@ class NotebookLine(metaclass=PoolMeta):
     
 
     def get_analysis_sheet_template(self):
-        cursor = Transaction().connection.cursor()
-        pool = Pool()
-        Template = pool.get('lims.template.analysis_sheet')
-        TemplateAnalysis = pool.get('lims.template.analysis_sheet.analysis')
+        Template = Pool().get('lims.template.analysis_sheet')
+        return Template.get_template(self.analysis.id,
+            self.method and self.method.id or None,
+            self.product_type and self.product_type.id or None,
+            self.matrix and self.matrix.id or None)
 
-        # Analysis + Method + Product type + Matrix
-        cursor.execute('SELECT t.id '
-            'FROM "' + Template._table + '" t '
-                'INNER JOIN "' + TemplateAnalysis._table + '" ta '
-                'ON t.id = ta.template '
-            'WHERE t.active IS TRUE '
-                'AND ta.analysis = %s '
-                'AND ta.method = %s '
-                'AND ta.product_type = %s '
-                'AND ta.matrix = %s',
-            (self.analysis.id, self.method.id, self.product_type.id,
-                self.matrix.id))
-        template = cursor.fetchone()
-        if template:
-            return template[0]
+    def analysis_sheet_required(self):
+        'Whether this line must be worked on an analysis sheet'
+        if self.analysis.no_analysis_sheet:
+            return False
+        return bool(self.laboratory
+            and self.laboratory.analysis_sheet_required)
 
-        # Analysis + Method + Product type
-        cursor.execute('SELECT t.id '
-            'FROM "' + Template._table + '" t '
-                'INNER JOIN "' + TemplateAnalysis._table + '" ta '
-                'ON t.id = ta.template '
-            'WHERE t.active IS TRUE '
-                'AND ta.analysis = %s '
-                'AND ta.method = %s '
-                'AND ta.product_type = %s '
-                'AND ta.matrix IS NULL',
-            (self.analysis.id, self.method.id, self.product_type.id))
-        template = cursor.fetchone()
-        if template:
-            return template[0]
-
-        # Analysis + Method + Matrix
-        cursor.execute('SELECT t.id '
-            'FROM "' + Template._table + '" t '
-                'INNER JOIN "' + TemplateAnalysis._table + '" ta '
-                'ON t.id = ta.template '
-            'WHERE t.active IS TRUE '
-                'AND ta.analysis = %s '
-                'AND ta.method = %s '
-                'AND ta.product_type IS NULL '
-                'AND ta.matrix = %s',
-            (self.analysis.id, self.method.id, self.matrix.id))
-        template = cursor.fetchone()
-        if template:
-            return template[0]
-
-        # Analysis + Product type + Matrix
-        cursor.execute('SELECT t.id '
-            'FROM "' + Template._table + '" t '
-                'INNER JOIN "' + TemplateAnalysis._table + '" ta '
-                'ON t.id = ta.template '
-            'WHERE t.active IS TRUE '
-                'AND ta.analysis = %s '
-                'AND ta.method IS NULL '
-                'AND ta.product_type = %s '
-                'AND ta.matrix = %s',
-            (self.analysis.id, self.product_type.id, self.matrix.id))
-        template = cursor.fetchone()
-        if template:
-            return template[0]
-
-        # Analysis + Product type
-        cursor.execute('SELECT t.id '
-            'FROM "' + Template._table + '" t '
-                'INNER JOIN "' + TemplateAnalysis._table + '" ta '
-                'ON t.id = ta.template '
-            'WHERE t.active IS TRUE '
-                'AND ta.analysis = %s '
-                'AND ta.method IS NULL '
-                'AND ta.product_type = %s '
-                'AND ta.matrix IS NULL',
-            (self.analysis.id, self.product_type.id))
-        template = cursor.fetchone()
-        if template:
-            return template[0]
-
-        # Analysis + Matrix
-        cursor.execute('SELECT t.id '
-            'FROM "' + Template._table + '" t '
-                'INNER JOIN "' + TemplateAnalysis._table + '" ta '
-                'ON t.id = ta.template '
-            'WHERE t.active IS TRUE '
-                'AND ta.analysis = %s '
-                'AND ta.method IS NULL '
-                'AND ta.product_type IS NULL '
-                'AND ta.matrix = %s',
-            (self.analysis.id, self.matrix.id))
-        template = cursor.fetchone()
-        if template:
-            return template[0]
-
-        # Analysis + Method
-        cursor.execute('SELECT t.id '
-            'FROM "' + Template._table + '" t '
-                'INNER JOIN "' + TemplateAnalysis._table + '" ta '
-                'ON t.id = ta.template '
-            'WHERE t.active IS TRUE '
-                'AND ta.analysis = %s '
-                'AND ta.method = %s '
-                'AND ta.product_type IS NULL '
-                'AND ta.matrix IS NULL',
-            (self.analysis.id, self.method.id))
-        template = cursor.fetchone()
-        if template:
-            return template[0]
-
-        # Analysis
-        cursor.execute('SELECT t.id '
-            'FROM "' + Template._table + '" t '
-                'INNER JOIN "' + TemplateAnalysis._table + '" ta '
-                'ON t.id = ta.template '
-            'WHERE t.active IS TRUE '
-                'AND ta.analysis = %s '
-                'AND ta.method IS NULL '
-                'AND ta.product_type IS NULL '
-                'AND ta.matrix IS NULL',
-            (self.analysis.id,))
-        template = cursor.fetchone()
-        if template:
-            return template[0]
-
-        return None
+    @classmethod
+    def check_analysis_sheet_templates(cls, lines):
+        'Refuse to plan lines that require a sheet but have no template'
+        missing = set()
+        for nl in lines:
+            if not nl.analysis_sheet_required():
+                continue
+            if nl.get_analysis_sheet_template():
+                continue
+            missing.add((
+                nl.analysis.rec_name,
+                nl.method and nl.method.rec_name or '-',
+                nl.product_type and nl.product_type.rec_name or '-',
+                nl.matrix and nl.matrix.rec_name or '-',
+                ))
+        if missing:
+            raise UserError(gettext(
+                'lims_analysis_sheet.msg_missing_analysis_sheet_template',
+                lines='\n'.join(' / '.join(m) for m in sorted(missing))))
 
     @classmethod
     def delete(cls, lines):

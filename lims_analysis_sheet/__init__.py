@@ -9,6 +9,7 @@ from . import interface
 from . import planification
 from . import notebook
 from . import laboratory
+from . import analysis
 from . import sample
 
 
@@ -58,6 +59,9 @@ def register():
         laboratory.LabDeviceConstant,
         laboratory.NotebookRule,
         laboratory.NotebookRuleCondition,
+        analysis.Analysis,
+        sample.Entry,
+        sample.EntryDetailAnalysis,
         module='lims_analysis_sheet', type_='model')
     Pool.register(
         sheet.OpenAnalysisSheetData,

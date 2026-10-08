@@ -166,6 +166,7 @@ class Planification(metaclass=PoolMeta):
         AnalysisSheet = pool.get('lims.analysis_sheet')
         PlanificationAnalysisSheet = pool.get(
             'lims.planification.analysis_sheet')
+        NotebookLine = pool.get('lims.notebook.line')
         Company = pool.get('company.company')
 
         company = Company(Transaction().context.get('company'))
@@ -179,6 +180,8 @@ class Planification(metaclass=PoolMeta):
             ('detail.planification', '=', self.id),
             ('notebook_line', '!=', None),
             ])
+        NotebookLine.check_analysis_sheet_templates(
+            [sd.notebook_line for sd in service_details])
         for service_detail in service_details:
             nl = service_detail.notebook_line
             template_id = nl.get_analysis_sheet_template()

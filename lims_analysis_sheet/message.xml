@@ -49,5 +49,16 @@
         <record model="ir.message" id="msg_export_data_no_sheets">
             <field name="text">There are no analysis sheets with data to export for the selected filters.</field>
         </record>
+        <record model="ir.message" id="msg_template_interface_not_ready">
+            <field name="text">The analysis sheet template "%(template)s" cannot be used: its interface "%(interface)s" is not active or has no columns. Activate the interface with its columns before planning.</field>
+        </record>
+        <record model="ir.message" id="msg_entry_interfaces_not_ready">
+            <field name="text">These analysis sheet templates have an interface that is not active or has no columns, so their sheets would be created empty:
+%(templates)s</field>
+        </record>
+        <record model="ir.message" id="msg_missing_analysis_sheet_template">
+            <field name="text">There is no analysis sheet template for these combinations (analysis / method / product type / matrix):
+%(lines)s</field>
+        </record>
     </data>
 </tryton>

@@ -7,14 +7,19 @@ try:
         import suite as _analysis_sheet_suite
     from trytond.modules.lims_analysis_sheet.tests.test_interface_integrity \
         import suite as _integrity_suite
+    from trytond.modules.lims_analysis_sheet.tests.\
+        test_analysis_sheet_requirements import suite as _requirements_suite
 except ImportError:
     from .test_analysis_sheet import suite as _analysis_sheet_suite
     from .test_interface_integrity import suite as _integrity_suite
+    from .test_analysis_sheet_requirements import \
+        suite as _requirements_suite
 
 
 def suite():
     s = _analysis_sheet_suite()
     s.addTests(_integrity_suite())
+    s.addTests(_requirements_suite())
     return s
 
 

@@ -86,6 +86,69 @@ class TemplateAnalysisSheet(DeactivableMixin, ModelSQL, ModelView):
         if self.interface:
             return self.interface.name
 
+    # Lookup order: the most specific mapping wins. A criterion missing from
+    # a step must be NULL in the mapping for that step to match.
+    _template_lookup_order = (
+        ('method', 'product_type', 'matrix'),
+        ('method', 'product_type'),
+        ('method', 'matrix'),
+        ('product_type', 'matrix'),
+        ('product_type',),
+        ('matrix',),
+        ('method',),
+        (),
+        )
+
+    @classmethod
+    def get_template(cls, analysis_id, method_id=None, product_type_id=None,
+            matrix_id=None):
+        'Return the id of the template for the combination, or None'
+        cursor = Transaction().connection.cursor()
+        TemplateAnalysis = Pool().get('lims.template.analysis_sheet.analysis')
+
+        values = {
+            'method': method_id,
+            'product_type': product_type_id,
+            'matrix': matrix_id,
+            }
+        for criteria in cls._template_lookup_order:
+            if any(values[c] is None for c in criteria):
+                continue
+            where = ['t.active IS TRUE', 'ta.analysis = %s']
+            params = [analysis_id]
+            for name in ('method', 'product_type', 'matrix'):
+                if name in criteria:
+                    where.append('ta.%s = %%s' % name)
+                    params.append(values[name])
+                else:
+                    where.append('ta.%s IS NULL' % name)
+            cursor.execute('SELECT t.id '
+                'FROM "' + cls._table + '" t '
+                    'INNER JOIN "' + TemplateAnalysis._table + '" ta '
+                    'ON t.id = ta.template '
+                'WHERE ' + ' AND '.join(where), params)
+            template = cursor.fetchone()
+            if template:
+                return template[0]
+        return None
+
+    def interface_ready(self):
+        'An interface is usable only when active and its table has columns'
+        Field = Pool().get('lims.interface.table.field')
+        interface = self.interface
+        if not interface or interface.state != 'active' or not interface.table:
+            return False
+        return bool(Field.search([
+            ('table', '=', interface.table.id),
+            ], limit=1))
+
+    def check_interface_ready(self):
+        if not self.interface_ready():
+            raise UserError(gettext(
+                'lims_analysis_sheet.msg_template_interface_not_ready',
+                template=self.rec_name,
+                interface=self.interface.rec_name))
+
     @classmethod
     def get_fields(cls, records, names):
         context = Transaction().context
@@ -1220,6 +1283,7 @@ class AnalysisSheet(Workflow, ModelSQL, ModelView):
 
     def get_new_compilation(self, defaults={}):
         Compilation = Pool().get('lims.interface.compilation')
+        self.template.check_interface_ready()
         compilation = Compilation(
             table=self.template.interface.table.id,
             interface=self.template.interface.id,
