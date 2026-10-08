@@ -574,6 +574,9 @@
         <record model="ir.message" id="msg_draft_different_type">
             <field name="text">The target Results Report already has a draft of a different type. Complete or delete that draft first.</field>
         </record>
+        <record model="ir.message" id="msg_released_report_target">
+            <field name="text">The Results Report "%(report)s" is already released. Select it as Target Report to choose the version type and enter the review reason.</field>
+        </record>
         <record model="ir.message" id="msg_service_default_laboratory">
             <field name="text">You cannot copy service "%(analysis)s" because the assigned laboratory (%(laboratory)s) is not the default one.</field>
         </record>

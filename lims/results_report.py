@@ -2906,6 +2906,69 @@ class GenerateReport(Wizard):
                 'lims.msg_invalid_report_state'))
         return None
 
+    @staticmethod
+    def _new_version_type(reported_analyses, pending_analyses):
+        if set(reported_analyses) & set(pending_analyses):
+            return 'corrective'
+        return 'complementary'
+
+    @classmethod
+    def _get_released_report(cls, notebook, laboratory_id):
+        '''Return the released report and its valid detail that would get
+        a new version with the lines pending reporting of the notebook'''
+        pool = Pool()
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+
+        if not laboratory_id:
+            return None, None
+        lines = notebook._get_lines_for_reporting(laboratory_id, 'complete')
+        groupers = {l.analysis_detail.report_grouper for l in lines}
+        if not groupers:
+            return None, None
+        details = ResultsDetail.search([
+            ('laboratory', '=', laboratory_id),
+            ('samples.notebook', '=', notebook.id),
+            ('type', '!=', 'preliminary'),
+            ])
+        for report in {d.report_version.results_report for d in details}:
+            if report.report_grouper not in groupers:
+                continue
+            if report.cie_fraction_type != notebook.fraction.cie_fraction_type:
+                continue
+            last_detail = ResultsDetail.search([
+                ('report_version.results_report', '=', report.id),
+                ('report_version.laboratory', '=', laboratory_id),
+                ('type', '!=', 'preliminary'),
+                ], order=[('id', 'DESC')], limit=1)
+            if not last_detail or last_detail[0].state != 'released':
+                continue
+            valid_detail = ResultsDetail.search([
+                ('report_version.results_report', '=', report.id),
+                ('report_version.laboratory', '=', laboratory_id),
+                ('valid', '=', True),
+                ], limit=1)
+            return report, valid_detail and valid_detail[0] or None
+        return None, None
+
+    @classmethod
+    def _get_released_report_version_type(cls, notebook, laboratory_id,
+            valid_detail):
+        pool = Pool()
+        ResultsLine = pool.get('lims.results_report.version.detail.line')
+
+        reported_analyses = []
+        if valid_detail:
+            reported_analyses = [l.notebook_line.analysis.id
+                for l in ResultsLine.search([
+                    ('detail_sample.version_detail', '=', valid_detail.id),
+                    ('detail_sample.notebook', '=', notebook.id),
+                    ])
+                if l.notebook_line]
+        pending_analyses = [l.analysis.id
+            for l in notebook._get_lines_for_reporting(
+                laboratory_id, 'complete')]
+        return cls._new_version_type(reported_analyses, pending_analyses)
+
     def default_start(self, fields):
         pool = Pool()
         Configuration = pool.get('lims.configuration')
@@ -3025,7 +3088,35 @@ class GenerateReport(Wizard):
                 res['report'] = (
                     draft_detail[0].report_version.results_report.id)
 
+        if not res['report'] and has_complete and not mixed:
+            self._set_released_report_defaults(res, laboratory_id)
+
         return res
+
+    def _set_released_report_defaults(self, res, laboratory_id):
+        pool = Pool()
+        Notebook = pool.get('lims.notebook')
+
+        report = None
+        version_type = 'complementary'
+        for notebook in Notebook.browse(res['notebooks']):
+            notebook_report, valid_detail = self._get_released_report(
+                notebook, laboratory_id)
+            if not notebook_report:
+                return
+            if report and report != notebook_report:
+                return
+            report = notebook_report
+            if self._get_released_report_version_type(
+                    notebook, laboratory_id, valid_detail) == 'corrective':
+                version_type = 'corrective'
+        if not report:
+            return
+        res['report'] = report.id
+        if report.id not in res['report_domain']:
+            res['report_domain'].append(report.id)
+        res['type'] = version_type
+        res['corrective'] = (version_type == 'corrective')
 
     def transition_generate(self):
         pool = Pool()
@@ -3296,6 +3387,15 @@ class GenerateReport(Wizard):
         draft_detail = self._find_draft_detail(
             ResultsDetail, actual_version.id, details['type'])
         if not draft_detail:
+            if details['type'] == 'final':
+                last_detail = ResultsDetail.search([
+                    ('report_version', '=', actual_version.id),
+                    ('type', '!=', 'preliminary'),
+                    ], order=[('id', 'DESC')], limit=1)
+                if last_detail and last_detail[0].state == 'released':
+                    raise UserError(gettext(
+                        'lims.msg_released_report_target',
+                        report=actual_report.rec_name))
             details['report_version'] = actual_version.id
             detail, = ResultsDetail.create([details])
             ResultsDetail.update_from_valid_version([detail])

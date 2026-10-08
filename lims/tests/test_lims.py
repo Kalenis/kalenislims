@@ -134,6 +134,20 @@ class LimsTestCase(ModuleTestCase):
             ('preliminary', 'in_progress'))
 
     @with_transaction()
+    def test_new_version_type_on_released_report(self):
+        "Corrective when an analysis is reported again, else complementary"
+        GenerateReport = Pool().get('lims.notebook.generate_results_report')
+
+        self.assertEqual(
+            GenerateReport._new_version_type([1, 2], [2]), 'corrective')
+        self.assertEqual(
+            GenerateReport._new_version_type([1, 2], [3]), 'complementary')
+        self.assertEqual(
+            GenerateReport._new_version_type([1, 2], [2, 3]), 'corrective')
+        self.assertEqual(
+            GenerateReport._new_version_type([], [3]), 'complementary')
+
+    @with_transaction()
     def test_results_estimated_date_skips_weekends(self):
         "Estimated results date counts workdays, not calendar days"
         pool = Pool()
