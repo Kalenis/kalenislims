@@ -10,6 +10,7 @@ from trytond.pyson import Eval, Not, Bool
 from trytond.transaction import Transaction
 from trytond.exceptions import UserError, UserWarning
 from trytond.i18n import gettext
+from .html_template import check_template_syntax
 
 
 class ResultsReportVersionDetail(metaclass=PoolMeta):
@@ -264,7 +265,25 @@ class ResultsReportVersionDetailSample(metaclass=PoolMeta):
                 save = True
             if save:
                 sample.save()
+        cls.check_diagnosis_syntax(samples)
         return samples
+
+    @classmethod
+    def write(cls, *args):
+        super().write(*args)
+        actions = iter(args)
+        to_check = []
+        for samples, vals in zip(actions, actions):
+            if 'diagnosis' in vals:
+                to_check.extend(samples)
+        cls.check_diagnosis_syntax(to_check)
+
+    @classmethod
+    def check_diagnosis_syntax(cls, samples):
+        for sample in samples:
+            if sample.template_type != 'base':
+                continue
+            check_template_syntax(sample, sample.diagnosis)
 
     @fields.depends('version_detail',
         '_parent_version_detail.diagnosis_template')

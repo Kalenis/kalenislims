@@ -2,10 +2,45 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 
+import re
+from jinja2 import TemplateSyntaxError
+
 from trytond.model import ModelSQL, ModelView, DeactivableMixin, fields, \
     DictSchemaMixin
-from trytond.pool import PoolMeta
+from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval
+from trytond.transaction import Transaction
+from trytond.exceptions import UserError
+from trytond.i18n import gettext
+
+_EXPRESSION = re.compile(r'{{.*?}}', re.DOTALL)
+
+
+def check_template_syntax(record, text):
+    if not text or not any(t in text for t in ('{{', '{%', '{#')):
+        return
+    ResultReport = Pool().get('lims.result_report', type='report')
+    with Transaction().set_context(locale=Transaction().language):
+        env = ResultReport.get_lims_environment()
+    try:
+        env.from_string(text)
+    except TemplateSyntaxError as e:
+        expression = _get_invalid_expression(env, text)
+        if expression:
+            raise UserError(gettext(
+                'lims_diagnosis.msg_invalid_template_expression',
+                record=record.rec_name, expression=expression,
+                error=e.message))
+        raise UserError(gettext('lims_diagnosis.msg_invalid_template_syntax',
+            record=record.rec_name, error=e.message))
+
+
+def _get_invalid_expression(env, text):
+    for match in _EXPRESSION.finditer(text):
+        try:
+            env.from_string(match.group())
+        except TemplateSyntaxError:
+            return match.group()
 
 
 class DiagnosisTemplate(DeactivableMixin, ModelSQL, ModelView):
@@ -17,6 +52,12 @@ class DiagnosisTemplate(DeactivableMixin, ModelSQL, ModelView):
     diagnosis_states = fields.Many2Many(
         'lims.diagnosis.template-diagnosis.state',
         'template', 'state', 'States')
+
+    @classmethod
+    def validate(cls, templates):
+        super().validate(templates)
+        for template in templates:
+            check_template_syntax(template, template.content)
 
 
 class DiagnosisState(DictSchemaMixin, ModelSQL, ModelView):

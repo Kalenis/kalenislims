@@ -304,6 +304,14 @@ msgctxt "model:ir.message,text:lbl_line_acceptance"
 msgid "Notebook Line Acceptance"
 msgstr "Aceptación de Línea de cuaderno"
 
+msgctxt "model:ir.message,text:msg_invalid_template_expression"
+msgid "The expression \"%(expression)s\" in \"%(record)s\" is not valid: %(error)s"
+msgstr "La expresión \"%(expression)s\" en \"%(record)s\" no es válida: %(error)s"
+
+msgctxt "model:ir.message,text:msg_invalid_template_syntax"
+msgid "The text of \"%(record)s\" is not valid: %(error)s"
+msgstr "El texto de \"%(record)s\" no es válido: %(error)s"
+
 msgctxt "model:ir.message,text:msg_invalid_diagnosis_length"
 msgid ""
 "The diagnosis has more characters (%(length)s) than the allowed one "

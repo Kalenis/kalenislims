@@ -7,6 +7,12 @@
         <record model="ir.message" id="msg_invalid_diagnosis_state">
             <field name="text">Missing diagnosis states</field>
         </record>
+        <record model="ir.message" id="msg_invalid_template_expression">
+            <field name="text">The expression "%(expression)s" in "%(record)s" is not valid: %(error)s</field>
+        </record>
+        <record model="ir.message" id="msg_invalid_template_syntax">
+            <field name="text">The text of "%(record)s" is not valid: %(error)s</field>
+        </record>
         <record model="ir.message" id="msg_invalid_diagnosis_length">
             <field name="text">The diagnosis has more characters (%(length)s) than the allowed one (%(allowed)s).</field>
         </record>
