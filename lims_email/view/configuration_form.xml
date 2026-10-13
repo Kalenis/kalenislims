@@ -14,6 +14,10 @@
             <separator string="Email body of Acknowledgment of results report"
                 colspan="4" id="mail_ack_report_body"/>
             <field name="mail_ack_report_body" colspan="4"/>
+            <separator name="mail_ack_report_html_body" colspan="4"/>
+            <field name="mail_ack_report_html_body" colspan="4"/>
+            <label name="mail_ack_report_signature"/>
+            <field name="mail_ack_report_signature"/>
         </page>
     </xpath>
 </data>

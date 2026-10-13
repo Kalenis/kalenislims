@@ -5,9 +5,13 @@ import logging
 import mimetypes
 from datetime import datetime
 from email.mime.base import MIMEBase
+from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
+from email.mime.text import MIMEText
 from string import Template
+
+from markupsafe import Markup
 
 from trytond.model import ModelSQL, ModelView, fields
 from trytond.wizard import Wizard, StateView, StateTransition, Button
@@ -18,8 +22,11 @@ from trytond.tools import get_smtp_server
 from trytond.config import config as tconfig
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
+from .configuration import get_mail_template_environment
 
 logger = logging.getLogger(__name__)
+
+SIGNATURE_CID = 'signature'
 
 
 class ResultsReportVersionDetail(metaclass=PoolMeta):
@@ -608,9 +615,15 @@ class SendResultsReport(Wizard):
                 ', '.join(to_addrs))
 
             subject, body = self._get_subject_body(group['reports_ready'])
+            html_body = self._get_html_body(group['reports_ready'])
+            signature = None
+            if html_body and config.mail_ack_report_signature:
+                signature = (config.mail_ack_report_signature,
+                    config.mail_ack_report_signature_name)
 
             msg = self._create_msg(from_addr, to_addrs, subject,
-                body, hide_recipients, group['attachments_data'])
+                body, hide_recipients, group['attachments_data'],
+                html_body=html_body, signature=signature)
             sent = self._send_msg(from_addr, to_addrs, msg)
             if not sent:
                 reports_not_sent.extend(group['reports_ready'])
@@ -737,6 +750,74 @@ class SendResultsReport(Wizard):
         body = body.replace('&lt;SAMPLES&gt;', '\n'.join(sample_list))
         return subject, body
 
+    def _get_html_body(self, reports):
+        pool = Pool()
+        Config = pool.get('lims.configuration')
+        User = pool.get('res.user')
+
+        config = Config(1)
+        template = config.mail_ack_report_html_body
+        if not template:
+            return None
+        lang = User(Transaction().user).language
+        lang_code = lang.code if lang else 'en'
+        try:
+            with Transaction().set_context(language=lang_code):
+                context = self._get_mail_template_context(reports)
+            return render_mail_html_body(template, context,
+                signature=bool(config.mail_ack_report_signature))
+        except Exception:
+            logger.error('Send Results Report: HTML body failed, '
+                'sending plain text', exc_info=True)
+            return None
+
+    def _get_mail_template_context(self, reports):
+        pool = Pool()
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+        Service = pool.get('lims.service')
+        Company = pool.get('company.company')
+
+        company_id = Transaction().context.get('company')
+        company = Company(company_id) if company_id else None
+
+        samples, seen = [], set()
+        for s in ResultsSample.search([
+                    ('version_detail.report_version.results_report',
+                        'in', reports),
+                    ('version_detail.valid', '=', True),
+                    ], order=[('id', 'ASC')]):
+            fraction = s.notebook.fraction
+            if fraction.id in seen:
+                continue
+            seen.add(fraction.id)
+            sample = fraction.sample
+            entry_date = sample.date
+            if entry_date and company:
+                entry_date = company.convert_timezone_datetime(entry_date)
+            analyses, quotes = [], []
+            for service in Service.search([
+                        ('fraction', '=', fraction.id),
+                        ('annulled', '=', False),
+                        ], order=[('id', 'ASC')]):
+                if service.analysis.description not in analyses:
+                    analyses.append(service.analysis.description)
+                for sale_line in getattr(service, 'sale_lines', None) or []:
+                    if sale_line.sale.number not in quotes:
+                        quotes.append(sale_line.sale.number)
+            samples.append({
+                    'label': s.notebook.label or s.notebook.rec_name,
+                    'number': sample.number,
+                    'entry_date': (entry_date.strftime('%d/%m/%Y')
+                        if entry_date else ''),
+                    'analyses': analyses,
+                    'quotes': quotes,
+                    })
+        return {
+            'party': reports[0].party.name if reports else '',
+            'reports': [{'number': r.number} for r in reports],
+            'samples': samples,
+            }
+
     def _get_sample_list(self, reports, language):
         pool = Pool()
         ResultsSample = pool.get('lims.results_report.version.detail.sample')
@@ -755,7 +836,8 @@ class SendResultsReport(Wizard):
             return sorted(list(set(res)), key=lambda x: x)
 
     def _create_msg(self, from_addr, to_addrs, subject, body,
-            hide_recipients, attachments_data=[]):
+            hide_recipients, attachments_data=[], html_body=None,
+            signature=None):
         if not to_addrs:
             return None
 
@@ -767,6 +849,27 @@ class SendResultsReport(Wizard):
 
         msg_body = MIMEBase('text', 'plain')
         msg_body.set_payload(body.encode('UTF-8'), 'UTF-8')
+        if html_body:
+            if signature and 'cid:%s' % SIGNATURE_CID not in html_body:
+                html_body += '<p><img src="cid:%s" alt=""/></p>' % (
+                    SIGNATURE_CID)
+            alternative = MIMEMultipart('alternative')
+            alternative.attach(msg_body)
+            alternative.attach(MIMEText(html_body, 'html', 'utf-8'))
+            msg_body = alternative
+            if signature:
+                data, filename = signature
+                mimetype = mimetypes.guess_type(filename or '')[0] or ''
+                subtype = (mimetype.split('/')[1]
+                    if mimetype.startswith('image/') else 'png')
+                image = MIMEImage(bytes(data), _subtype=subtype)
+                image.add_header('Content-ID', '<%s>' % SIGNATURE_CID)
+                image.add_header('Content-Disposition', 'inline',
+                    filename=filename or 'signature.%s' % subtype)
+                related = MIMEMultipart('related')
+                related.attach(msg_body)
+                related.attach(image)
+                msg_body = related
         msg.attach(msg_body)
 
         for attachment_data in attachments_data:
@@ -903,3 +1006,12 @@ class ReportNameFormat(ModelSQL, ModelView):
             return config_.result_report_format.format_
 
         return cls.default_format_()
+
+
+def render_mail_html_body(template, context, signature=False):
+    context = dict(context)
+    context.setdefault('signature', Markup(
+            '<img src="cid:%s" alt=""/>' % SIGNATURE_CID)
+        if signature else '')
+    return get_mail_template_environment().from_string(template).render(
+        **context)

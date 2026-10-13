@@ -305,3 +305,27 @@ msgstr "Enviar"
 msgctxt "wizard_button:lims_email.send_results_report,succeed,end:"
 msgid "Ok"
 msgstr "Aceptar"
+
+msgctxt "field:lims.configuration,mail_ack_report_html_body:"
+msgid "Email HTML body of Acknowledgment of results report"
+msgstr "Cuerpo HTML del correo de Acuse de informe de resultados"
+
+msgctxt "field:lims.configuration,mail_ack_report_signature:"
+msgid "Email signature"
+msgstr "Firma del correo"
+
+msgctxt "field:lims.configuration,mail_ack_report_signature_name:"
+msgid "Email signature name"
+msgstr "Nombre de la firma del correo"
+
+msgctxt "help:lims.configuration,mail_ack_report_html_body:"
+msgid "Jinja template. When set, the email is sent as HTML and the plain text body is kept as alternative. Available variables: party, reports (number) and samples (label, number, entry_date, analyses, quotes). The signature is added at the end unless {{ signature }} is used."
+msgstr "Plantilla Jinja. Si se completa, el correo se envía en HTML y el cuerpo de texto se mantiene como alternativa. Variables disponibles: party (cliente), reports (number) y samples (label, number, entry_date, analyses, quotes). La firma se agrega al final, salvo que se use {{ signature }}."
+
+msgctxt "help:lims.configuration,mail_ack_report_signature:"
+msgid "Image added to the HTML email"
+msgstr "Imagen que se agrega al correo HTML"
+
+msgctxt "model:ir.message,text:msg_invalid_mail_template"
+msgid "Invalid email HTML template (line %(line)s): %(error)s"
+msgstr "Plantilla HTML de correo inválida (línea %(line)s): %(error)s"
