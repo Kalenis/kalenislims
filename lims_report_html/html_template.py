@@ -545,8 +545,8 @@ class LimsReport:
             'report': action,
             'get_image': cls.get_image,
             'operation': cls.operation,
-            'print_date': get_print_date(),
             })
+        context.setdefault('print_date', get_print_date())
         res = report_template.render(**context)
         res = cls.parse_images(res)
         # print('TEMPLATE:\n', res)
