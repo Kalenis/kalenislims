@@ -259,6 +259,53 @@ class LimsTestCase(ModuleTestCase):
             Included.write([first, second], {'included_analysis': 7})
             update.assert_called_once_with([first, second])
 
+    @with_transaction()
+    def test_create_sample_party_changed(self):
+        "Creating samples fails if the entry party changed meanwhile"
+        from types import SimpleNamespace
+        from trytond.exceptions import UserError
+        CreateSample = Pool().get('lims.create_sample', type='wizard')
+
+        entry = SimpleNamespace(multi_party=False, rec_name='2026/1',
+            party=SimpleNamespace(id=1))
+        CreateSample.check_party(entry, SimpleNamespace(id=1, rec_name='A'))
+        CreateSample.check_party(entry, None)
+        with self.assertRaises(UserError):
+            CreateSample.check_party(entry,
+                SimpleNamespace(id=2, rec_name='B'))
+
+    @with_transaction()
+    def test_create_sample_party_changed_multi_party(self):
+        "In multi party entries the related parties of the invoice party are valid"
+        from types import SimpleNamespace
+        from trytond.exceptions import UserError
+        pool = Pool()
+        CreateSample = pool.get('lims.create_sample', type='wizard')
+        Party = pool.get('party.party')
+        RelationType = pool.get('party.relation.type')
+        Relation = pool.get('party.relation')
+        Configuration = pool.get('lims.configuration')
+
+        invoice, related, other = Party.create([
+                {'name': 'Invoice'}, {'name': 'Related'}, {'name': 'Other'}])
+        relation_type, = RelationType.create([{'name': 'Invoice party'}])
+        Relation.create([{
+                    'from_': related.id,
+                    'to': invoice.id,
+                    'type': relation_type.id,
+                    }])
+
+        entry = SimpleNamespace(multi_party=True, rec_name='2026/1',
+            party=None, invoice_party=invoice)
+        with patch.object(Configuration, 'invoice_party_relation_type',
+                relation_type):
+            self.assertEqual(sorted(CreateSample.get_party_domain(entry)),
+                sorted([invoice.id, related.id]))
+            CreateSample.check_party(entry, invoice)
+            CreateSample.check_party(entry, related)
+            with self.assertRaises(UserError):
+                CreateSample.check_party(entry, other)
+
 
 def suite():
     suite = trytond.tests.test_tryton.suite()

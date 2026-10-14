@@ -7500,7 +7500,6 @@ class CreateSample(Wizard):
         pool = Pool()
         Entry = pool.get('lims.entry')
         Config = pool.get('lims.configuration')
-        PartyRelation = pool.get('party.relation')
         Typification = pool.get('lims.typification')
 
         config_ = Config(1)
@@ -7514,17 +7513,10 @@ class CreateSample(Wizard):
             }
 
         entry = Entry(Transaction().context['active_id'])
+        party_domain = self.get_party_domain(entry)
         if entry.multi_party:
-            party_domain = [entry.invoice_party.id]
-            relations = PartyRelation.search([
-                ('to', '=', entry.invoice_party),
-                ('type', '=', config_.invoice_party_relation_type)
-                ])
-            party_domain.extend([r.from_.id for r in relations])
-            party_domain = list(set(party_domain))
             party_id = party_domain[0] if len(party_domain) == 1 else None
         else:
-            party_domain = [entry.party.id]
             party_id = entry.party.id
 
         defaults['trace_report'] = entry.party.trace_report
@@ -7546,6 +7538,28 @@ class CreateSample(Wizard):
             config_.results_report_language)
         return defaults
 
+    @staticmethod
+    def get_party_domain(entry):
+        pool = Pool()
+        Config = pool.get('lims.configuration')
+        PartyRelation = pool.get('party.relation')
+
+        if not entry.multi_party:
+            return [entry.party.id]
+        party_domain = [entry.invoice_party.id]
+        relations = PartyRelation.search([
+            ('to', '=', entry.invoice_party),
+            ('type', '=', Config(1).invoice_party_relation_type),
+            ])
+        party_domain.extend([r.from_.id for r in relations])
+        return list(set(party_domain))
+
+    @classmethod
+    def check_party(cls, entry, party):
+        if party and party.id not in cls.get_party_domain(entry):
+            raise UserError(gettext('lims.msg_create_sample_party_changed',
+                    party=party.rec_name, entry=entry.rec_name))
+
     def transition_create_(self):
         # TODO: Remove logs
         logger.info('-- CreateSample().transition_create_():INIT --')
@@ -7556,6 +7570,7 @@ class CreateSample(Wizard):
 
         entry_id = Transaction().context['active_id']
         entry = Entry(entry_id)
+        self.check_party(entry, self.start.party)
         samples_defaults = self._get_samples_defaults(entry_id)
         logger.info('.. Sample.create(..)')
         with Transaction().set_context(create_sample=True):

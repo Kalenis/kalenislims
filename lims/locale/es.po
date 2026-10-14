@@ -17351,3 +17351,6 @@ msgctxt "model:lims.results_report.reason,name:"
 msgid "Results Report Reason"
 msgstr "Motivo de informe de resultados"
 
+msgctxt "model:ir.message,text:msg_create_sample_party_changed"
+msgid "The party \"%(party)s\" is not valid for the entry \"%(entry)s\": the party of the entry was changed while the samples were being created. Close the wizard and create the samples again."
+msgstr "La entidad \"%(party)s\" no es válida para el ingreso \"%(entry)s\": la entidad del ingreso se cambió mientras se cargaban las muestras. Cierre el asistente y vuelva a cargar las muestras."
