@@ -5,6 +5,7 @@
 from datetime import datetime
 import operator
 from sql import Cast
+from sql.functions import CurrentTimestamp
 
 from trytond.model import Workflow, ModelView, ModelSQL, DeactivableMixin, \
     fields, Unique
@@ -15,6 +16,7 @@ from trytond.pyson import Eval, Bool
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 from trytond.rpc import RPC
+from trytond.tools import grouped_slice, reduce_ids
 from .formula_parser import FormulaParser
 
 
@@ -286,17 +288,17 @@ class LabMethod(Workflow, ModelSQL, ModelView):
         for method in methods:
             waiting_times_parties = [rw.party.id
                 for rw in method.results_waiting]
-            notebook_lines = NotebookLine.search([
+            domain = [
                 ('method', '=', method.id),
-                ('party', 'not in', waiting_times_parties),
                 ('accepted', '=', False),
                 ('results_estimated_waiting', '!=', results_estimated_waiting),
-                ])
+                ]
+            if waiting_times_parties:
+                domain.append(('party', 'not in', waiting_times_parties))
+            notebook_lines = NotebookLine.search(domain)
             if notebook_lines:
-                NotebookLine.write(notebook_lines, {
-                    'results_estimated_waiting': (
-                        method.results_estimated_waiting),
-                    })
+                set_notebook_lines_estimated_waiting(notebook_lines,
+                    method.results_estimated_waiting)
 
     def _get_new_version_fields(self):
         return ['code', 'name', 'version', 'reference', 'determination',
@@ -417,6 +419,23 @@ class LabMethod(Workflow, ModelSQL, ModelView):
         return None
 
 
+def set_notebook_lines_estimated_waiting(lines, results_estimated_waiting):
+    '''
+    Update the estimated waiting of the notebook lines with a direct query:
+    writing them through the ORM is too slow for methods with many lines.
+    '''
+    NotebookLine = Pool().get('lims.notebook.line')
+    table = NotebookLine.__table__()
+    cursor = Transaction().connection.cursor()
+    for sub_lines in grouped_slice(lines):
+        cursor.execute(*table.update(
+                [table.results_estimated_waiting, table.write_date,
+                    table.write_uid],
+                [results_estimated_waiting, CurrentTimestamp(),
+                    Transaction().user],
+                where=reduce_ids(table.id, [line.id for line in sub_lines])))
+
+
 class LabMethodWaitingTime(ModelSQL, ModelView):
     'Waiting Time per Client'
     __name__ = 'lims.lab.method.results_waiting'
@@ -463,11 +482,8 @@ class LabMethodWaitingTime(ModelSQL, ModelView):
                 ('accepted', '=', False),
                 ])
             if notebook_lines:
-                results_estimated_waiting = (waiting or
-                    waiting_time.results_estimated_waiting)
-                NotebookLine.write(notebook_lines, {
-                    'results_estimated_waiting': results_estimated_waiting,
-                    })
+                set_notebook_lines_estimated_waiting(notebook_lines,
+                    waiting or waiting_time.results_estimated_waiting)
 
     @classmethod
     def delete(cls, waiting_times):

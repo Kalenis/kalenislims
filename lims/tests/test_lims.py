@@ -306,6 +306,29 @@ class LimsTestCase(ModuleTestCase):
             with self.assertRaises(UserError):
                 CreateSample.check_party(entry, other)
 
+    @with_transaction()
+    def test_method_waiting_updates_lines_with_query(self):
+        "Changing the method waiting does not write the lines through the ORM"
+        from types import SimpleNamespace
+        from trytond.modules.lims import laboratory
+        pool = Pool()
+        LabMethod = pool.get('lims.lab.method')
+        NotebookLine = pool.get('lims.notebook.line')
+
+        lines = [SimpleNamespace(id=1), SimpleNamespace(id=2)]
+        method = SimpleNamespace(id=10, results_waiting=[],
+            results_estimated_waiting=9)
+        with patch.object(NotebookLine, 'search', return_value=lines), \
+                patch.object(NotebookLine, 'write') as write, \
+                patch.object(laboratory,
+                    'set_notebook_lines_estimated_waiting') as update:
+            LabMethod.update_laboratory_notebook([method], 9)
+        update.assert_called_once_with(lines, 9)
+        write.assert_not_called()
+
+        laboratory.set_notebook_lines_estimated_waiting(
+            [SimpleNamespace(id=-1)], 9)
+
 
 def suite():
     suite = trytond.tests.test_tryton.suite()
