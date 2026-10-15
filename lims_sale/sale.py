@@ -1243,7 +1243,7 @@ class SaleLine2(metaclass=PoolMeta):
         default.setdefault('services', None)
         default.setdefault('additional_origin', None)
         default.setdefault('lims_invoice_lines', None)
-        return super(SaleLine, cls).copy(lines, default=default)
+        return super(SaleLine2, cls).copy(lines, default=default)
 
 
 class ModifyHeader(metaclass=PoolMeta):
