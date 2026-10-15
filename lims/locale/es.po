@@ -17354,3 +17354,79 @@ msgstr "Motivo de informe de resultados"
 msgctxt "model:ir.message,text:msg_create_sample_party_changed"
 msgid "The party \"%(party)s\" is not valid for the entry \"%(entry)s\": the party of the entry was changed while the samples were being created. Close the wizard and create the samples again."
 msgstr "La entidad \"%(party)s\" no es válida para el ingreso \"%(entry)s\": la entidad del ingreso se cambió mientras se cargaban las muestras. Cierre el asistente y vuelva a cargar las muestras."
+
+msgctxt "model:lims.notebook.copy_lines_setup.start,name:"
+msgid "Copy Lines Setup"
+msgstr "Copiar configuración de líneas"
+
+msgctxt "model:lims.notebook.copy_lines_setup.result,name:"
+msgid "Copy Lines Setup"
+msgstr "Copiar configuración de líneas"
+
+msgctxt "model:ir.action,name:wiz_notebook_copy_lines_setup"
+msgid "Copy Lines Setup"
+msgstr "Copiar configuración de líneas"
+
+msgctxt "field:lims.notebook.copy_lines_setup.start,targets:"
+msgid "Notebooks"
+msgstr "Cuadernos"
+
+msgctxt "field:lims.notebook.copy_lines_setup.start,party:"
+msgid "Party"
+msgstr "Entidad"
+
+msgctxt "field:lims.notebook.copy_lines_setup.start,product_type:"
+msgid "Product type"
+msgstr "Tipo de producto"
+
+msgctxt "field:lims.notebook.copy_lines_setup.start,matrix:"
+msgid "Matrix"
+msgstr "Matriz"
+
+msgctxt "field:lims.notebook.copy_lines_setup.start,source:"
+msgid "Source notebook"
+msgstr "Cuaderno modelo"
+
+msgctxt "field:lims.notebook.copy_lines_setup.start,copy_units:"
+msgid "Units"
+msgstr "Unidades"
+
+msgctxt "field:lims.notebook.copy_lines_setup.start,copy_limits:"
+msgid "Detection and quantification limits"
+msgstr "Límites de detección y cuantificación"
+
+msgctxt "field:lims.notebook.copy_lines_setup.start,copy_concentrations:"
+msgid "Concentrations"
+msgstr "Concentraciones"
+
+msgctxt "field:lims.notebook.copy_lines_setup.start,copy_decimals:"
+msgid "Decimals and significant digits"
+msgstr "Decimales y cifras significativas"
+
+msgctxt "field:lims.notebook.copy_lines_setup.start,only_empty:"
+msgid "Do not overwrite loaded values"
+msgstr "No pisar valores ya cargados"
+
+msgctxt "field:lims.notebook.copy_lines_setup.result,summary:"
+msgid "Summary"
+msgstr "Resumen"
+
+msgctxt "model:ir.message,text:msg_copy_lines_setup_result"
+msgid "%(notebook)s: %(updated)s lines updated."
+msgstr "%(notebook)s: %(updated)s líneas actualizadas."
+
+msgctxt "model:ir.message,text:msg_copy_lines_setup_missing"
+msgid "Analyses not in the source notebook: %(analysis)s."
+msgstr "Análisis que no están en el cuaderno modelo: %(analysis)s."
+
+msgctxt "wizard_button:lims.notebook.copy_lines_setup,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:lims.notebook.copy_lines_setup,start,copy:"
+msgid "Copy"
+msgstr "Copiar"
+
+msgctxt "wizard_button:lims.notebook.copy_lines_setup,result,end:"
+msgid "Close"
+msgstr "Cerrar"

@@ -371,6 +371,29 @@
             <field name="action" ref="wiz_lims_notebook_line_results_conversion"/>
         </record>
 
+<!-- Wizard Copy Lines Setup -->
+
+        <record model="ir.ui.view" id="notebook_copy_lines_setup_start_view_form">
+            <field name="model">lims.notebook.copy_lines_setup.start</field>
+            <field name="type">form</field>
+            <field name="name">notebook_copy_lines_setup_start_form</field>
+        </record>
+        <record model="ir.ui.view" id="notebook_copy_lines_setup_result_view_form">
+            <field name="model">lims.notebook.copy_lines_setup.result</field>
+            <field name="type">form</field>
+            <field name="name">notebook_copy_lines_setup_result_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wiz_notebook_copy_lines_setup">
+            <field name="name">Copy Lines Setup</field>
+            <field name="wiz_name">lims.notebook.copy_lines_setup</field>
+        </record>
+        <record model="ir.action.keyword" id="wiz_notebook_copy_lines_setup_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">lims.notebook,-1</field>
+            <field name="action" ref="wiz_notebook_copy_lines_setup"/>
+        </record>
+
 <!-- Wizard Limits Validation -->
 
         <record model="ir.ui.view" id="lims_notebook_limits_validation_view_form">

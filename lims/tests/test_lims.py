@@ -329,6 +329,32 @@ class LimsTestCase(ModuleTestCase):
         laboratory.set_notebook_lines_estimated_waiting(
             [SimpleNamespace(id=-1)], 9)
 
+    @with_transaction()
+    def test_copy_lines_setup_values(self):
+        "Copy the setup of the source line without touching other fields"
+        from types import SimpleNamespace
+        CopyLinesSetup = Pool().get('lims.notebook.copy_lines_setup',
+            type='wizard')
+
+        unit_mg, unit_ug = SimpleNamespace(id=1), SimpleNamespace(id=2)
+        source = SimpleNamespace(initial_unit=unit_ug, detection_limit='0.5',
+            quantification_limit='1', decimals=3, result='10')
+        line = SimpleNamespace(initial_unit=unit_mg, detection_limit=None,
+            quantification_limit='2', decimals=3, result='99')
+        names = ['initial_unit', 'detection_limit', 'quantification_limit',
+            'decimals']
+
+        self.assertEqual(
+            CopyLinesSetup.get_setup_values(source, line, names),
+            {'initial_unit': 2, 'detection_limit': '0.5',
+                'quantification_limit': '1'})
+        self.assertEqual(
+            CopyLinesSetup.get_setup_values(source, line, names,
+                only_empty=True),
+            {'detection_limit': '0.5'})
+        self.assertEqual(
+            CopyLinesSetup.get_setup_values(source, line, ['decimals']), {})
+
 
 def suite():
     suite = trytond.tests.test_tryton.suite()

@@ -2808,6 +2808,164 @@ class NotebookLineResultsConversion(NotebookResultsConversion):
         return 'end'
 
 
+class NotebookCopyLinesSetupStart(ModelView):
+    'Copy Lines Setup'
+    __name__ = 'lims.notebook.copy_lines_setup.start'
+
+    targets = fields.Many2Many('lims.notebook', None, None, 'Notebooks',
+        readonly=True)
+    party = fields.Many2One('party.party', 'Party', readonly=True)
+    product_type = fields.Many2One('lims.product.type', 'Product type',
+        readonly=True)
+    matrix = fields.Many2One('lims.matrix', 'Matrix', readonly=True)
+    source = fields.Many2One('lims.notebook', 'Source notebook',
+        required=True, domain=[
+            ('id', 'not in', Eval('targets', [])),
+            ('party', '=', Eval('party')),
+            ('product_type', '=', Eval('product_type')),
+            ('matrix', '=', Eval('matrix')),
+            ], depends=['targets', 'party', 'product_type', 'matrix'])
+    copy_units = fields.Boolean('Units')
+    copy_limits = fields.Boolean('Detection and quantification limits')
+    copy_concentrations = fields.Boolean('Concentrations')
+    copy_decimals = fields.Boolean('Decimals and significant digits')
+    only_empty = fields.Boolean('Do not overwrite loaded values')
+
+    @staticmethod
+    def default_copy_units():
+        return True
+
+    @staticmethod
+    def default_copy_limits():
+        return True
+
+    @staticmethod
+    def default_copy_concentrations():
+        return True
+
+    @staticmethod
+    def default_copy_decimals():
+        return True
+
+
+class NotebookCopyLinesSetupResult(ModelView):
+    'Copy Lines Setup'
+    __name__ = 'lims.notebook.copy_lines_setup.result'
+
+    summary = fields.Text('Summary', readonly=True)
+
+
+class NotebookCopyLinesSetup(Wizard):
+    'Copy Lines Setup'
+    __name__ = 'lims.notebook.copy_lines_setup'
+
+    start = StateView('lims.notebook.copy_lines_setup.start',
+        'lims.notebook_copy_lines_setup_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Copy', 'copy', 'tryton-ok', default=True),
+            ])
+    copy = StateTransition()
+    result = StateView('lims.notebook.copy_lines_setup.result',
+        'lims.notebook_copy_lines_setup_result_view_form', [
+            Button('Close', 'end', 'tryton-close', default=True),
+            ])
+
+    FIELD_GROUPS = [
+        ('copy_units', ['initial_unit', 'final_unit']),
+        ('copy_limits', ['detection_limit', 'quantification_limit']),
+        ('copy_concentrations', ['initial_concentration',
+            'final_concentration', 'literal_final_concentration']),
+        ('copy_decimals', ['decimals', 'significant_digits']),
+        ]
+
+    def default_start(self, fields):
+        Notebook = Pool().get('lims.notebook')
+        notebooks = Notebook.browse(Transaction().context['active_ids'])
+        first = notebooks[0]
+        return {
+            'targets': [n.id for n in notebooks],
+            'party': first.party.id if first.party else None,
+            'product_type': (first.product_type.id
+                if first.product_type else None),
+            'matrix': first.matrix.id if first.matrix else None,
+            }
+
+    def _get_field_names(self):
+        names = []
+        for option, field_names in self.FIELD_GROUPS:
+            if getattr(self.start, option):
+                names.extend(field_names)
+        return names
+
+    @staticmethod
+    def get_setup_values(source_line, line, field_names, only_empty=False):
+        def value_of(record, name):
+            value = getattr(record, name)
+            return value.id if hasattr(value, 'id') else value
+
+        values = {}
+        for name in field_names:
+            new_value = value_of(source_line, name)
+            current_value = value_of(line, name)
+            if new_value == current_value:
+                continue
+            if only_empty and current_value not in (None, ''):
+                continue
+            values[name] = new_value
+        return values
+
+    def transition_copy(self):
+        NotebookLine = Pool().get('lims.notebook.line')
+
+        field_names = self._get_field_names()
+        source = self.start.source
+        source_lines = {}
+        for line in NotebookLine.search([
+                    ('notebook', '=', source.id),
+                    ('annulled', '=', False),
+                    ]):
+            source_lines.setdefault(
+                (line.analysis.id, line.method.id), line)
+
+        to_write = defaultdict(list)
+        summary = []
+        for notebook in self.start.targets:
+            if notebook == source:
+                continue
+            with Transaction().set_context(_check_access=True):
+                lines = NotebookLine.search([
+                        ('notebook', '=', notebook.id),
+                        ('accepted', '=', False),
+                        ('annulled', '=', False),
+                        ])
+            updated, missing = 0, []
+            for line in lines:
+                source_line = source_lines.get(
+                    (line.analysis.id, line.method.id))
+                if not source_line:
+                    missing.append(line.analysis.code)
+                    continue
+                values = self.get_setup_values(source_line, line,
+                    field_names, self.start.only_empty)
+                if values:
+                    to_write[tuple(sorted(values.items()))].append(line)
+                    updated += 1
+            text = gettext('lims.msg_copy_lines_setup_result',
+                notebook=notebook.rec_name, updated=updated)
+            if missing:
+                text += ' ' + gettext('lims.msg_copy_lines_setup_missing',
+                    analysis=', '.join(sorted(set(missing))))
+            summary.append(text)
+
+        for values, lines in to_write.items():
+            NotebookLine.write(lines, dict(values))
+        self.result.summary = '\n'.join(summary)
+        return 'result'
+
+    def default_result(self, fields):
+        return {'summary': self.result.summary}
+
+
 class NotebookLimitsValidationStart(ModelView):
     'Limits Validation'
     __name__ = 'lims.notebook.limits_validation.start'

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<form>
+    <label name="source"/>
+    <field name="source" colspan="3"/>
+    <label name="party"/>
+    <field name="party"/>
+    <label name="product_type"/>
+    <field name="product_type"/>
+    <label name="matrix"/>
+    <field name="matrix"/>
+    <newline/>
+    <separator id="fields" colspan="4"/>
+    <label name="copy_units"/>
+    <field name="copy_units"/>
+    <label name="copy_limits"/>
+    <field name="copy_limits"/>
+    <label name="copy_concentrations"/>
+    <field name="copy_concentrations"/>
+    <label name="copy_decimals"/>
+    <field name="copy_decimals"/>
+    <label name="only_empty"/>
+    <field name="only_empty"/>
+    <field name="targets" colspan="4"/>
+</form>

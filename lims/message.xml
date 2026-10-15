@@ -595,6 +595,12 @@ Rule 4: 1 value above or below the mean +/- 3 deviations.</field>
         <record model="ir.message" id="msg_delete_signatories">
             <field name="text">You can not delete all signers from the report. There must be at least one Manager or Responsible.</field>
         </record>
+        <record model="ir.message" id="msg_copy_lines_setup_result">
+            <field name="text">%(notebook)s: %(updated)s lines updated.</field>
+        </record>
+        <record model="ir.message" id="msg_copy_lines_setup_missing">
+            <field name="text">Analyses not in the source notebook: %(analysis)s.</field>
+        </record>
         <record model="ir.message" id="msg_create_sample_party_changed">
             <field name="text">The party "%(party)s" is not valid for the entry "%(entry)s": the party of the entry was changed while the samples were being created. Close the wizard and create the samples again.</field>
         </record>
