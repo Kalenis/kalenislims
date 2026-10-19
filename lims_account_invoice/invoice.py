@@ -51,7 +51,7 @@ class Invoice(metaclass=PoolMeta):
     def __setup__(cls):
         super().__setup__()
         cls._check_modify_exclude.update({'sent', 'sent_date',
-            'invoice_contacts', 'no_send_invoice'})
+            'invoice_contacts', 'no_send_invoice', 'entries_comments'})
 
     @classmethod
     def view_attributes(cls):
