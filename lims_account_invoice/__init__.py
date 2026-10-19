@@ -10,6 +10,7 @@ from . import stock
 from . import product
 from . import sale
 from . import lims
+from . import account_invoice_ar
 
 
 def register():
@@ -36,6 +37,10 @@ def register():
         sale.SaleLine,
         module='lims_account_invoice', type_='model',
         depends=['sale'])
+    Pool.register(
+        account_invoice_ar.Invoice,
+        module='lims_account_invoice', type_='model',
+        depends=['account_invoice_ar'])
     Pool.register(
         lims.ManageServices,
         lims.EditSample,

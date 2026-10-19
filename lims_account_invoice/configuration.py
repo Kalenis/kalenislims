@@ -11,7 +11,8 @@ class Configuration(metaclass=PoolMeta):
     __name__ = 'lims.configuration'
 
     mail_send_invoice_subject = fields.Char('Email subject of Invoice report',
-        help="In the text will be added suffix with the invoice report number")
+        help="The invoice number is appended to the text, unless it uses "
+        "placeholders like ${number}")
     mail_send_invoice_body = fields.Text('Email body of Invoice report')
     invoice_condition = fields.Selection([
         ('service_confirmation', 'Upon confirmation of service'),

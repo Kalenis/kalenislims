@@ -8,6 +8,7 @@ from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from string import Template
 from time import time
 from sql import Literal
 from sql.functions import Substring, Position
@@ -153,11 +154,21 @@ class Invoice(metaclass=PoolMeta):
                     ], limit=1)
 
         with Transaction().set_context(language=lang.code):
-            subject = str('%s %s' % (config.mail_send_invoice_subject,
-                    self.number)).strip()
+            subject = config.mail_send_invoice_subject or ''
+            if '$' in subject:
+                subject = Template(subject).safe_substitute(
+                    self.get_mail_subject_values())
+            else:
+                subject = '%s %s' % (subject, self.number)
+            subject = subject.strip()
             body = str(config.mail_send_invoice_body)
 
         return subject, body
+
+    def get_mail_subject_values(self):
+        return {
+            'number': self.number or '',
+            }
 
     def attachment(self):
         data = []
