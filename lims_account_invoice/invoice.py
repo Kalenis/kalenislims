@@ -516,16 +516,13 @@ class PopulateInvoiceContacts(Wizard):
         t1 = time()  # DEBUG
         pool = Pool()
         Invoice = pool.get('account.invoice')
-        InvoiceLine = pool.get('account.invoice.line')
         InvoiceContacts = pool.get('account.invoice.invoice_contacts')
         EntryInvoiceContacts = pool.get('lims.entry.invoice_contacts')
         Entry = pool.get('lims.entry')
 
         invoice = Invoice(Transaction().context['active_id'])
 
-        lines = InvoiceLine.search([
-            ('invoice', '=', invoice.id),
-            ])
+        lines = self.get_lines(invoice)
         if not lines:
             logger.warn('transition_populate():La factura no '
                     'posee lineas! (id: %s)', invoice.id)
@@ -584,6 +581,12 @@ class PopulateInvoiceContacts(Wizard):
                 'en %s segundos. (id: %s)', len(to_create), tt, invoice.id)
         return 'end'
 
+    def get_lines(self, invoice):
+        InvoiceLine = Pool().get('account.invoice.line')
+        return InvoiceLine.search([
+            ('invoice', '=', invoice.id),
+            ])
+
 
 class SendOfInvoice(Wizard):
     'Send Of Invoice'
@@ -606,6 +609,9 @@ class SendOfInvoice(Wizard):
                     invoice.invoice_report_cache = None
                     invoice.invoice_report_format = None
                     invoice.save()
+                if not invoice.invoice_contacts:
+                    self.populate_invoice_contacts(invoice)
+                    invoice = Invoice(active_id)
                 logger.info('SendOfInvoice:transition_start():'
                         'Factura %s (id: %s)', invoice.number, invoice.id)
                 invoice.print_invoice()
@@ -620,6 +626,15 @@ class SendOfInvoice(Wizard):
                 invoice.save()
         logger.info('SendOfInvoice:transition_start():END')
         return 'end'
+
+    def populate_invoice_contacts(self, invoice):
+        PopulateInvoiceContacts = Pool().get(
+            'account.invoice.populate_invoice_contacts', type='wizard')
+        session_id, _, _ = PopulateInvoiceContacts.create()
+        populate_invoice_contacts = PopulateInvoiceContacts(session_id)
+        with Transaction().set_context(active_id=invoice.id):
+            populate_invoice_contacts.transition_populate()
+        PopulateInvoiceContacts.delete(session_id)
 
 
 class ForceReadyToInvoiceStart(ModelView):
