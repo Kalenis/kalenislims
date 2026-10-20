@@ -81,8 +81,21 @@ class Invoice(metaclass=PoolMeta):
     @ModelView.button
     @Workflow.transition('posted')
     def post(cls, invoices):
-        cls.check_invoice_contacts(invoices)
+        for invoice in invoices:
+            if (invoice.type == 'out' and not invoice.no_send_invoice
+                    and not invoice.invoice_contacts):
+                invoice.populate_invoice_contacts()
+        cls.check_invoice_contacts(cls.browse(invoices))
         super().post(invoices)
+
+    def populate_invoice_contacts(self):
+        PopulateInvoiceContacts = Pool().get(
+            'account.invoice.populate_invoice_contacts', type='wizard')
+        session_id, _, _ = PopulateInvoiceContacts.create()
+        populate_invoice_contacts = PopulateInvoiceContacts(session_id)
+        with Transaction().set_context(active_id=self.id):
+            populate_invoice_contacts.transition_populate()
+        PopulateInvoiceContacts.delete(session_id)
 
     @classmethod
     def check_invoice_contacts(cls, invoices):
@@ -626,7 +639,7 @@ class SendOfInvoice(Wizard):
                     invoice.invoice_report_format = None
                     invoice.save()
                 if not invoice.invoice_contacts:
-                    self.populate_invoice_contacts(invoice)
+                    invoice.populate_invoice_contacts()
                     invoice = Invoice(active_id)
                 logger.info('SendOfInvoice:transition_start():'
                         'Factura %s (id: %s)', invoice.number, invoice.id)
@@ -642,15 +655,6 @@ class SendOfInvoice(Wizard):
                 invoice.save()
         logger.info('SendOfInvoice:transition_start():END')
         return 'end'
-
-    def populate_invoice_contacts(self, invoice):
-        PopulateInvoiceContacts = Pool().get(
-            'account.invoice.populate_invoice_contacts', type='wizard')
-        session_id, _, _ = PopulateInvoiceContacts.create()
-        populate_invoice_contacts = PopulateInvoiceContacts(session_id)
-        with Transaction().set_context(active_id=invoice.id):
-            populate_invoice_contacts.transition_populate()
-        PopulateInvoiceContacts.delete(session_id)
 
 
 class ForceReadyToInvoiceStart(ModelView):
