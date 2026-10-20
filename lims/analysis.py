@@ -8,7 +8,8 @@ import json
 import formulas
 from datetime import datetime, date
 from decimal import Decimal
-from sql import Literal
+from sql import Literal, Column
+from sql.functions import CurrentTimestamp
 
 from trytond.model import Workflow, ModelView, ModelSQL, DeactivableMixin, \
     fields, Unique
@@ -20,6 +21,7 @@ from trytond.transaction import Transaction
 from trytond.pyson import PYSONEncoder, Eval, Equal, Bool, Not, Or, And
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
+from trytond.tools import grouped_slice, reduce_ids
 
 FUNCTIONS = formulas.get_functions()
 
@@ -500,9 +502,22 @@ class Typification(ModelSQL, ModelView):
     @classmethod
     def update_laboratory_notebook(cls, typifications):
         NotebookLine = Pool().get('lims.notebook.line')
+        cursor = Transaction().connection.cursor()
+        notebook_line = NotebookLine.__table__()
 
         def _str_value(val=None):
             return str(val) if val is not None else None
+
+        def _update(lines, values):
+            # Values are copied from the typification, so a direct update
+            # avoids validating every line, which is slow on large sets
+            columns = [Column(notebook_line, f) for f in values]
+            columns.extend([notebook_line.write_uid, notebook_line.write_date])
+            update_values = list(values.values())
+            update_values.extend([Transaction().user, CurrentTimestamp()])
+            for sub_ids in grouped_slice([l.id for l in lines]):
+                cursor.execute(*notebook_line.update(columns, update_values,
+                    where=reduce_ids(notebook_line.id, sub_ids)))
 
         for typification in typifications:
             if not typification.valid:
@@ -519,7 +534,7 @@ class Typification(ModelSQL, ModelView):
                 ('end_date', '=', None),
                 ])
             if notebook_lines:
-                NotebookLine.write(notebook_lines, {
+                _update(notebook_lines, {
                     'detection_limit': _str_value(
                         typification.detection_limit),
                     'quantification_limit': _str_value(
@@ -552,7 +567,7 @@ class Typification(ModelSQL, ModelView):
                 ('end_date', '=', None),
                 ])
             if notebook_lines:
-                NotebookLine.write(notebook_lines, {
+                _update(notebook_lines, {
                     'initial_concentration': str(
                         typification.initial_concentration or ''),
                     })
