@@ -645,7 +645,7 @@ class GenerateReport(metaclass=PoolMeta):
         template = None
         for notebook in Notebook.browse(Transaction().context['active_ids']):
             if not notebook.fraction.sample.result_template:
-                continue
+                return res
             if not template:
                 template = notebook.fraction.sample.result_template.id
             elif template != notebook.fraction.sample.result_template.id:
