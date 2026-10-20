@@ -30,6 +30,7 @@ def register():
         lims.Service,
         lims.ResultsReportVersionDetail,
         invoice.PopulateInvoiceContactsStart,
+        invoice.SendOfInvoiceStart,
         invoice.ForceReadyToInvoiceStart,
         invoice.CreateInvoiceStart,
         module='lims_account_invoice', type_='model')

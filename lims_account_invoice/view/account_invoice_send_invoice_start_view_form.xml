@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<form col="2">
+    <image name="tryton-info" xexpand="0" xfill="0"/>
+    <label string="Send the selected invoices by email to their invoice contacts?"
+        id="send" yalign="0.0" xalign="0.0" xexpand="1"/>
+</form>

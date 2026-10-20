@@ -128,7 +128,7 @@ class Invoice(metaclass=PoolMeta):
             send_of_invoice = SendOfInvoice(session_id)
             with Transaction().set_context(active_ids=[invoice.id for invoice
                     in invoices]):
-                send_of_invoice.transition_start()
+                send_of_invoice.transition_send()
         tt = round(time() - t1, 2)  # DEBUG
         logger.info('Cron - Send Of Invoice:END:Finalizado en %s segundos.',
                 tt)
@@ -617,14 +617,24 @@ class PopulateInvoiceContacts(Wizard):
             ])
 
 
+class SendOfInvoiceStart(ModelView):
+    'Send Of Invoice Start'
+    __name__ = 'account.invoice.send_invoice.start'
+
+
 class SendOfInvoice(Wizard):
     'Send Of Invoice'
     __name__ = 'account.invoice.send_invoice'
 
-    start = StateTransition()
+    start = StateView('account.invoice.send_invoice.start',
+        'lims_account_invoice.account_invoice_send_invoice_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Send', 'send', 'tryton-ok', default=True),
+            ])
+    send = StateTransition()
 
-    def transition_start(self):
-        logger.info('SendOfInvoice:transition_start():INIT')
+    def transition_send(self):
+        logger.info('SendOfInvoice:transition_send():INIT')
         Invoice = Pool().get('account.invoice')
 
         clean_invoice_report_cache = False  # TODO: HARDCODE!
@@ -641,19 +651,19 @@ class SendOfInvoice(Wizard):
                 if not invoice.invoice_contacts:
                     invoice.populate_invoice_contacts()
                     invoice = Invoice(active_id)
-                logger.info('SendOfInvoice:transition_start():'
+                logger.info('SendOfInvoice:transition_send():'
                         'Factura %s (id: %s)', invoice.number, invoice.id)
                 invoice.print_invoice()
                 if not invoice.mail_send_invoice():
-                    logger.error('SendOfInvoice:transition_start():'
+                    logger.error('SendOfInvoice:transition_send():'
                             'Factura %s:Envio fallido!', invoice.number)
                     continue
-                logger.info('SendOfInvoice:transition_start():'
+                logger.info('SendOfInvoice:transition_send():'
                         'Factura %s:Envio exitoso.', invoice.number)
                 invoice.sent = True
                 invoice.sent_date = datetime.now()
                 invoice.save()
-        logger.info('SendOfInvoice:transition_start():END')
+        logger.info('SendOfInvoice:transition_send():END')
         return 'end'
 
 

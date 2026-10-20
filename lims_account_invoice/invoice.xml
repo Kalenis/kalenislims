@@ -142,6 +142,12 @@
             <field name="method">account.invoice|cron_send_invoice</field>
         </record>
 
+        <record model="ir.ui.view" id="account_invoice_send_invoice_start_view_form">
+            <field name="model">account.invoice.send_invoice.start</field>
+            <field name="type">form</field>
+            <field name="name">account_invoice_send_invoice_start_view_form</field>
+        </record>
+
         <record model="ir.action.wizard" id="wiz_send_invoice">
             <field name="name">Send Invoice</field>
             <field name="wiz_name">account.invoice.send_invoice</field>
