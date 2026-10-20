@@ -1177,6 +1177,7 @@ class NotebookLine(ModelSQL, ModelView):
         context_update_referrals_state = Transaction().context.get(
             'update_referrals_state', True)
 
+        samples_to_update = set()
         actions = iter(args)
         for lines, vals in zip(actions, actions):
             if vals.get('not_accepted_message'):
@@ -1192,9 +1193,7 @@ class NotebookLine(ModelSQL, ModelView):
                     update_samples_state = True
                     break
             if update_samples_state and context_update_samples_state:
-                to_update = Sample.browse(list(set(nl.sample.id
-                    for nl in lines)))
-                Sample.__queue__.update_samples_state(to_update)
+                samples_to_update.update(nl.sample.id for nl in lines)
             update_referrals_state = False
             for field in ('accepted', 'annulled', 'result', 'literal_result',
                     'result_modifier'):
@@ -1203,6 +1202,9 @@ class NotebookLine(ModelSQL, ModelView):
                     break
             if update_referrals_state and context_update_referrals_state:
                 cls.update_referrals_state(lines)
+        if samples_to_update:
+            Sample.__queue__.update_samples_state(
+                Sample.browse(list(samples_to_update)))
 
     @staticmethod
     def update_detail_analysis(lines, accepted):

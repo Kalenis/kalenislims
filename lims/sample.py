@@ -630,6 +630,7 @@ class Service(ModelSQL, ModelView):
 
         super().write(*args)
 
+        samples_to_update = set()
         actions = iter(args)
         for services, vals in zip(actions, actions):
             if vals.get('not_divided_message'):
@@ -664,9 +665,10 @@ class Service(ModelSQL, ModelView):
                     update_samples_state = True
                     break
             if update_samples_state:
-                to_update = Sample.browse(list(set(s.sample.id
-                    for s in services)))
-                Sample.__queue__.update_samples_state(to_update)
+                samples_to_update.update(s.sample.id for s in services)
+        if samples_to_update:
+            Sample.__queue__.update_samples_state(
+                Sample.browse(list(samples_to_update)))
 
     @classmethod
     def check_fraction_not_confirmed(cls, vlist):
