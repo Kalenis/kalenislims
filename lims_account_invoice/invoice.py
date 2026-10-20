@@ -243,6 +243,11 @@ class InvoiceContact(ModelSQL, ModelView):
         ondelete='CASCADE', select=True, required=True)
     contact = fields.Many2One('party.address', 'Contact', required=True,
         domain=[('invoice_contact', '=', True)])
+    email = fields.Function(fields.Char('Email'), 'on_change_with_email')
+
+    @fields.depends('contact')
+    def on_change_with_email(self, name=None):
+        return self.contact.email if self.contact else None
 
     def _credit(self):
         credit = self.__class__()

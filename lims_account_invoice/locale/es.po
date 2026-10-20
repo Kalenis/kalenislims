@@ -26,6 +26,10 @@ msgctxt "field:account.invoice.invoice_contacts,contact:"
 msgid "Contact"
 msgstr "Contacto"
 
+msgctxt "field:account.invoice.invoice_contacts,email:"
+msgid "Email"
+msgstr "Correo electrónico"
+
 msgctxt "field:account.invoice.invoice_contacts,invoice:"
 msgid "Invoice"
 msgstr "Factura"

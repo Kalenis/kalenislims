@@ -2,4 +2,6 @@
 <form>
     <label name="contact"/>
     <field name="contact"/>
+    <label name="email"/>
+    <field name="email"/>
 </form>
