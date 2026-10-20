@@ -27,6 +27,10 @@ from .configuration import get_mail_template_environment
 logger = logging.getLogger(__name__)
 
 SIGNATURE_CID = 'signature'
+SIGNATURE_WIDTH = 600
+SIGNATURE_IMG = ('<img src="cid:%s" alt="" width="%s" '
+    'style="width: %spx; max-width: 100%%; height: auto;"/>' % (
+        SIGNATURE_CID, SIGNATURE_WIDTH, SIGNATURE_WIDTH))
 
 
 class ResultsReportVersionDetail(metaclass=PoolMeta):
@@ -851,8 +855,7 @@ class SendResultsReport(Wizard):
         msg_body.set_payload(body.encode('UTF-8'), 'UTF-8')
         if html_body:
             if signature and 'cid:%s' % SIGNATURE_CID not in html_body:
-                html_body += '<p><img src="cid:%s" alt=""/></p>' % (
-                    SIGNATURE_CID)
+                html_body += '<p>%s</p>' % SIGNATURE_IMG
             alternative = MIMEMultipart('alternative')
             alternative.attach(msg_body)
             alternative.attach(MIMEText(html_body, 'html', 'utf-8'))
@@ -1010,8 +1013,7 @@ class ReportNameFormat(ModelSQL, ModelView):
 
 def render_mail_html_body(template, context, signature=False):
     context = dict(context)
-    context.setdefault('signature', Markup(
-            '<img src="cid:%s" alt=""/>' % SIGNATURE_CID)
+    context.setdefault('signature', Markup(SIGNATURE_IMG)
         if signature else '')
     return get_mail_template_environment().from_string(template).render(
         **context)

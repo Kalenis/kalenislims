@@ -35,6 +35,8 @@ class LimsTestCase(ModuleTestCase):
         self.assertIn('Fares &lt;Taie&gt;', html)
         self.assertIn('<li>Agua 1: pH, Cloro (0049-1/2026)</li>', html)
         self.assertIn('cid:signature', html)
+        self.assertIn('width="600"', html)
+        self.assertIn('max-width: 100%', html)
         self.assertNotIn('cid:signature',
             render_mail_html_body(template, context, signature=False))
 
@@ -61,8 +63,9 @@ class LimsTestCase(ModuleTestCase):
                 'text/plain', 'text/html', 'image/png'])
         html = [p for p in msg.walk()
             if p.get_content_type() == 'text/html'][0]
-        self.assertIn('cid:signature',
-            html.get_payload(decode=True).decode())
+        html = html.get_payload(decode=True).decode()
+        self.assertIn('cid:signature', html)
+        self.assertIn('width="600"', html)
         image = [p for p in msg.walk()
             if p.get_content_type() == 'image/png'][0]
         self.assertEqual(image['Content-ID'], '<signature>')
