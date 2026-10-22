@@ -19,5 +19,8 @@
         <record model="ir.message" id="msg_sale_line_not_typified_method">
             <field name="text">The analysis "%(analysis)s" with method "%(method)s" is not typified for product type "%(product_type)s" and matrix "%(matrix)s".</field>
         </record>
+        <record model="ir.message" id="msg_sale_line_all_analysis_excluded">
+            <field name="text">At least one analysis of the service "%(analysis)s" must be quoted.</field>
+        </record>
     </data>
 </tryton>

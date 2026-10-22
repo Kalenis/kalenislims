@@ -647,6 +647,21 @@ class SaleLine(metaclass=PoolMeta):
     certifications = fields.Function(fields.Many2Many(
         'lims.certification.type', None, None,
         'Accreditations / Certifications'), 'on_change_with_certifications')
+    excluded_analysis = fields.Many2Many('sale.line-excluded-lims.analysis',
+        'sale_line', 'analysis', 'Excluded analyses',
+        domain=[('id', 'in', Eval('included_analysis_domain', []))],
+        states={
+            'invisible': ~Eval('analysis_type').in_(['set', 'group']),
+            'readonly': Eval('sale_state') != 'draft',
+            },
+        depends=['included_analysis_domain', 'analysis_type', 'sale_state'])
+    included_analysis_domain = fields.Function(fields.Many2Many(
+        'lims.analysis', None, None, 'Included analyses domain'),
+        'on_change_with_included_analysis_domain')
+    analysis_type = fields.Function(fields.Char('Service type'),
+        'on_change_with_analysis_type')
+    quoted_analysis = fields.Function(fields.Many2Many('lims.analysis',
+        None, None, 'Quoted analyses'), 'get_quoted_analysis')
 
     @staticmethod
     def default_product_type_domain():
@@ -824,8 +839,10 @@ class SaleLine(metaclass=PoolMeta):
 
     @fields.depends('analysis', 'product_type', 'matrix', 'method',
         'method_domain', '_parent_analysis.product', '_parent_analysis.type',
+        'excluded_analysis',
         methods=['on_change_product', 'on_change_with_method_domain'])
     def on_change_analysis(self):
+        self.excluded_analysis = []
         product = None
         method = None
         if self.analysis and self.analysis.product:
@@ -842,6 +859,23 @@ class SaleLine(metaclass=PoolMeta):
                 method = self.method
         self.method = method
 
+    @fields.depends('analysis')
+    def on_change_with_analysis_type(self, name=None):
+        return self.analysis.type if self.analysis else None
+
+    @fields.depends('analysis')
+    def on_change_with_included_analysis_domain(self, name=None):
+        if not self.analysis or self.analysis.type not in ('set', 'group'):
+            return []
+        return get_included_analysis_ids(self.analysis)
+
+    def get_quoted_analysis(self, name=None):
+        if not self.analysis or self.analysis.type not in ('set', 'group'):
+            return [self.analysis.id] if self.analysis else []
+        excluded = [a.id for a in self.excluded_analysis]
+        return [a for a in get_included_analysis_ids(self.analysis)
+            if a not in excluded]
+
     @classmethod
     def validate(cls, sale_lines):
         super().validate(sale_lines)
@@ -855,6 +889,12 @@ class SaleLine(metaclass=PoolMeta):
                 raise UserError(gettext(
                     'lims_sale.msg_sale_line_analysis_product',
                     product=sale_line.product.rec_name,
+                    analysis=sale_line.analysis.rec_name))
+
+            if (sale_line.excluded_analysis and
+                    not sale_line.get_quoted_analysis()):
+                raise UserError(gettext(
+                    'lims_sale.msg_sale_line_all_analysis_excluded',
                     analysis=sale_line.analysis.rec_name))
 
             if getattr(sale_line, 'type', 'line') != 'line':
@@ -1103,6 +1143,34 @@ class SaleLine(metaclass=PoolMeta):
             return list(set(x[0] for x in cursor.fetchall()))
 
         return []
+
+
+def get_included_analysis_ids(analysis):
+    '''
+    Return the analyses (not sets nor groups) included in a set or group,
+    following the nested sets and groups, in their order and without
+    repetitions.
+    '''
+    res = []
+    for included in analysis.included_analysis:
+        child = included.included_analysis
+        if child.type == 'analysis':
+            ids = [child.id]
+        else:
+            ids = get_included_analysis_ids(child)
+        res.extend(i for i in ids if i not in res)
+    return res
+
+
+class SaleLineExcludedAnalysis(ModelSQL):
+    'Sale Line - Excluded Analysis'
+    __name__ = 'sale.line-excluded-lims.analysis'
+    _table = 'sale_line_excluded_lims_analysis'
+
+    sale_line = fields.Many2One('sale.line', 'Sale Line',
+        ondelete='CASCADE', select=True, required=True)
+    analysis = fields.Many2One('lims.analysis', 'Analysis',
+        ondelete='CASCADE', select=True, required=True)
 
 
 class SaleLine2(metaclass=PoolMeta):

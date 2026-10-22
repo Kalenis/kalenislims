@@ -25,6 +25,7 @@ def register():
         sale.Sale,
         sale.SaleSection,
         sale.SaleLine,
+        sale.SaleLineExcludedAnalysis,
         sale.SaleLoadServicesStart,
         sale.SaleLoadAnalysisStart,
         sample.CreateSampleStart,

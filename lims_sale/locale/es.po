@@ -137,6 +137,34 @@ msgctxt "field:sale.line,certifications:"
 msgid "Accreditations / Certifications"
 msgstr "Acreditaciones / Certificaciones"
 
+msgctxt "field:sale.line,excluded_analysis:"
+msgid "Excluded analyses"
+msgstr "Análisis excluidos"
+
+msgctxt "field:sale.line,included_analysis_domain:"
+msgid "Included analyses domain"
+msgstr "Dominio de análisis incluidos"
+
+msgctxt "field:sale.line,analysis_type:"
+msgid "Service type"
+msgstr "Tipo de servicio"
+
+msgctxt "field:sale.line,quoted_analysis:"
+msgid "Quoted analyses"
+msgstr "Análisis cotizados"
+
+msgctxt "field:sale.line-excluded-lims.analysis,analysis:"
+msgid "Analysis"
+msgstr "Análisis"
+
+msgctxt "field:sale.line-excluded-lims.analysis,sale_line:"
+msgid "Sale Line"
+msgstr "Línea de venta"
+
+msgctxt "model:sale.line-excluded-lims.analysis,name:"
+msgid "Sale Line - Excluded Analysis"
+msgstr "Línea de venta - Análisis excluido"
+
 msgctxt "field:sale.line,expiration_date:"
 msgid "Expiration date"
 msgstr "Fecha de vencimiento"
@@ -357,6 +385,10 @@ msgstr ""
 msgctxt "model:ir.message,text:msg_sale_line_analysis_product"
 msgid "Product \"%(product)s\" does not correspond to analysis \"%(analysis)s\"."
 msgstr "El producto \"%(product)s\" no corresponde al análisis \"%(analysis)s\"."
+
+msgctxt "model:ir.message,text:msg_sale_line_all_analysis_excluded"
+msgid "At least one analysis of the service \"%(analysis)s\" must be quoted."
+msgstr "Debe quedar cotizado al menos un análisis del servicio \"%(analysis)s\"."
 
 msgctxt "model:ir.message,text:msg_sale_line_not_typified_method"
 msgid "The analysis \"%(analysis)s\" with method \"%(method)s\" is not typified for product type \"%(product_type)s\" and matrix \"%(matrix)s\"."

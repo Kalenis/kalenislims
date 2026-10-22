@@ -811,6 +811,32 @@ class Service(metaclass=PoolMeta):
         return new_service
 
     @classmethod
+    def update_analysis_detail(cls, services):
+        EntryDetailAnalysis = Pool().get('lims.entry.detail.analysis')
+
+        details = super().update_analysis_detail(services)
+        excluded = {}
+        to_delete = []
+        for detail in details:
+            service = detail.service
+            if service.id not in excluded:
+                excluded[service.id] = service.get_quote_excluded_analysis()
+            if detail.analysis.id in excluded[service.id]:
+                to_delete.append(detail)
+        if to_delete:
+            with Transaction().set_user(0, set_context=True):
+                EntryDetailAnalysis.delete(to_delete)
+            details = [d for d in details if d not in to_delete]
+        return details
+
+    def get_quote_excluded_analysis(self):
+        excluded = set()
+        for sale_line in self.sale_lines:
+            if sale_line.analysis and sale_line.analysis == self.analysis:
+                excluded.update(a.id for a in sale_line.excluded_analysis)
+        return excluded
+
+    @classmethod
     def check_services_without_quotation(cls, services, silent=False):
         pool = Pool()
         Warning = pool.get('res.user.warning')

@@ -3,6 +3,7 @@
 # the full copyright notices and license terms.
 import unittest
 from types import SimpleNamespace
+from unittest.mock import patch
 
 import trytond.tests.test_tryton
 from trytond.pool import Pool
@@ -97,6 +98,71 @@ class LimsTestCase(ModuleTestCase):
         self.assertEqual(get_allowed_analysis(domain, [], True), domain)
         self.assertEqual(get_allowed_analysis(domain, [], False), [])
 
+
+    def test_included_analysis_ids(self):
+        "Included analyses follow nested sets and groups without repeating"
+        from trytond.modules.lims_sale.sale import get_included_analysis_ids
+
+        def analysis(id_, type_='analysis', included=()):
+            return SimpleNamespace(id=id_, type=type_, included_analysis=[
+                    SimpleNamespace(included_analysis=i) for i in included])
+
+        benzene, toluene, xylene = analysis(1), analysis(2), analysis(3)
+        btex = analysis(10, 'set', [benzene, toluene, xylene])
+        group = analysis(20, 'group', [btex, analysis(4), toluene])
+
+        self.assertEqual(get_included_analysis_ids(btex), [1, 2, 3])
+        self.assertEqual(get_included_analysis_ids(group), [1, 2, 3, 4])
+
+    @with_transaction()
+    def test_quoted_analysis(self):
+        "A quoted set leaves out its excluded analyses"
+        SaleLine = Pool().get('sale.line')
+
+        def analysis(id_, type_='analysis', included=()):
+            return SimpleNamespace(id=id_, type=type_, included_analysis=[
+                    SimpleNamespace(included_analysis=i) for i in included])
+
+        benzene, toluene, xylene = analysis(1), analysis(2), analysis(3)
+        btex = analysis(10, 'set', [benzene, toluene, xylene])
+
+        line = SimpleNamespace(analysis=btex, excluded_analysis=[])
+        self.assertEqual(SaleLine.get_quoted_analysis(line), [1, 2, 3])
+        line.excluded_analysis = [xylene]
+        self.assertEqual(SaleLine.get_quoted_analysis(line), [1, 2])
+        line = SimpleNamespace(analysis=benzene, excluded_analysis=[])
+        self.assertEqual(SaleLine.get_quoted_analysis(line), [1])
+
+    @with_transaction()
+    def test_service_without_excluded_analysis(self):
+        "The service of a quoted set gets no detail for excluded analyses"
+        from trytond.modules.lims.sample import Service as LimsService
+        pool = Pool()
+        Service = pool.get('lims.service')
+        EntryDetailAnalysis = pool.get('lims.entry.detail.analysis')
+
+        btex = SimpleNamespace(id=10)
+        quote = SimpleNamespace(analysis=btex,
+            excluded_analysis=[SimpleNamespace(id=3)])
+        other_quote = SimpleNamespace(analysis=SimpleNamespace(id=11),
+            excluded_analysis=[SimpleNamespace(id=1)])
+        service = SimpleNamespace(id=1, analysis=btex, sale_lines=[])
+        service.get_quote_excluded_analysis = (
+            lambda: Service.get_quote_excluded_analysis(service))
+        details = [SimpleNamespace(service=service,
+                analysis=SimpleNamespace(id=i)) for i in (1, 2, 3)]
+
+        with patch.object(LimsService, 'update_analysis_detail',
+                    classmethod(lambda cls, services: list(details))), \
+                patch.object(EntryDetailAnalysis, 'delete') as delete:
+            self.assertEqual(Service.update_analysis_detail([service]),
+                details)
+            delete.assert_not_called()
+
+            service.sale_lines = [quote, other_quote]
+            self.assertEqual(Service.update_analysis_detail([service]),
+                details[:2])
+            delete.assert_called_once_with([details[2]])
 
 def suite():
     suite = trytond.tests.test_tryton.suite()
