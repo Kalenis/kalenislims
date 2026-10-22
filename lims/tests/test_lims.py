@@ -477,6 +477,37 @@ class LimsTestCase(ModuleTestCase):
         self.assertEqual(between.result_modifier, low)
         self.assertEqual(between.result, '1.0')
 
+    @with_transaction()
+    def test_accept_inconsistent_result(self):
+        "Accepting a result inconsistent with its limits is blocked"
+        NotebookLine = Pool().get('lims.notebook.line')
+
+        line = NotebookLine()
+        line.accepted = True
+        line.report = True
+        line.annulled = False
+        line.end_date = date.today()
+        line.acceptance_date = None
+        line.result = '0.360'
+        line.converted_result = None
+        line.literal_result = None
+        line.result_modifier = None
+        line.converted_result_modifier = None
+        line.backup = None
+        line.detection_limit = '0.01'
+        line.decimals = 0
+        line.significant_digits = None
+        line.analysis = None
+        line.on_change_accepted()
+        self.assertFalse(line.accepted)
+        self.assertIn('0.360', line.not_accepted_message)
+
+        line.accepted = True
+        line.decimals = 3
+        line.on_change_accepted()
+        self.assertTrue(line.accepted)
+        self.assertFalse(line.not_accepted_message)
+
 def suite():
     suite = trytond.tests.test_tryton.suite()
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(

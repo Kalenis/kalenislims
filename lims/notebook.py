@@ -1272,6 +1272,17 @@ class NotebookLine(ModelSQL, ModelView):
             to_save.append(d)
         EntryDetailAnalysis.save(to_save)
 
+    def get_inconsistent_result_message(self, name=None):
+        if name is None:
+            name = self.analysis.rec_name if self.analysis else ''
+        if get_inconsistent_result(self) == 'nd':
+            return gettext('lims.msg_inconsistent_result_nd',
+                line=name, backup=self.backup,
+                detection_limit=self.detection_limit)
+        return gettext('lims.msg_inconsistent_result_rounding',
+            line=name, result=self.result or self.converted_result,
+            decimals=self.decimals, detection_limit=self.detection_limit)
+
     @classmethod
     def check_accepted_results(cls, args):
         Warning = Pool().get('res.user.warning')
@@ -1290,17 +1301,9 @@ class NotebookLine(ModelSQL, ModelView):
             reason = get_inconsistent_result(line)
             if not reason:
                 continue
-            name = '%s / %s' % (line.notebook.rec_name, line.analysis.rec_name)
-            if reason == 'nd':
-                messages.append(gettext('lims.msg_inconsistent_result_nd',
-                    line=name, backup=line.backup,
-                    detection_limit=line.detection_limit))
-            else:
-                messages.append(gettext(
-                    'lims.msg_inconsistent_result_rounding',
-                    line=name, result=line.result or line.converted_result,
-                    decimals=line.decimals,
-                    detection_limit=line.detection_limit))
+            messages.append(line.get_inconsistent_result_message(
+                    '%s / %s' % (line.notebook.rec_name,
+                        line.analysis.rec_name)))
             inconsistent_ids.append(line.id)
         if not messages:
             return
@@ -1609,7 +1612,9 @@ class NotebookLine(ModelSQL, ModelView):
 
     @fields.depends('accepted', 'report', 'annulled', 'result',
         'converted_result', 'literal_result', 'result_modifier',
-        'converted_result_modifier', 'end_date', 'acceptance_date')
+        'converted_result_modifier', 'end_date', 'acceptance_date',
+        'backup', 'detection_limit', 'decimals', 'significant_digits',
+        'analysis')
     def on_change_accepted(self):
         self.not_accepted_message = ''
         if self.accepted:
@@ -1658,6 +1663,10 @@ class NotebookLine(ModelSQL, ModelView):
                     self.accepted = False
                     self.not_accepted_message = gettext(
                         'lims.msg_not_accepted_7')
+                elif get_inconsistent_result(self):
+                    self.accepted = False
+                    self.not_accepted_message = (
+                        self.get_inconsistent_result_message())
                 else:
                     self.acceptance_date = datetime.now()
         else:
