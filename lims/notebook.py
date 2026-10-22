@@ -2,6 +2,7 @@
 # This file is part of lims module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+import hashlib
 import operator
 import re
 import formulas
@@ -20,7 +21,7 @@ from trytond.pool import Pool
 from trytond.pyson import PYSONEncoder, Eval, Bool, Not, Or
 from trytond.transaction import Transaction
 from trytond.report import Report
-from trytond.exceptions import UserError
+from trytond.exceptions import UserError, UserWarning
 from trytond.i18n import gettext
 from .configuration import get_print_date
 from .formula_parser import FormulaParser
@@ -1185,6 +1186,7 @@ class NotebookLine(ModelSQL, ModelView):
             args.extend((lines, values))
 
         super().write(*args)
+        cls.check_accepted_results(args)
 
         context_update_samples_state = Transaction().context.get(
             'update_samples_state', True)
@@ -1269,6 +1271,45 @@ class NotebookLine(ModelSQL, ModelView):
             d.report = value[0] if value else False
             to_save.append(d)
         EntryDetailAnalysis.save(to_save)
+
+    @classmethod
+    def check_accepted_results(cls, args):
+        Warning = Pool().get('res.user.warning')
+
+        line_ids = []
+        actions = iter(args)
+        for lines, vals in zip(actions, actions):
+            if vals.get('accepted'):
+                line_ids.extend(l.id for l in lines)
+        if not line_ids:
+            return
+
+        messages = []
+        inconsistent_ids = []
+        for line in cls.browse(sorted(set(line_ids))):
+            reason = get_inconsistent_result(line)
+            if not reason:
+                continue
+            name = '%s / %s' % (line.notebook.rec_name, line.analysis.rec_name)
+            if reason == 'nd':
+                messages.append(gettext('lims.msg_inconsistent_result_nd',
+                    line=name, backup=line.backup,
+                    detection_limit=line.detection_limit))
+            else:
+                messages.append(gettext(
+                    'lims.msg_inconsistent_result_rounding',
+                    line=name, result=line.result or line.converted_result,
+                    decimals=line.decimals,
+                    detection_limit=line.detection_limit))
+            inconsistent_ids.append(line.id)
+        if not messages:
+            return
+        key = 'lims_inconsistent_accepted_results@%s' % hashlib.md5(
+            ','.join(map(str, inconsistent_ids)).encode()).hexdigest()
+        if Warning.check(key):
+            raise UserWarning(key, gettext(
+                'lims.msg_inconsistent_accepted_results',
+                lines='\n'.join(messages)))
 
     @classmethod
     def update_referrals_state(cls, lines):
@@ -2957,13 +2998,201 @@ class NotebookCopyLinesSetup(Wizard):
                     analysis=', '.join(sorted(set(missing))))
             summary.append(text)
 
+        limit_line_ids = []
         for values, lines in to_write.items():
-            NotebookLine.write(lines, dict(values))
+            values = dict(values)
+            NotebookLine.write(lines, values)
+            if ('detection_limit' in values or
+                    'quantification_limit' in values):
+                limit_line_ids.extend(l.id for l in lines)
+        revalidate = [l for l in NotebookLine.browse(limit_line_ids)
+            if get_limits_revalidation_field(l)]
+        if revalidate:
+            apply_limits_validation(revalidate)
+            summary.append(gettext('lims.msg_copy_lines_setup_revalidated',
+                count=len(revalidate)))
         self.result.summary = '\n'.join(summary)
         return 'result'
 
     def default_result(self, fields):
         return {'summary': self.result.summary}
+
+
+def _to_float(value):
+    if value in (None, ''):
+        return None
+    try:
+        return float(str(value).replace(',', '.'))
+    except ValueError:
+        return None
+
+
+def _code(modifier):
+    return modifier.code if modifier else None
+
+
+def get_limits_modifier(value, detection_limit, quantification_limit):
+    """
+    Return the result modifier code that the limits validation gives to the
+    value: 'nd' below the detection limit, 'low' up to the quantification
+    limit, None otherwise.
+    """
+    if value < detection_limit:
+        return 'nd'
+    if value == detection_limit or value < quantification_limit:
+        return 'low'
+    return None
+
+
+def get_limits_revalidation_field(line):
+    """
+    Return the result field ('result' or 'converted_result') whose modifier
+    was set by the limits validation, so it can be evaluated again from the
+    backup when the limits of the line change. Modifiers set by hand keep
+    the result next to the backup and are not returned.
+    """
+    backup = _to_float(line.backup)
+    if backup is None:
+        return None
+    result_modifier = _code(line.result_modifier)
+    converted_modifier = _code(line.converted_result_modifier)
+    if converted_modifier:
+        if result_modifier != 'ni' or converted_modifier not in ('nd', 'low'):
+            return None
+        value = line.converted_result
+        field_name = 'converted_result'
+        modifier = converted_modifier
+    else:
+        if result_modifier not in ('nd', 'low'):
+            return None
+        value = line.result
+        field_name = 'result'
+        modifier = result_modifier
+    if modifier == 'nd' and value in (None, ''):
+        return field_name
+    if modifier == 'low' and _to_float(value) != backup:
+        return field_name
+    return None
+
+
+def get_inconsistent_result(line):
+    """
+    Return why the result of the line does not match its limits: 'nd' when
+    it is not detected but the backup is above the detection limit,
+    'rounding' when the result is detected but its decimals round it below
+    the detection limit. None when it is consistent.
+    """
+    if line.literal_result:
+        return None
+    detection_limit = _to_float(line.detection_limit)
+    if detection_limit is None:
+        return None
+    backup = _to_float(line.backup)
+    if 'nd' in (_code(line.result_modifier),
+            _code(line.converted_result_modifier)):
+        if backup is not None and backup > detection_limit:
+            return 'nd'
+        return None
+    if (detection_limit <= 0 or line.significant_digits or
+            line.decimals is None):
+        return None
+    for value, modifier in ((line.result, line.result_modifier),
+            (line.converted_result, line.converted_result_modifier)):
+        value = _to_float(value)
+        if modifier or value is None:
+            continue
+        if (value >= detection_limit and
+                round(value, line.decimals) < detection_limit):
+            return 'rounding'
+    return None
+
+
+def apply_limits_validation(notebook_lines):
+    """
+    Set the result modifiers of the lines according to their limits. A
+    modifier already set by a previous validation is evaluated again from
+    the backup, so it follows the current limits of the line.
+    """
+    pool = Pool()
+    ModelData = pool.get('ir.model.data')
+    NotebookLine = pool.get('lims.notebook.line')
+
+    modifiers = {
+        'low': ModelData.get_id('lims', 'result_modifier_low'),
+        'nd': ModelData.get_id('lims', 'result_modifier_nd'),
+        }
+    result_modifier_ni = ModelData.get_id('lims', 'result_modifier_ni')
+
+    lines_to_save = []
+    for notebook_line in notebook_lines:
+        if notebook_line.accepted:
+            continue
+        try:
+            dl = float(notebook_line.detection_limit)
+            ql = float(notebook_line.quantification_limit)
+        except (TypeError, ValueError):
+            continue
+
+        ll = (notebook_line.lower_limit and
+            float(notebook_line.lower_limit) or None)
+        ul = (notebook_line.upper_limit and
+            float(notebook_line.upper_limit) or None)
+
+        revalidate = get_limits_revalidation_field(notebook_line)
+        if revalidate:
+            field_name = revalidate
+            value = float(notebook_line.backup)
+        elif (notebook_line.result and (
+                notebook_line.check_result_limits or
+                not notebook_line.converted_result)):
+            if notebook_line.result_modifier:
+                continue
+            field_name = 'result'
+            try:
+                value = float(notebook_line.result)
+            except ValueError:
+                continue
+        elif notebook_line.converted_result:
+            if notebook_line.converted_result_modifier:
+                continue
+            field_name = 'converted_result'
+            try:
+                value = float(notebook_line.converted_result)
+            except ValueError:
+                continue
+        else:
+            continue
+
+        if (ll and value < ll) or (ul and value > ul):
+            raise UserError(gettext('lims.msg_error_limits_allowed',
+                line=notebook_line.rec_name))
+        modifier = get_limits_modifier(value, dl, ql)
+        if field_name == 'result':
+            if modifier:
+                notebook_line.result = str(ql) if modifier == 'low' else None
+                notebook_line.result_modifier = modifiers[modifier]
+                notebook_line.converted_result = None
+                notebook_line.converted_result_modifier = None
+                notebook_line.rm_correction_formula = None
+            elif revalidate:
+                notebook_line.result = notebook_line.backup
+                notebook_line.result_modifier = None
+        else:
+            if modifier:
+                notebook_line.converted_result = (
+                    str(ql) if modifier == 'low' else None)
+                notebook_line.converted_result_modifier = modifiers[modifier]
+                notebook_line.result_modifier = result_modifier_ni
+                notebook_line.rm_correction_formula = None
+            elif revalidate:
+                notebook_line.converted_result = notebook_line.backup
+                notebook_line.converted_result_modifier = None
+        notebook_line.backup = str(value)
+        lines_to_save.append(notebook_line)
+
+    if lines_to_save:
+        NotebookLine.save(lines_to_save)
+    return lines_to_save
 
 
 class NotebookLimitsValidationStart(ModelView):
@@ -2997,98 +3226,7 @@ class NotebookLimitsValidation(Wizard):
         return 'end'
 
     def lines_limits_validation(self, notebook_lines):
-        pool = Pool()
-        ModelData = pool.get('ir.model.data')
-        NotebookLine = pool.get('lims.notebook.line')
-
-        result_modifier_low = ModelData.get_id('lims', 'result_modifier_low')
-        result_modifier_nd = ModelData.get_id('lims', 'result_modifier_nd')
-        result_modifier_ni = ModelData.get_id('lims', 'result_modifier_ni')
-
-        lines_to_save = []
-        for notebook_line in notebook_lines:
-            if notebook_line.accepted:
-                continue
-            try:
-                dl = float(notebook_line.detection_limit)
-                ql = float(notebook_line.quantification_limit)
-            except (TypeError, ValueError):
-                continue
-
-            ll = (notebook_line.lower_limit and
-                float(notebook_line.lower_limit) or None)
-            ul = (notebook_line.upper_limit and
-                float(notebook_line.upper_limit) or None)
-
-            if (notebook_line.result and (
-                    notebook_line.check_result_limits or
-                    not notebook_line.converted_result)):
-                if notebook_line.result_modifier:
-                    continue
-                try:
-                    value = float(notebook_line.result)
-                except ValueError:
-                    continue
-                if (ll and value < ll) or (ul and value > ul):
-                    raise UserError(gettext('lims.msg_error_limits_allowed',
-                        line=notebook_line.rec_name))
-                if dl < value and value < ql:
-                    notebook_line.result = str(ql)
-                    notebook_line.result_modifier = result_modifier_low
-                    notebook_line.converted_result = None
-                    notebook_line.converted_result_modifier = None
-                    notebook_line.rm_correction_formula = None
-                elif value < dl:
-                    notebook_line.result = None
-                    notebook_line.result_modifier = result_modifier_nd
-                    notebook_line.converted_result = None
-                    notebook_line.converted_result_modifier = None
-                    notebook_line.rm_correction_formula = None
-                elif value == dl:
-                    notebook_line.result = str(ql)
-                    notebook_line.result_modifier = result_modifier_low
-                    notebook_line.converted_result = None
-                    notebook_line.converted_result_modifier = None
-                    notebook_line.rm_correction_formula = None
-                notebook_line.backup = str(value)
-                lines_to_save.append(notebook_line)
-
-            elif notebook_line.converted_result:
-                if notebook_line.converted_result_modifier:
-                    continue
-                try:
-                    value = float(notebook_line.converted_result)
-                except ValueError:
-                    continue
-                if (ll and value < ll) or (ul and value > ul):
-                    raise UserError(gettext('lims.msg_error_limits_allowed',
-                        line=notebook_line.rec_name))
-                if dl < value and value < ql:
-                    notebook_line.converted_result = str(ql)
-                    notebook_line.converted_result_modifier = (
-                        result_modifier_low)
-                    notebook_line.result_modifier = result_modifier_ni
-                    notebook_line.rm_correction_formula = None
-                elif value < dl:
-                    notebook_line.converted_result = None
-                    notebook_line.converted_result_modifier = (
-                        result_modifier_nd)
-                    notebook_line.result_modifier = result_modifier_ni
-                    notebook_line.rm_correction_formula = None
-                elif value == dl:
-                    notebook_line.converted_result = str(ql)
-                    notebook_line.converted_result_modifier = (
-                        result_modifier_low)
-                    notebook_line.result_modifier = result_modifier_ni
-                    notebook_line.rm_correction_formula = None
-                notebook_line.backup = str(value)
-                lines_to_save.append(notebook_line)
-
-            else:
-                continue
-
-        if lines_to_save:
-            NotebookLine.save(lines_to_save)
+        apply_limits_validation(notebook_lines)
 
     def end(self):
         return 'reload'

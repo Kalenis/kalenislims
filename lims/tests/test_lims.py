@@ -356,6 +356,127 @@ class LimsTestCase(ModuleTestCase):
             CopyLinesSetup.get_setup_values(source, line, ['decimals']), {})
 
 
+    def test_limits_modifier(self):
+        "The limits validation gives nd below the DL and low up to the QL"
+        from trytond.modules.lims.notebook import get_limits_modifier
+
+        self.assertEqual(get_limits_modifier(0.2, 0.5, 1), 'nd')
+        self.assertEqual(get_limits_modifier(0.5, 0.5, 1), 'low')
+        self.assertEqual(get_limits_modifier(0.7, 0.5, 1), 'low')
+        self.assertEqual(get_limits_modifier(1, 0.5, 1), None)
+        self.assertEqual(get_limits_modifier(390, 0.5, 1), None)
+
+    def test_limits_revalidation_field(self):
+        "Only modifiers set by the limits validation are evaluated again"
+        from types import SimpleNamespace
+        from trytond.modules.lims.notebook import (
+            get_limits_revalidation_field)
+
+        nd, low, ni = (SimpleNamespace(code=c) for c in ('nd', 'low', 'ni'))
+
+        def line(**kwargs):
+            values = dict(result=None, result_modifier=None,
+                converted_result=None, converted_result_modifier=None,
+                backup=None)
+            values.update(kwargs)
+            return SimpleNamespace(**values)
+
+        self.assertEqual(get_limits_revalidation_field(
+                line(result_modifier=nd, backup='390.0')), 'result')
+        self.assertEqual(get_limits_revalidation_field(
+                line(result='1.0', result_modifier=low, backup='0.7')),
+            'result')
+        self.assertEqual(get_limits_revalidation_field(
+                line(result_modifier=ni, converted_result_modifier=nd,
+                    backup='0.003')), 'converted_result')
+        # Modifiers set by hand keep the result next to the backup
+        self.assertIsNone(get_limits_revalidation_field(
+                line(result='10', result_modifier=low, backup='10.0')))
+        self.assertIsNone(get_limits_revalidation_field(
+                line(result='5', result_modifier=nd, backup='5.0')))
+        self.assertIsNone(get_limits_revalidation_field(
+                line(result_modifier=nd)))
+        self.assertIsNone(get_limits_revalidation_field(
+                line(result='12.5', backup='12.5')))
+
+    def test_inconsistent_result(self):
+        "Detect results that the report would show against their limits"
+        from types import SimpleNamespace
+        from trytond.modules.lims.notebook import get_inconsistent_result
+
+        nd = SimpleNamespace(code='nd')
+
+        def line(**kwargs):
+            values = dict(result=None, result_modifier=None,
+                converted_result=None, converted_result_modifier=None,
+                backup=None, literal_result=None, detection_limit='0.01',
+                decimals=3, significant_digits=None)
+            values.update(kwargs)
+            return SimpleNamespace(**values)
+
+        self.assertEqual(get_inconsistent_result(line(result_modifier=nd,
+                    backup='390.0', detection_limit='0.50')), 'nd')
+        self.assertIsNone(get_inconsistent_result(line(result_modifier=nd,
+                    backup='0.0', detection_limit='0.50')))
+        self.assertEqual(get_inconsistent_result(line(result='0.360',
+                    decimals=0)), 'rounding')
+        self.assertIsNone(get_inconsistent_result(line(result='0.360')))
+        self.assertIsNone(get_inconsistent_result(line(result='0.360',
+                    decimals=0, significant_digits=2)))
+        self.assertIsNone(get_inconsistent_result(line(result='0.005',
+                    decimals=0)))
+        self.assertIsNone(get_inconsistent_result(line(result='12',
+                    decimals=0, detection_limit='0')))
+        self.assertIsNone(get_inconsistent_result(line(result_modifier=nd,
+                    backup='390.0', detection_limit='0.50',
+                    literal_result='Ausencia')))
+
+    @with_transaction()
+    def test_limits_validation_follows_new_limits(self):
+        "A validated modifier is evaluated again when the limits change"
+        from types import SimpleNamespace
+        from trytond.modules.lims.notebook import apply_limits_validation
+        pool = Pool()
+        ModelData = pool.get('ir.model.data')
+        NotebookLine = pool.get('lims.notebook.line')
+
+        nd = ModelData.get_id('lims', 'result_modifier_nd')
+        low = ModelData.get_id('lims', 'result_modifier_low')
+        modifiers = {nd: SimpleNamespace(id=nd, code='nd'),
+            low: SimpleNamespace(id=low, code='low')}
+
+        def line(**kwargs):
+            values = dict(accepted=False, result=None, result_modifier=None,
+                converted_result=None, converted_result_modifier=None,
+                backup=None, detection_limit='500', quantification_limit='1000',
+                lower_limit=None, upper_limit=None, check_result_limits=False,
+                rm_correction_formula=None, rec_name='line')
+            values.update(kwargs)
+            return SimpleNamespace(**values)
+
+        detected = line(result='390')
+        manual = line(result='390', result_modifier=modifiers[low])
+        with patch.object(NotebookLine, 'save'):
+            apply_limits_validation([detected, manual])
+        self.assertEqual(detected.result_modifier, nd)
+        self.assertIsNone(detected.result)
+        self.assertEqual(detected.backup, '390.0')
+        self.assertEqual(manual.result, '390')
+
+        detected.result_modifier = modifiers[nd]
+        detected.detection_limit, detected.quantification_limit = '0.5', '1'
+        with patch.object(NotebookLine, 'save'):
+            apply_limits_validation([detected])
+        self.assertIsNone(detected.result_modifier)
+        self.assertEqual(detected.result, '390.0')
+
+        between = line(result_modifier=modifiers[nd], backup='0.7',
+            detection_limit='0.5', quantification_limit='1')
+        with patch.object(NotebookLine, 'save'):
+            apply_limits_validation([between])
+        self.assertEqual(between.result_modifier, low)
+        self.assertEqual(between.result, '1.0')
+
 def suite():
     suite = trytond.tests.test_tryton.suite()
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(
