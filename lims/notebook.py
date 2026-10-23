@@ -1163,6 +1163,7 @@ class NotebookLine(ModelSQL, ModelView):
 
         actions = iter(args)
         args = []
+        method_changed = []
         for lines, values in zip(actions, actions):
             value_to_convert = None
             if 'backup' in values:
@@ -1183,10 +1184,15 @@ class NotebookLine(ModelSQL, ModelView):
             if 'method' in values and values['method'] is not None:
                 values['method_version'] = LabMethod(
                     values['method']).get_current_version()
+                method_changed.append(([l for l in lines
+                    if not l.method or l.method.id != values['method']],
+                    values))
             args.extend((lines, values))
 
         super().write(*args)
         cls.check_accepted_results(args)
+        for lines, values in method_changed:
+            cls.set_method_typification_values(lines, values)
 
         context_update_samples_state = Transaction().context.get(
             'update_samples_state', True)
@@ -1218,6 +1224,51 @@ class NotebookLine(ModelSQL, ModelView):
                     break
             if update_referrals_state and context_update_referrals_state:
                 cls.update_referrals_state(lines)
+
+    @classmethod
+    def set_method_typification_values(cls, lines, values):
+        Typification = Pool().get('lims.typification')
+
+        def _str_value(val=None):
+            return str(val) if val is not None else None
+
+        to_write = []
+        for line in lines:
+            if line.notebook.fraction.special_type == 'rm':
+                continue
+            typification = Typification.get_valid_typification(
+                line.notebook.product_type.id, line.notebook.matrix.id,
+                line.analysis.id, line.method.id,
+                line.laboratory and line.laboratory.id or None)
+            if not typification:
+                continue
+            typification_values = {
+                'detection_limit': _str_value(
+                    typification.detection_limit),
+                'quantification_limit': _str_value(
+                    typification.quantification_limit),
+                'lower_limit': _str_value(typification.lower_limit),
+                'upper_limit': _str_value(typification.upper_limit),
+                'initial_concentration': _str_value(
+                    typification.initial_concentration),
+                'final_concentration': _str_value(
+                    typification.final_concentration),
+                'literal_final_concentration': _str_value(
+                    typification.literal_final_concentration),
+                'initial_unit': (typification.start_uom and
+                    typification.start_uom.id or None),
+                'final_unit': (typification.end_uom and
+                    typification.end_uom.id or None),
+                'decimals': typification.calc_decimals,
+                'significant_digits': typification.significant_digits,
+                'scientific_notation': typification.scientific_notation,
+                }
+            for field in values:
+                typification_values.pop(field, None)
+            if typification_values:
+                to_write.extend(([line], typification_values))
+        if to_write:
+            cls.write(*to_write)
 
     @staticmethod
     def update_detail_analysis(lines, accepted):
