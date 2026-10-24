@@ -9249,6 +9249,10 @@ msgctxt "model:ir.message,text:msg_invalid_report_state"
 msgid "The target Results Report does not have a valid state"
 msgstr "El informe de resultados destino no tiene un estado válido"
 
+msgctxt "model:ir.message,text:msg_generate_report_no_samples"
+msgid "Select at least one sample to generate the report."
+msgstr "Seleccione al menos una muestra para generar el informe."
+
 msgctxt "model:ir.message,text:msg_mixed_sample_states"
 msgid "Cannot mix complete and in-progress samples in the same target report"
 msgstr ""

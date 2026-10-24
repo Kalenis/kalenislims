@@ -2848,6 +2848,9 @@ class GenerateReport(Wizard):
         ResultsReport = pool.get('lims.results_report')
         ResultsDetail = pool.get('lims.results_report.version.detail')
 
+        if not Transaction().context.get('active_ids'):
+            raise UserError(gettext('lims.msg_generate_report_no_samples'))
+
         laboratory_id = Transaction().context.get(
             'samples_pending_reporting_laboratory', None)
         config_ = Configuration(1)
