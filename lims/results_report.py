@@ -5214,6 +5214,7 @@ class RenderResultReport(Wizard):
         pool = Pool()
         ResultsDetail = pool.get('lims.results_report.version.detail')
 
-        detail = ResultsDetail(Transaction().context['active_id'])
-        detail.generate_render()
+        for detail in ResultsDetail.browse(
+                Transaction().context['active_ids']):
+            detail.generate_render()
         return 'end'

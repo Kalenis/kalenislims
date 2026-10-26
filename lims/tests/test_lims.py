@@ -508,6 +508,23 @@ class LimsTestCase(ModuleTestCase):
         self.assertTrue(line.accepted)
         self.assertFalse(line.not_accepted_message)
 
+    @with_transaction()
+    def test_render_preview_of_several_reports(self):
+        "Render Preview renders every selected report"
+        pool = Pool()
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+        RenderResultReport = pool.get('lims.render_result_report',
+            type='wizard')
+
+        session_id, _, _ = RenderResultReport.create()
+        wizard = RenderResultReport(session_id)
+        rendered = []
+        with patch.object(ResultsDetail, 'generate_render', autospec=True,
+                    side_effect=lambda detail: rendered.append(detail.id)), \
+                Transaction().set_context(active_id=1, active_ids=[1, 2, 3]):
+            self.assertEqual(wizard.transition_start(), 'end')
+        self.assertEqual(rendered, [1, 2, 3])
+
 def suite():
     suite = trytond.tests.test_tryton.suite()
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(
