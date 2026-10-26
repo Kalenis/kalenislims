@@ -1022,6 +1022,13 @@ class Service(ModelSQL, ModelView):
             ]
 
     @classmethod
+    def update_estimated_dates(cls, services):
+        for service in services:
+            service.laboratory_date = service.on_change_with_laboratory_date()
+            service.report_date = service.on_change_with_report_date()
+        cls.save(services)
+
+    @classmethod
     def copy(cls, services, default=None):
         EntryDetailAnalysis = Pool().get('lims.entry.detail.analysis')
 
@@ -4417,16 +4424,23 @@ class DuplicateSample(Wizard):
             }
 
     def transition_duplicate(self):
-        Sample = Pool().get('lims.sample')
+        pool = Pool()
+        Sample = pool.get('lims.sample')
+        Service = pool.get('lims.service')
 
         sample = self.start.sample
         date = self.start.date
         labels_list = self._get_labels_list(self.start.labels)
+        new_samples = []
         for label in labels_list:
-            Sample.copy([sample], default={
+            new_samples.extend(Sample.copy([sample], default={
                 'label': label,
                 'date': date,
-                })
+                }))
+        Service.update_estimated_dates(Service.search([
+            ('fraction.sample', 'in', [s.id for s in new_samples]),
+            ('annulled', '=', False),
+            ]))
         return 'end'
 
     def _get_labels_list(self, labels=None):
@@ -4474,16 +4488,23 @@ class DuplicateSampleFromEntry(Wizard):
             }
 
     def transition_duplicate(self):
-        Sample = Pool().get('lims.sample')
+        pool = Pool()
+        Sample = pool.get('lims.sample')
+        Service = pool.get('lims.service')
 
         sample = self.start.sample
         date = self.start.date
         labels_list = self._get_labels_list(self.start.labels)
+        new_samples = []
         for label in labels_list:
-            Sample.copy([sample], default={
+            new_samples.extend(Sample.copy([sample], default={
                 'label': label,
                 'date': date,
-                })
+                }))
+        Service.update_estimated_dates(Service.search([
+            ('fraction.sample', 'in', [s.id for s in new_samples]),
+            ('annulled', '=', False),
+            ]))
         return 'end'
 
     def _get_labels_list(self, labels=None):
