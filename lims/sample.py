@@ -7,7 +7,8 @@ import operator
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from decimal import Decimal
-from sql.conditionals import Case
+from sql.conditionals import Case, Coalesce
+from sql.functions import CurrentTimestamp
 from sql import Literal
 from email import encoders
 from email.mime.base import MIMEBase
@@ -26,7 +27,7 @@ from trytond.exceptions import UserError, UserWarning
 from trytond.i18n import gettext
 from trytond.rpc import RPC
 from trytond.config import config as tconfig
-from trytond.tools import get_smtp_server
+from trytond.tools import get_smtp_server, grouped_slice, reduce_ids
 from trytond import backend
 
 logger = logging.getLogger(__name__)
@@ -1153,17 +1154,22 @@ class Service(ModelSQL, ModelView):
 
     @staticmethod
     def update_urgent_lines(services, urgent):
+        # Only the urgent flag changes: update it directly instead of
+        # validating every notebook line, which is too slow for big entries
         pool = Pool()
         NotebookLine = pool.get('lims.notebook.line')
+        cursor = Transaction().connection.cursor()
+        notebook_line = NotebookLine.__table__()
 
-        with Transaction().set_context(_check_access=False):
-            notebook_lines = NotebookLine.search([
-                ('service', 'in', [s.id for s in services]),
-                ])
-            if notebook_lines:
-                NotebookLine.write(notebook_lines, {
-                    'urgent': urgent,
-                    })
+        urgent = bool(urgent)
+        service_ids = list(set(s.id for s in services))
+        for sub_ids in grouped_slice(service_ids):
+            cursor.execute(*notebook_line.update(
+                [notebook_line.urgent, notebook_line.write_uid,
+                    notebook_line.write_date],
+                [urgent, Transaction().user, CurrentTimestamp()],
+                where=reduce_ids(notebook_line.service, sub_ids)
+                & (Coalesce(notebook_line.urgent, False) != urgent)))
 
     @fields.depends('analysis', 'fraction', 'typification_domain',
         'laboratory', '_parent_fraction.id',

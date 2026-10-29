@@ -5,6 +5,8 @@
 import logging
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
+from sql.conditionals import Coalesce
+from sql.functions import CurrentTimestamp
 
 from trytond.model import Workflow, ModelView, ModelSQL, fields, Unique
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
@@ -12,6 +14,7 @@ from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
 from trytond.report import Report
 from trytond.pool import Pool
 from trytond.transaction import Transaction
+from trytond.tools import grouped_slice, reduce_ids
 from trytond.pyson import PYSONEncoder, Eval, Equal, Bool, Not, Or
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
@@ -788,20 +791,31 @@ class PlanificationDetail(ModelSQL, ModelView):
         Service = pool.get('lims.service')
         NotebookLine = pool.get('lims.notebook.line')
 
-        services_to_write = []
-        notebook_lines_to_write = []
+        services_to_write = set()
+        notebook_lines_to_write = set()
         for d in details:
             if d.fraction and d.service_analysis:
                 for service in d.fraction.services:
                     if service.analysis == d.service_analysis:
-                        services_to_write.append(service)
+                        services_to_write.add(service)
             for sd in d.details:
-                notebook_lines_to_write.append(sd.notebook_line)
+                if sd.notebook_line:
+                    notebook_lines_to_write.add(sd.notebook_line.id)
 
         if services_to_write:
-            Service.write(services_to_write, {'urgent': value})
+            Service.write(list(services_to_write), {'urgent': value})
         if notebook_lines_to_write and value:
-            NotebookLine.write(notebook_lines_to_write, {'urgent': value})
+            # Only the urgent flag changes: update it directly instead of
+            # validating every notebook line
+            cursor = Transaction().connection.cursor()
+            notebook_line = NotebookLine.__table__()
+            for sub_ids in grouped_slice(list(notebook_lines_to_write)):
+                cursor.execute(*notebook_line.update(
+                    [notebook_line.urgent, notebook_line.write_uid,
+                        notebook_line.write_date],
+                    [True, Transaction().user, CurrentTimestamp()],
+                    where=reduce_ids(notebook_line.id, sub_ids)
+                    & ~Coalesce(notebook_line.urgent, False)))
 
     def get_icon(self, name):
         if self.comments:
