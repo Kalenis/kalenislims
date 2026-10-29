@@ -644,7 +644,7 @@ class ComercialProductBrand(ModelSQL, ModelView):
     name = fields.Char('Name', required=True)
 
 
-class ComercialProduct(ModelSQL, ModelView):
+class ComercialProduct(DeactivableMixin, ModelSQL, ModelView):
     'Comercial Product'
     __name__ = 'lims.comercial.product'
 
