@@ -425,7 +425,8 @@ class SearchAnalysisSheet(Wizard):
         records_ids_added = ', '.join(str(x)
             for x in ['(0,0)'] + records_added)
         extra_where = (
-            'AND (nb.fraction, srv.analysis) IN (' + records_ids_added + ') ')
+            'AND (nb.fraction, srv.analysis) IN (VALUES ' +
+            records_ids_added + ') ')
 
         data = self._get_service_details(planification, extra_where)
 
