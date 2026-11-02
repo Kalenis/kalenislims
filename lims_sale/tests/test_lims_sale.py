@@ -164,6 +164,63 @@ class LimsTestCase(ModuleTestCase):
                 details[:2])
             delete.assert_called_once_with([details[2]])
 
+    @with_transaction()
+    def test_email_recipient(self):
+        "The quotation goes to the sale contact, address or party email"
+        Sale = Pool().get('sale.sale')
+
+        def sale(contact=None, address=None, party_email=''):
+            return SimpleNamespace(contact=contact, invoice_address=address,
+                party=SimpleNamespace(email=party_email))
+
+        email = SimpleNamespace(type='email', value='contact@customer.test')
+        phone = SimpleNamespace(type='phone', value='223-4818481')
+        address = SimpleNamespace(email='address@customer.test')
+        no_email = SimpleNamespace(email=None)
+
+        self.assertEqual(
+            Sale._get_email_recipient(
+                sale(email, address, 'party@customer.test')),
+            'contact@customer.test')
+        self.assertEqual(
+            Sale._get_email_recipient(
+                sale(phone, address, 'party@customer.test')),
+            'address@customer.test')
+        self.assertEqual(
+            Sale._get_email_recipient(
+                sale(None, no_email, 'party@customer.test')),
+            'party@customer.test')
+        self.assertFalse(Sale._get_email_recipient(sale()))
+
+    @with_transaction()
+    def test_send_email_party(self):
+        "Quotations are sent to their own recipient and skipped without one"
+        Sale = Pool().get('sale.sale')
+
+        def sale(number, recipient):
+            return SimpleNamespace(number=number,
+                party=SimpleNamespace(rec_name=number),
+                create_uid=SimpleNamespace(email='seller@lab.test'),
+                _get_email_recipient=lambda: recipient,
+                _get_subject_body=lambda: ('Subject', 'Body'),
+                _get_attachment=lambda: {})
+
+        with patch('trytond.modules.lims_sale.sale.config') as config, \
+                patch.object(Sale, 'create_msg') as create_msg, \
+                patch.object(Sale, 'send_msg') as send_msg:
+            config.get.return_value = 'lab@lab.test'
+            Sale.send_email_party([
+                    sale('Q1', 'customer@customer.test'),
+                    sale('Q2', ''),
+                    ])
+
+        create_msg.assert_called_once_with('lab@lab.test',
+            'customer@customer.test', 'seller@lab.test', 'Subject', 'Body',
+            {})
+        send_msg.assert_called_once_with('lab@lab.test',
+            'customer@customer.test', create_msg.return_value, 'Q1')
+
+
 def suite():
     suite = trytond.tests.test_tryton.suite()
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(

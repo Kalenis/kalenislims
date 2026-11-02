@@ -382,7 +382,7 @@ class Sale(metaclass=PoolMeta):
             return
 
         for sale in sales:
-            to_addr = 'contacto@silix.com.ar'  # sale.party.email
+            to_addr = sale._get_email_recipient()
             if not to_addr:
                 logger.error("Missing address for '%s' to send email",
                     sale.party.rec_name)
@@ -394,6 +394,13 @@ class Sale(metaclass=PoolMeta):
             msg = cls.create_msg(from_addr, to_addr, reply_to, subject,
                 body, attachment_data)
             cls.send_msg(from_addr, to_addr, msg, sale.number)
+
+    def _get_email_recipient(self):
+        if self.contact and self.contact.type == 'email':
+            return self.contact.value
+        if self.invoice_address and self.invoice_address.email:
+            return self.invoice_address.email
+        return self.party.email
 
     def _get_subject_body(self):
         pool = Pool()
