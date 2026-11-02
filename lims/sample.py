@@ -7,6 +7,7 @@ import operator
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from decimal import Decimal
+from sql.aggregate import BoolAnd
 from sql.conditionals import Case, Coalesce
 from sql.functions import CurrentTimestamp
 from sql import Literal
@@ -3609,13 +3610,21 @@ class Sample(ModelSQL, ModelView):
             else_=0))))))))))]
         return order
 
-    def get_confirmed(self, name=None):
-        if not self.fractions:
-            return False
-        for fraction in self.fractions:
-            if not fraction.confirmed:
-                return False
-        return True
+    @classmethod
+    def get_confirmed(cls, samples, name=None):
+        cursor = Transaction().connection.cursor()
+        Fraction = Pool().get('lims.fraction')
+        fraction = Fraction.__table__()
+
+        sample_ids = [s.id for s in samples]
+        res = dict.fromkeys(sample_ids, False)
+        for sub_ids in grouped_slice(sample_ids):
+            cursor.execute(*fraction.select(fraction.sample,
+                    where=reduce_ids(fraction.sample, sub_ids),
+                    group_by=fraction.sample,
+                    having=BoolAnd(Coalesce(fraction.confirmed, False))))
+            res.update((sample_id, True) for sample_id, in cursor.fetchall())
+        return res
 
     @fields.depends('entry', '_parent_entry.state', 'fractions')
     def on_change_with_button_confirm_available(self, name=None):

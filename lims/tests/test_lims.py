@@ -525,6 +525,123 @@ class LimsTestCase(ModuleTestCase):
             self.assertEqual(wizard.transition_start(), 'end')
         self.assertEqual(rendered, [1, 2, 3])
 
+    def _create_confirmed_records(self):
+        pool = Pool()
+        Entry = pool.get('lims.entry')
+        Fraction = pool.get('lims.fraction')
+        FractionType = pool.get('lims.fraction.type')
+        Lang = pool.get('ir.lang')
+        Location = pool.get('stock.location')
+        Matrix = pool.get('lims.matrix')
+        Party = pool.get('party.party')
+        ProductType = pool.get('lims.product.type')
+        Sample = pool.get('lims.sample')
+        cursor = Transaction().connection.cursor()
+
+        party, = Party.create([{'name': 'Customer'}])
+        lang, = Lang.search([], limit=1)
+        matrix, = Matrix.create([{'code': 'M', 'description': 'Matrix'}])
+        product_type, = ProductType.create([{
+                    'code': 'P', 'description': 'Product type'}])
+        fraction_type, = FractionType.create([{
+                    'code': 'F', 'description': 'Fraction type'}])
+        location, = Location.search([('type', '=', 'storage')], limit=1)
+
+        def insert(Model, columns, values):
+            table = Model.__table__()
+            cursor.execute(*table.insert(
+                    [getattr(table, c) for c in columns], [values],
+                    returning=[table.id]))
+            return Model(cursor.fetchone()[0])
+
+        def create_entry():
+            return insert(Entry, ['state', 'report_language'],
+                ['ongoing', lang.id])
+
+        def create_sample(entry):
+            return insert(Sample,
+                ['entry', 'party', 'date', 'product_type', 'matrix'],
+                [entry.id, party.id, date.today(), product_type.id,
+                    matrix.id])
+
+        def create_fraction(sample, confirmed):
+            return insert(Fraction,
+                ['sample', 'type', 'storage_location', 'storage_time',
+                    'confirmed'],
+                [sample.id, fraction_type.id, location.id, 1, confirmed])
+
+        return create_entry, create_sample, create_fraction
+
+    @with_transaction()
+    def test_entry_confirmed(self):
+        "An entry is confirmed when all the fractions of its samples are"
+        pool = Pool()
+        Entry = pool.get('lims.entry')
+        create_entry, create_sample, create_fraction = (
+            self._create_confirmed_records())
+
+        empty = create_entry()
+        without_fraction = create_entry()
+        create_fraction(create_sample(without_fraction), True)
+        create_sample(without_fraction)
+        pending = create_entry()
+        pending_sample = create_sample(pending)
+        create_fraction(pending_sample, True)
+        create_fraction(pending_sample, False)
+        not_set = create_entry()
+        create_fraction(create_sample(not_set), None)
+        confirmed = create_entry()
+        for _ in range(2):
+            sample = create_sample(confirmed)
+            create_fraction(sample, True)
+            create_fraction(sample, True)
+
+        entries = [empty, without_fraction, pending, not_set, confirmed]
+        self.assertEqual(
+            Entry.get_confirmed(entries, 'confirmed'), {
+                empty.id: False,
+                without_fraction.id: False,
+                pending.id: False,
+                not_set.id: False,
+                confirmed.id: True,
+                })
+        self.assertEqual(
+            [(e['id'], e['icon']) for e in Entry.read(
+                    [pending.id, confirmed.id], ['icon'])],
+            [(pending.id, 'lims-red'), (confirmed.id, 'lims-white')])
+
+    @with_transaction()
+    def test_sample_confirmed(self):
+        "A sample is confirmed when it has fractions and all are confirmed"
+        Sample = Pool().get('lims.sample')
+        create_entry, create_sample, create_fraction = (
+            self._create_confirmed_records())
+
+        entry = create_entry()
+        empty = create_sample(entry)
+        pending = create_sample(entry)
+        create_fraction(pending, True)
+        create_fraction(pending, False)
+        not_set = create_sample(entry)
+        create_fraction(not_set, None)
+        confirmed = create_sample(entry)
+        create_fraction(confirmed, True)
+        create_fraction(confirmed, True)
+
+        samples = [empty, pending, not_set, confirmed]
+        self.assertEqual(
+            Sample.get_confirmed(samples, 'confirmed'), {
+                empty.id: False,
+                pending.id: False,
+                not_set.id: False,
+                confirmed.id: True,
+                })
+        self.assertEqual(
+            [s['confirmed'] for s in Sample.read(
+                    [pending.id, confirmed.id], ['confirmed'])],
+            [False, True])
+
+
 def suite():
     suite = trytond.tests.test_tryton.suite()
     suite.addTests(unittest.TestLoader().loadTestsFromTestCase(

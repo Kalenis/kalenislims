@@ -10,6 +10,8 @@ from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from sql import Literal
+from sql.aggregate import BoolAnd
+from sql.conditionals import Coalesce
 
 from trytond.model import Workflow, Model, ModelView, ModelSQL, fields, Unique
 from trytond.wizard import Wizard, StateTransition, StateView, StateReport, \
@@ -17,7 +19,7 @@ from trytond.wizard import Wizard, StateTransition, StateView, StateReport, \
 from trytond.pool import Pool
 from trytond.pyson import Eval, Equal, Bool, Not, If
 from trytond.transaction import Transaction
-from trytond.tools import get_smtp_server
+from trytond.tools import get_smtp_server, grouped_slice, reduce_ids
 from trytond.config import config as tconfig
 from trytond.report import Report
 from trytond.rpc import RPC
@@ -947,16 +949,26 @@ class Entry(Workflow, ModelSQL, ModelView):
         cls.check_delete(entries)
         super().delete(entries)
 
-    def get_confirmed(self, name=None):
-        if not self.samples:
-            return False
-        for sample in self.samples:
-            if not sample.fractions:
-                return False
-            for fraction in sample.fractions:
-                if not fraction.confirmed:
-                    return False
-        return True
+    @classmethod
+    def get_confirmed(cls, entries, name=None):
+        pool = Pool()
+        Sample = pool.get('lims.sample')
+        Fraction = pool.get('lims.fraction')
+        cursor = Transaction().connection.cursor()
+        sample = Sample.__table__()
+        fraction = Fraction.__table__()
+
+        entry_ids = [e.id for e in entries]
+        res = dict.fromkeys(entry_ids, False)
+        for sub_ids in grouped_slice(entry_ids):
+            cursor.execute(*sample.join(fraction, 'LEFT',
+                    condition=fraction.sample == sample.id
+                    ).select(sample.entry,
+                    where=reduce_ids(sample.entry, sub_ids),
+                    group_by=sample.entry,
+                    having=BoolAnd(Coalesce(fraction.confirmed, False))))
+            res.update((entry_id, True) for entry_id, in cursor.fetchall())
+        return res
 
     @classmethod
     def order_create_date2(cls, tables):
