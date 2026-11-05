@@ -4,7 +4,7 @@
 # the full copyright notices and license terms.
 import logging
 from io import BytesIO
-from datetime import datetime
+from datetime import datetime, timedelta
 from PyPDF2 import PdfFileMerger
 from sql import Literal, Null, Cast
 from sql.conditionals import Case
@@ -2569,7 +2569,56 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
                 'AND rd.state NOT IN (\'released\', \'annulled\') '
                 'AND rd.type != \'preliminary\' ' +
                 laboratory_clause + notebook_clause)
-        return [x[0] for x in cursor.fetchall()]
+        draft_lines_ids = [x[0] for x in cursor.fetchall()]
+        draft_lines_ids.extend(x[0] for x in cls.get_releasing_lines(
+            laboratory_id, notebook_id and [notebook_id] or None))
+        return draft_lines_ids
+
+    @classmethod
+    def _get_releasing_lines_window(cls):
+        return timedelta(hours=1)
+
+    @classmethod
+    def get_releasing_lines(cls, laboratory_id=None, notebook_ids=None):
+        '''
+        Returns (notebook line, notebook, version detail) for the lines of
+        reports released in background whose release has not linked them yet
+        '''
+        cursor = Transaction().connection.cursor()
+        pool = Pool()
+        Config = pool.get('lims.configuration')
+        ResultsSample = pool.get('lims.results_report.version.detail.sample')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+        ResultsVersion = pool.get('lims.results_report.version')
+        NotebookLine = pool.get('lims.notebook.line')
+
+        if not Config(1).report_release_background:
+            return []
+
+        query = ('SELECT rl.notebook_line, rs.notebook, rd.id '
+            'FROM "' + ResultsDetail._table + '" rd '
+                'INNER JOIN "' + ResultsVersion._table + '" rv '
+                'ON rd.report_version = rv.id '
+                'INNER JOIN "' + ResultsSample._table + '" rs '
+                'ON rs.version_detail = rd.id '
+                'INNER JOIN "' + cls._table + '" rl '
+                'ON rl.detail_sample = rs.id '
+                'INNER JOIN "' + NotebookLine._table + '" nl '
+                'ON nl.id = rl.notebook_line '
+            'WHERE rd.state = \'released\' '
+                'AND rd.valid = TRUE '
+                'AND rd.type != \'preliminary\' '
+                'AND rd.release_date > %s '
+                'AND nl.results_report IS NULL ')
+        params = [datetime.now() - cls._get_releasing_lines_window()]
+        if laboratory_id:
+            query += 'AND rv.laboratory = %s '
+            params.append(laboratory_id)
+        if notebook_ids:
+            query += 'AND rs.notebook IN %s '
+            params.append(tuple(notebook_ids))
+        cursor.execute(query, params)
+        return cursor.fetchall()
 
     @classmethod
     def delete(cls, details):
@@ -2853,6 +2902,8 @@ class GenerateReport(Wizard):
 
         laboratory_id = Transaction().context.get(
             'samples_pending_reporting_laboratory', None)
+        self._check_releasing_lines(laboratory_id,
+            Transaction().context['active_ids'])
         config_ = Configuration(1)
 
         res = {
@@ -2973,6 +3024,21 @@ class GenerateReport(Wizard):
 
         return res
 
+    @staticmethod
+    def _check_releasing_lines(laboratory_id, notebook_ids):
+        pool = Pool()
+        Notebook = pool.get('lims.notebook')
+        ResultsLine = pool.get('lims.results_report.version.detail.line')
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+
+        releasing = ResultsLine.get_releasing_lines(laboratory_id,
+            notebook_ids)
+        if releasing:
+            _, notebook_id, detail_id = releasing[0]
+            raise UserError(gettext('lims.msg_generate_report_releasing',
+                sample=Notebook(notebook_id).rec_name,
+                report=ResultsDetail(detail_id).report_version.rec_name))
+
     def transition_generate(self):
         pool = Pool()
         Laboratory = pool.get('lims.laboratory')
@@ -2982,6 +3048,8 @@ class GenerateReport(Wizard):
 
         laboratory_id = Transaction().context.get(
             'samples_pending_reporting_laboratory', None)
+        self._check_releasing_lines(laboratory_id,
+            [n.id for n in self.start.notebooks])
         laboratory = Laboratory(laboratory_id)
 
         signatories = [{'type': 'signer',
