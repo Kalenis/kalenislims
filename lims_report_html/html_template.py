@@ -787,7 +787,7 @@ class ResultsReportTemplate(ReportTemplate):
                 Eval('report_name') != 'lims.result_report',
                 ),
             },
-        depends=['type'])
+        depends=['type', 'report_name'])
 
     @staticmethod
     def default_charts_x_row():

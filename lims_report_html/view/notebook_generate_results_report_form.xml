@@ -4,5 +4,7 @@
         <label name="template"/>
         <field name="template"
             view_ids="lims_report_html.result_template_view_list,lims_report_html.result_template_view_form"/>
+        <label name="resultrange_origin"/>
+        <field name="resultrange_origin"/>
     </xpath>
 </data>

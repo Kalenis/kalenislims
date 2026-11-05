@@ -42,6 +42,18 @@ msgctxt "field:lims.notebook,resultrange_origin:"
 msgid "Comparison range"
 msgstr "Rango de comparación"
 
+msgctxt "field:lims.notebook.generate_results_report.start,resultrange_origin:"
+msgid "Origin"
+msgstr "Origen"
+
+msgctxt "help:lims.notebook.generate_results_report.start,resultrange_origin:"
+msgid ""
+"Origin for all the reports. If empty, the one of the sample or the template "
+"is used"
+msgstr ""
+"Origen para todos los informes. Si queda vacío, se usa el de la muestra o el "
+"de la plantilla"
+
 msgctxt "field:lims.notebook.generate_results_report.start,template:"
 msgid "Report Template"
 msgstr "Plantilla de Informe"

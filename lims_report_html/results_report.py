@@ -136,9 +136,11 @@ class ResultsReportVersionDetail(metaclass=PoolMeta):
             generate_report_form)
 
         result_template = None
-        if generate_report_form and generate_report_form.template:
-            result_template = generate_report_form.template
         resultrange_origin = None
+        if generate_report_form:
+            result_template = getattr(generate_report_form, 'template', None)
+            resultrange_origin = getattr(generate_report_form,
+                'resultrange_origin', None)
 
         for sample in samples:
             nb = Notebook(sample['notebook'])
@@ -624,6 +626,12 @@ class GenerateReportStart(metaclass=PoolMeta):
             ],
         states={'readonly': Bool(Eval('report'))},
         depends=['report'])
+    resultrange_origin = fields.Many2One('lims.range.type', 'Origin',
+        domain=[('use', '=', 'result_range')],
+        states={'readonly': Bool(Eval('report'))},
+        depends=['report'],
+        help='Origin for all the reports. If empty, the one of the sample '
+        'or the template is used')
 
 
 class GenerateReport(metaclass=PoolMeta):
