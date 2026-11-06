@@ -2907,6 +2907,26 @@ class GenerateReport(Wizard):
         return None
 
     @staticmethod
+    def _get_existing_reports(notebook_id, laboratory_id=None):
+        '''Return the reports that include the notebook, skipping those
+        where it only remains in annulled details replaced by a later one'''
+        pool = Pool()
+        ResultsDetail = pool.get('lims.results_report.version.detail')
+
+        clause = [('samples.notebook', '=', notebook_id)]
+        if laboratory_id:
+            clause.append(('laboratory', '=', laboratory_id))
+        reports = []
+        for detail in ResultsDetail.search(clause):
+            if detail.state == 'annulled' and ResultsDetail.search_count([
+                    ('report_version', '=', detail.report_version.id),
+                    ('id', '>', detail.id),
+                    ]) > 0:
+                continue
+            reports.append(detail.report_version.results_report.id)
+        return reports
+
+    @staticmethod
     def _new_version_type(reported_analyses, pending_analyses):
         if set(reported_analyses) & set(pending_analyses):
             return 'corrective'
@@ -3031,13 +3051,9 @@ class GenerateReport(Wizard):
                 elif cie_fraction_type != notebook.fraction.cie_fraction_type:
                     res['report_readonly'] = True
                 # same current_report
-                existing_details = ResultsDetail.search([
-                    ('laboratory', '=', laboratory_id),
-                    ('samples.notebook', '=', notebook.id),
-                    ])
-                if existing_details:
-                    existing_reports = [d.report_version.results_report.id
-                        for d in existing_details]
+                existing_reports = self._get_existing_reports(
+                    notebook.id, laboratory_id)
+                if existing_reports:
                     if not current_reports:
                         current_reports = existing_reports
                     elif current_reports != existing_reports:
@@ -3340,24 +3356,13 @@ class GenerateReport(Wizard):
             reports_details = [d.id for d in report.versions[0].details]
             return reports_details
 
-        existing_details = ResultsDetail.search([
-            ('laboratory', '=', laboratory_id),
-            ('samples.notebook', '=', samples[0]['notebook']),
-            ])
-        if existing_details:
-            current_reports = [d.report_version.results_report.id
-                for d in existing_details]
-        else:
-            existing_details = ResultsDetail.search([
-                ('samples.notebook', '=', samples[0]['notebook']),
-                ])
-            if existing_details:
-                current_reports = [d.report_version.results_report.id
-                    for d in existing_details]
-            else:
-                report, = ResultsReport.create([reports])
-                reports_details = [d.id for d in report.versions[0].details]
-                return reports_details
+        current_reports = (
+            self._get_existing_reports(samples[0]['notebook'], laboratory_id)
+            or self._get_existing_reports(samples[0]['notebook']))
+        if not current_reports:
+            report, = ResultsReport.create([reports])
+            reports_details = [d.id for d in report.versions[0].details]
+            return reports_details
 
         actual_report = ResultsReport.search([
             ('id', 'in', current_reports),
