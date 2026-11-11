@@ -22,6 +22,7 @@ class Planification(metaclass=PoolMeta):
             'lims.planification.search_fractions', type='wizard')
         SearchFractionsDetail = pool.get(
             'lims.planification.search_fractions.detail')
+        ServiceDetail = pool.get('lims.planification.service_detail')
         TechniciansQualification = pool.get(
             'lims.planification.technicians_qualification', type='wizard')
         try:
@@ -47,10 +48,19 @@ class Planification(metaclass=PoolMeta):
 
             staff = [t.laboratory_professional.id
                 for t in planification.technicians]
-            for f in planification.details:
-                for s in f.details:
-                    s.staff_responsible = staff
-                    s.save()
+            service_details = [s for f in planification.details
+                for s in f.details]
+            previous = list(set(p.id for s in service_details
+                for p in s.staff_responsible) - set(staff))
+            actions = []
+            if previous:
+                actions.append(('remove', previous))
+            if staff:
+                actions.append(('add', staff))
+            if service_details and actions:
+                ServiceDetail.write(service_details, {
+                    'staff_responsible': actions,
+                    })
             planification.save()
 
             if analysis_sheet_activated:
