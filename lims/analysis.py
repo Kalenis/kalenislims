@@ -236,7 +236,8 @@ class Typification(ModelSQL, ModelView):
         cursor.execute('SELECT DISTINCT(department) '
             'FROM "' + AnalysisLaboratory._table + '" '
             'WHERE analysis = %s  '
-                'AND laboratory = %s',
+                'AND laboratory = %s '
+                'AND department IS NOT NULL',
             (self.analysis.id, self.laboratory.id))
         res = cursor.fetchall()
         if not res:

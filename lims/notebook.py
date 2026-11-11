@@ -12,13 +12,14 @@ from decimal import Decimal
 from collections import defaultdict
 from datetime import datetime, date, time, timedelta
 from dateutil.relativedelta import relativedelta
-from sql import Literal, Join
+from sql import Literal, Join, Null
 
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
     StateReport, Button
 from trytond.pool import Pool
 from trytond.pyson import PYSONEncoder, Eval, Bool, Not, Or
+from trytond.tools import grouped_slice, reduce_ids
 from trytond.transaction import Transaction
 from trytond.report import Report
 from trytond.exceptions import UserError, UserWarning
@@ -1008,7 +1009,7 @@ class NotebookLine(ModelSQL, ModelView):
             ('id', 'in', Eval('department_domain'))],
         states=_states, depends=_depends + ['department_domain'])
     department_domain = fields.Function(fields.Many2Many('company.department',
-        None, None, 'Department domain'), 'on_change_with_department_domain')
+        None, None, 'Department domain'), 'get_department_domain')
     icon = fields.Function(fields.Char("Icon"), 'get_icon')
     planning_comments = fields.Function(fields.Text('Planification comments'),
         'get_planning_comments')
@@ -1876,12 +1877,44 @@ class NotebookLine(ModelSQL, ModelView):
         cursor.execute('SELECT DISTINCT(department) '
             'FROM "' + AnalysisLaboratory._table + '" '
             'WHERE analysis = %s  '
-                'AND laboratory = %s',
+                'AND laboratory = %s '
+                'AND department IS NOT NULL',
             (self.analysis.id, self.laboratory.id))
         res = cursor.fetchall()
         if not res:
             return []
         return [x[0] for x in res]
+
+    @classmethod
+    def get_department_domain(cls, lines, name):
+        # Computed for all the lines at once: the department domain is
+        # validated on every write of notebook lines
+        cursor = Transaction().connection.cursor()
+        AnalysisLaboratory = Pool().get('lims.analysis-laboratory')
+        analysis_laboratory = AnalysisLaboratory.__table__()
+
+        res = {l.id: [] for l in lines}
+        lines_by_key = defaultdict(list)
+        for line in lines:
+            if line.analysis and line.laboratory:
+                lines_by_key[(line.analysis.id, line.laboratory.id)].append(
+                    line.id)
+        analysis_ids = list(set(a for a, _ in lines_by_key))
+        for sub_ids in grouped_slice(analysis_ids):
+            cursor.execute(*analysis_laboratory.select(
+                    analysis_laboratory.analysis,
+                    analysis_laboratory.laboratory,
+                    analysis_laboratory.department,
+                    where=reduce_ids(analysis_laboratory.analysis, sub_ids)
+                    & (analysis_laboratory.department != Null),
+                    group_by=[analysis_laboratory.analysis,
+                        analysis_laboratory.laboratory,
+                        analysis_laboratory.department]))
+            for analysis_id, laboratory_id, department_id in cursor:
+                for line_id in lines_by_key.get(
+                        (analysis_id, laboratory_id), []):
+                    res[line_id].append(department_id)
+        return res
 
     def get_icon(self, name):
         if self.report_date:
