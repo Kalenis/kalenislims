@@ -568,6 +568,9 @@
         <record model="ir.message" id="msg_generate_report_releasing">
             <field name="text">Sample "%(sample)s" is being released in results report "%(report)s". Wait until the release finishes and generate the report again.</field>
         </record>
+        <record model="ir.message" id="msg_release_all_lang_releasing">
+            <field name="text">Results report "%(report)s" is still being released in background. Wait until the release finishes and try again.</field>
+        </record>
         <record model="ir.message" id="msg_mixed_sample_states">
             <field name="text">Cannot mix complete and in-progress samples in the same target report</field>
         </record>

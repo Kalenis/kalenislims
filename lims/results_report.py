@@ -1453,8 +1453,22 @@ class ResultsReportVersionDetail(Workflow, ModelSQL, ModelView):
     @classmethod
     @ModelView.button
     def release_all_lang(cls, details):
+        cls.check_release_finished(details)
         for detail in details:
             detail.generate_report()
+
+    @classmethod
+    def check_release_finished(cls, details):
+        ResultsLine = Pool().get('lims.results_report.version.detail.line')
+
+        if not details:
+            return
+        releasing = ResultsLine.get_releasing_lines(
+            detail_ids=[d.id for d in details])
+        if releasing:
+            _, _, detail_id = releasing[0]
+            raise UserError(gettext('lims.msg_release_all_lang_releasing',
+                report=cls(detail_id).report_version.rec_name))
 
     def generate_report(self):
         pool = Pool()
@@ -2579,7 +2593,8 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
         return timedelta(hours=1)
 
     @classmethod
-    def get_releasing_lines(cls, laboratory_id=None, notebook_ids=None):
+    def get_releasing_lines(cls, laboratory_id=None, notebook_ids=None,
+            detail_ids=None):
         '''
         Returns (notebook line, notebook, version detail) for the lines of
         reports released in background whose release has not linked them yet
@@ -2617,6 +2632,9 @@ class ResultsReportVersionDetailLine(ModelSQL, ModelView):
         if notebook_ids:
             query += 'AND rs.notebook IN %s '
             params.append(tuple(notebook_ids))
+        if detail_ids:
+            query += 'AND rd.id IN %s '
+            params.append(tuple(detail_ids))
         cursor.execute(query, params)
         return cursor.fetchall()
 
