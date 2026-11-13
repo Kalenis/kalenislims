@@ -58,6 +58,34 @@ def data_record(name, field_names):
     return res
 
 
+class OnChangeWithRPC(dict):
+    '''
+    RPC registry that exposes the on_change_with_<field> methods of the
+    interface columns on demand, so they do not depend on fields_get having
+    been called on the same process
+    '''
+    prefix = 'on_change_with_'
+
+    def __init__(self, model, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.model = model
+
+    def _is_dynamic(self, key):
+        return (not dict.__contains__(self, key)
+            and isinstance(key, str) and key.startswith(self.prefix)
+            and len(key) > len(self.prefix)
+            and not hasattr(self.model, key))
+
+    def __contains__(self, key):
+        return dict.__contains__(self, key) or self._is_dynamic(key)
+
+    def __getitem__(self, key):
+        if self._is_dynamic(key):
+            self.model.add_on_change_with_method(key[len(self.prefix):])
+            self[key] = RPC(instantiate=0)
+        return super().__getitem__(key)
+
+
 class Adapter:
     def __getattr__(self, name):
         fields = self.get_fields()
@@ -257,6 +285,7 @@ class Data(ModelSQL, ModelView):
         cls._order.insert(0, ('notebook_line.notebook', 'ASC'))
         cls._order.insert(1, ('notebook_line.analysis.order', 'ASC'))
         cls._order.insert(2, ('notebook_line.analysis.code', 'ASC'))
+        cls.__rpc__ = OnChangeWithRPC(cls, cls.__rpc__)
         cls.__rpc__['fields_view_get'].cache = None
         cls.__rpc__['default_get'].cache = None
 
@@ -984,6 +1013,7 @@ class GroupedData(ModelView):
     @classmethod
     def __setup__(cls):
         super().__setup__()
+        cls.__rpc__ = OnChangeWithRPC(cls, cls.__rpc__)
         cls.__rpc__['fields_view_get'].cache = None
         cls.__rpc__['default_get'].cache = None
 
