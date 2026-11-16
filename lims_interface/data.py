@@ -815,6 +815,14 @@ class Data(ModelSQL, ModelView):
             query = sql_table.update(fields, values,
                 where=sql_table.id.in_([x.id for x in records]))
             cursor.execute(*query)
+
+        # Values read before the update (e.g. by the editable check) would
+        # make update_formulas compute with the previous values
+        for record in all_records:
+            record._local_cache.pop(record.id, None)
+        for cache in Transaction().cache.values():
+            if cls.__name__ in cache:
+                del cache[cls.__name__]
         cls.update_formulas(all_records)
 
     @classmethod
