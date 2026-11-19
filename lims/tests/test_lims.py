@@ -260,6 +260,71 @@ class LimsTestCase(ModuleTestCase):
             update.assert_called_once_with([first, second])
 
     @with_transaction()
+    def test_typification_write_updates_calculated_typifications(self):
+        "Changing the method of a typification recalculates its sets"
+        pool = Pool()
+        ProductType = pool.get('lims.product.type')
+        Matrix = pool.get('lims.matrix')
+        Method = pool.get('lims.lab.method')
+        Analysis = pool.get('lims.analysis')
+        Included = pool.get('lims.analysis.included')
+        Typification = pool.get('lims.typification')
+        Calculated = pool.get('lims.typification.calculated')
+
+        product_type, = ProductType.create([{
+                    'code': 'PT', 'description': 'Product type'}])
+        matrix, other_matrix = Matrix.create([
+                {'code': 'M1', 'description': 'Matrix 1'},
+                {'code': 'M2', 'description': 'Matrix 2'}])
+        method, other_method = Method.create([
+                {'code': 'ME1', 'name': 'Method 1', 'determination': 'D',
+                    'requalification_months': 12},
+                {'code': 'ME2', 'name': 'Method 2', 'determination': 'D',
+                    'requalification_months': 12}])
+        # laboratories and devices are not needed to calculate typifications
+        with patch.object(Analysis, '_validate'), \
+                patch.object(Included, '_validate'):
+            analysis, = Analysis.create([{
+                        'code': 'A1', 'description': 'Analysis',
+                        'type': 'analysis', 'behavior': 'normal',
+                        'methods': [('add', [method.id, other_method.id])],
+                        }])
+            set_, = Analysis.create([{
+                        'code': 'S1', 'description': 'Set',
+                        'type': 'set', 'behavior': 'normal',
+                        'included_analysis': [('create', [{
+                                    'included_analysis': analysis.id,
+                                    'method': method.id,
+                                    }])],
+                        }])
+            Analysis.write([analysis, set_], {'state': 'active'})
+
+        def calculated(matrix):
+            return Calculated.search_count([
+                    ('product_type', '=', product_type.id),
+                    ('matrix', '=', matrix.id),
+                    ('analysis', '=', set_.id),
+                    ])
+
+        typification, = Typification.create([{
+                    'product_type': product_type.id,
+                    'matrix': matrix.id,
+                    'analysis': analysis.id,
+                    'method': other_method.id,
+                    }])
+        self.assertEqual(calculated(matrix), 0)
+
+        Typification.write([typification], {'method': method.id})
+        self.assertEqual(calculated(matrix), 1)
+
+        Typification.write([typification], {'matrix': other_matrix.id})
+        self.assertEqual(calculated(matrix), 0)
+        self.assertEqual(calculated(other_matrix), 1)
+
+        Typification.write([typification], {'method': other_method.id})
+        self.assertEqual(calculated(other_matrix), 0)
+
+    @with_transaction()
     def test_create_sample_party_changed(self):
         "Creating samples fails if the entry party changed meanwhile"
         from types import SimpleNamespace
