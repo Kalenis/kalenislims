@@ -444,6 +444,7 @@ def register():
         planification.ReplaceTechnician,
         planification.PrintBlindSampleReport,
         planification.PrintPendingServicesUnplannedReport,
+        party.PartyReplace,
         module='lims', type_='wizard')
     Pool.register(
         analysis.CopyTypificationSpreadsheet,

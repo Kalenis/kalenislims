@@ -21,4 +21,5 @@ def register():
     Pool.register(
         maintenance.LabDeviceGenerateMaintenance,
         maintenance.LabDeviceEditMaintenance,
+        maintenance.PartyReplace,
         module='lims_device_maintenance', type_='wizard')

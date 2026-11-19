@@ -11,3 +11,6 @@ def register():
         project.Project,
         project.Entry,
         module='lims_project_interlaboratory', type_='model')
+    Pool.register(
+        project.PartyReplace,
+        module='lims_project_interlaboratory', type_='wizard')

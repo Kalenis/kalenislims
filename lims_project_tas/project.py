@@ -165,3 +165,13 @@ class TasType(ModelSQL, ModelView):
         if records:
             return [(field,) + tuple(clause[1:])]
         return [(cls._rec_name,) + tuple(clause[1:])]
+
+
+class PartyReplace(metaclass=PoolMeta):
+    __name__ = 'party.replace'
+
+    @classmethod
+    def fields_to_replace(cls):
+        return super().fields_to_replace() + [
+            ('lims.project', 'tas_invoice_party'),
+            ]

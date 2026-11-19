@@ -7,6 +7,7 @@ from datetime import date
 from unittest.mock import patch
 
 import trytond.tests.test_tryton
+from trytond.model import ModelSQL, fields
 from trytond.pool import Pool
 from trytond.tests.test_tryton import ModuleTestCase
 from trytond.tests.test_tryton import doctest_teardown
@@ -705,6 +706,64 @@ class LimsTestCase(ModuleTestCase):
             [s['confirmed'] for s in Sample.read(
                     [pending.id, confirmed.id], ['confirmed'])],
             [False, True])
+
+    @with_transaction()
+    def test_party_replace_covers_lims_fields(self):
+        "Party replace includes every stored lims field to party.party"
+        pool = Pool()
+        ModelField = pool.get('ir.model.field')
+        Replace = pool.get('party.replace', type='wizard')
+
+        to_replace = set(Replace.fields_to_replace())
+        missing = []
+        for model_field in ModelField.search([
+                    ('module', 'like', 'lims%'),
+                    ('ttype', '=', 'many2one'),
+                    ('relation', '=', 'party.party'),
+                    ]):
+            model_name = model_field.model.model
+            Model = pool.get(model_name)
+            if (not issubclass(Model, ModelSQL)
+                    or callable(Model.table_query) and Model.table_query()):
+                continue
+            field = Model._fields.get(model_field.name)
+            if not field or isinstance(field, fields.Function):
+                continue
+            if (model_name, model_field.name) not in to_replace:
+                missing.append((model_name, model_field.name))
+        self.assertEqual(missing, [])
+
+    @with_transaction()
+    def test_party_replace_moves_sample_producer(self):
+        "Party replace moves lims records to the destination party"
+        pool = Pool()
+        Party = pool.get('party.party')
+        SampleProducer = pool.get('lims.sample.producer')
+        Replace = pool.get('party.replace', type='wizard')
+        ActionWizard = pool.get('ir.action.wizard')
+        ModelData = pool.get('ir.model.data')
+
+        action = ActionWizard(ModelData.get_id('party', 'wizard_replace'))
+        self.assertTrue(action.active)
+
+        source, destination = Party.create([
+                {'name': 'Customer'}, {'name': 'Customer'}])
+        producer, = SampleProducer.create([{
+                    'party': source.id,
+                    'name': 'Producer',
+                    }])
+
+        session_id, _, _ = Replace.create()
+        replace = Replace(session_id)
+        replace.ask.source = source
+        replace.ask.destination = destination
+        self.assertIn(
+            ('lims.sample.producer', 'party'), Replace.fields_to_replace())
+        replace.transition_replace()
+
+        producer, = SampleProducer.read([producer.id], ['party'])
+        self.assertEqual(producer['party'], destination.id)
+        self.assertFalse(Party(source.id).active)
 
 
 def suite():

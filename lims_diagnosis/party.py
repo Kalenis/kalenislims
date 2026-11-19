@@ -51,3 +51,13 @@ class Party(metaclass=PoolMeta):
     diagnosis_template = fields.Many2One('lims.diagnosis.template',
         'Diagnosis Template', domain=['OR', ('active', '=', True),
             ('id', '=', Eval('diagnosis_template'))])
+
+
+class PartyReplace(metaclass=PoolMeta):
+    __name__ = 'party.replace'
+
+    @classmethod
+    def fields_to_replace(cls):
+        return super().fields_to_replace() + [
+            ('lims.diagnostician', 'party'),
+            ]

@@ -17,6 +17,9 @@ def register():
         configuration.LabWorkYearSequence,
         module='lims_project_tas', type_='model')
     Pool.register(
+        project.PartyReplace,
+        module='lims_project_tas', type_='wizard')
+    Pool.register(
         invoice.Invoice,
         module='lims_project_tas', type_='model',
         depends=['lims_account_invoice'])

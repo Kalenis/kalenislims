@@ -464,3 +464,13 @@ class Cron(metaclass=PoolMeta):
             ('lims.lab.device.maintenance|send_notice',
                 'Device Maintenance Calendar Notice'),
             ])
+
+
+class PartyReplace(metaclass=PoolMeta):
+    __name__ = 'party.replace'
+
+    @classmethod
+    def fields_to_replace(cls):
+        return super().fields_to_replace() + [
+            ('lims.lab.device.maintenance', 'party'),
+            ]

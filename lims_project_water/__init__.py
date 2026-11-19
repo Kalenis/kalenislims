@@ -15,6 +15,7 @@ def register():
         module='lims_project_water', type_='model')
     Pool.register(
         project.CreateSample,
+        project.PartyReplace,
         module='lims_project_water', type_='wizard')
     Pool.register(
         project.ProjectWaterSampling,

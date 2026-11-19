@@ -54,6 +54,7 @@ def register():
         results_report.OpenSamplesComparator,
         notebook.NotebookRepeatAnalysis,
         notebook.NotebookLineRepeatAnalysis,
+        party.PartyReplace,
         module='lims_diagnosis', type_='wizard')
     Pool.register(
         results_report.ResultReport,

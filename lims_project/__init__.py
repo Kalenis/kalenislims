@@ -15,4 +15,5 @@ def register():
         module='lims_project', type_='model')
     Pool.register(
         project.CreateSample,
+        project.PartyReplace,
         module='lims_project', type_='wizard')

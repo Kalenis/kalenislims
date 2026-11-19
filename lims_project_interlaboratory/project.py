@@ -48,3 +48,13 @@ class Entry(metaclass=PoolMeta):
         project_type = ('itl', 'Interlaboratory')
         if project_type not in cls.project_type.selection:
             cls.project_type.selection.append(project_type)
+
+
+class PartyReplace(metaclass=PoolMeta):
+    __name__ = 'party.replace'
+
+    @classmethod
+    def fields_to_replace(cls):
+        return super().fields_to_replace() + [
+            ('lims.project', 'int_itl_party'),
+            ]

@@ -211,3 +211,22 @@ class Company(metaclass=PoolMeta):
 
 class Employee(DeactivableMixin, metaclass=PoolMeta):
     __name__ = 'company.employee'
+
+
+class PartyReplace(metaclass=PoolMeta):
+    __name__ = 'party.replace'
+
+    @classmethod
+    def fields_to_replace(cls):
+        return super().fields_to_replace() + [
+            ('lims.analysis.family', 'party'),
+            ('lims.entry', 'invoice_party'),
+            ('lims.entry', 'party'),
+            ('lims.lab.method.results_waiting', 'party'),
+            ('lims.laboratory.professional', 'party'),
+            ('lims.referral', 'laboratory'),
+            ('lims.results_report', 'party'),
+            ('lims.sample', 'party'),
+            ('lims.sample.producer', 'party'),
+            ('lims.technical.scope', 'party'),
+            ]

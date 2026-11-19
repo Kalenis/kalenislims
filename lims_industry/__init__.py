@@ -75,6 +75,7 @@ def register():
         results_report.ResultsReportAnnulation,
         control_tendency.OpenTrendChart,
         planification.TechniciansQualification,
+        party.PartyReplace,
         module='lims_industry', type_='wizard')
     Pool.register(
         results_report.SendResultsReport,

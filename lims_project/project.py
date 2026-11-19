@@ -125,3 +125,13 @@ class CreateSample(metaclass=PoolMeta):
         if entry.project:
             defaults['project_type'] = entry.project.type
         return defaults
+
+
+class PartyReplace(metaclass=PoolMeta):
+    __name__ = 'party.replace'
+
+    @classmethod
+    def fields_to_replace(cls):
+        return super().fields_to_replace() + [
+            ('lims.project', 'client'),
+            ]

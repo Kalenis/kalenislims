@@ -302,3 +302,13 @@ class ProjectWaterSampling(Report):
         return PartyAddress.search([
             ('id', 'in', [x[0] for x in cursor.fetchall()]),
             ])
+
+
+class PartyReplace(metaclass=PoolMeta):
+    __name__ = 'party.replace'
+
+    @classmethod
+    def fields_to_replace(cls):
+        return super().fields_to_replace() + [
+            ('lims.sample', 'sampling_responsible'),
+            ]

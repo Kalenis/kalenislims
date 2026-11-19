@@ -126,3 +126,14 @@ class Address(metaclass=PoolMeta):
     @staticmethod
     def default_plant():
         return Transaction().context.get('plant', None)
+
+
+class PartyReplace(metaclass=PoolMeta):
+    __name__ = 'party.replace'
+
+    @classmethod
+    def fields_to_replace(cls):
+        return super().fields_to_replace() + [
+            ('lims.plant', 'invoice_party'),
+            ('lims.plant', 'party'),
+            ]
